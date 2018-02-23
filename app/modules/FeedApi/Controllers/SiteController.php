@@ -1,19 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\FeedApi\Controllers;
 
-use App\Business\Site\SiteManager;
 use App\Business\Error\ErrorCode;
+use App\Business\Site\SiteManager;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveSite;
 use App\Http\Resources\SiteResource;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
-	/**
-     * @var siteManager
-     */
-    protected $siteManager;
 
     /**
      * Create a new site from a Request.

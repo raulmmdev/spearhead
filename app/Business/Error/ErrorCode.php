@@ -4,7 +4,7 @@ namespace App\Business\Site;
 use App\Http\Requests\SaveSite;
 use App\Site;
   
-class SiteManager
+class ErrorCode
 {
     const ERROR_SAVE_SITE = 'QWSIT0001';
 
