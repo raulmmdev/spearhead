@@ -4,8 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "88e7081bc501f0c5d789c6f08648cdca",
+    "content-hash": "4de960626cfe3ef7b18ba31b67450b74",
     "packages": [
+        {
+            "name": "bschmitt/laravel-amqp",
+            "version": "1.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bschmitt/laravel-amqp.git",
+                "reference": "083f6146457f958ec53dace92f84186e95ddc52f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bschmitt/laravel-amqp/zipball/083f6146457f958ec53dace92f84186e95ddc52f",
+                "reference": "083f6146457f958ec53dace92f84186e95ddc52f",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=5.1",
+                "php": ">=5.5.9",
+                "php-amqplib/php-amqplib": "2.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "^3.0@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Bschmitt\\Amqp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Björn Schmitt",
+                    "email": "code@bjoern.io"
+                }
+            ],
+            "description": "AMQP wrapper for Laravel and Lumen to publish and consume messages",
+            "keywords": [
+                "AMQP",
+                "Björn Schmitt",
+                "bschmitt",
+                "laravel",
+                "laravel5",
+                "lumen",
+                "message queue",
+                "package",
+                "queue",
+                "rabbitmq"
+            ],
+            "time": "2017-10-29T23:28:14+00:00"
+        },
         {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "0.1",
@@ -1118,6 +1173,47 @@
                 "random"
             ],
             "time": "2017-09-27T21:40:39+00:00"
+        },
+        {
+            "name": "php-amqplib/php-amqplib",
+            "version": "v2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-amqplib/php-amqplib.git",
+                "reference": "682e3365f51c455f7a0bd32173d79922416fe9f0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/682e3365f51c455f7a0bd32173d79922416fe9f0",
+                "reference": "682e3365f51c455f7a0bd32173d79922416fe9f0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PhpAmqpLib": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Alvaro Videla"
+                }
+            ],
+            "description": "This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/videlalvaro/php-amqplib/",
+            "keywords": [
+                "message",
+                "queue",
+                "rabbitmq"
+            ],
+            "time": "2013-02-13T19:43:51+00:00"
         },
         {
             "name": "psr/container",

@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
-use app\Site;
 
-class SiteResource extends Resource
+class ApiRequestResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +15,9 @@ class SiteResource extends Resource
     public function toArray($request): array
     {
         return [
-            'type'          => 'site',
-            'id'            => $this->id,
+            'type'          => 'message',
             'attributes'    => [
-                'name' => $this->name,
+                'status' => 'ok',
             ],
         ];
     }

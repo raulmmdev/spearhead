@@ -1,15 +1,15 @@
 <?php
-namespace App\Business\Site;
+namespace App\Business\Error;
 
 use App\Http\Requests\SaveSite;
 use App\Site;
   
 class ErrorCode
 {
-    const ERROR_SAVE_SITE = 'QWSIT0001';
+    const ERROR_SAVE_MESSAGE = 'QWMSG0001';
 
     const MESSAGES        = [
-        self::ERROR_SAVE_SITE = 'There was an error trying to save your site';
+        self::ERROR_SAVE_MESSAGE => 'There was an error trying to save the message',
     ];
 
 	/**

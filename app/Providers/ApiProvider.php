@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Business\Message\MessageManager;
 use App\Business\Site\SiteManager;
 
 class ApiProvider extends ServiceProvider
@@ -26,6 +27,10 @@ class ApiProvider extends ServiceProvider
     {
         $this->app->bind('App\Business\Site\SiteManager', function ($app) {
             return new SiteManager();
+        });
+
+        $this->app->bind('App\Business\Message\MessageManager', function ($app) {
+            return new MessageManager();
         });
     }
 }

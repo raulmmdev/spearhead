@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ApiProvider::class,
         App\Modules\ModulesProvider::class,
+        Bschmitt\Amqp\AmqpServiceProvider::class,
 
     ],
 
@@ -194,6 +195,7 @@ return [
 
     'aliases' => [
 
+        'Amqp' => Bschmitt\Amqp\Facades\Amqp::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
