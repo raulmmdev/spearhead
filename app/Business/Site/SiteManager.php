@@ -2,7 +2,7 @@
 namespace App\Business\Site;
 
 use App\Http\Requests\SaveSite;
-use App\Site;
+use App\Model\Entity\Site;
   
 class SiteManager
 {
