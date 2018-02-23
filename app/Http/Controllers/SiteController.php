@@ -15,17 +15,6 @@ class SiteController extends Controller
      */
     protected $siteManager;
 
-	/**
-     * Create a new controller instance.
-     *
-     * @param  SiteManager  $siteManager
-     * @return void
-     */
-    public function __construct(SiteManager $siteManager)
-    {
-        $this->siteManager = $siteManager;
-    }
-
     /**
      * Create a new site from a Request.
      *
