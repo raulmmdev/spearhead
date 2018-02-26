@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Business\Api;
+namespace App\Business\Api\Request;
 
 use \Illuminate\Http\Request;
 use App\Business\Api\Interfaces\ResolvableInterface;
@@ -42,14 +42,8 @@ class ApiRequest implements ResolvableInterface
 		$this->body = $body;
 	}
 
-	public function resolve(string $messageType)
+	public function resolve(string $messageType): bool
 	{
-		try {
-			return $this->messageManager->produceJobMessage($messageType, $this->getBody());
-		} catch (\Exception $e) {
-			\Log::error($e->getMessage());
-
-			return false;
-		}
+		return $this->messageManager->produceJobMessage($messageType, $this->getBody());
 	}
 }

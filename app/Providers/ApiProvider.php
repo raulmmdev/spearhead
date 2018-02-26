@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Message\MessageManager;
 use App\Business\Site\SiteManager;
+use Illuminate\Support\ServiceProvider;
 
 class ApiProvider extends ServiceProvider
 {
@@ -31,6 +32,10 @@ class ApiProvider extends ServiceProvider
 
         $this->app->bind('App\Business\Message\MessageManager', function ($app) {
             return new MessageManager();
+        });
+
+        $this->app->bind('App\Business\Api\Response\ApiResponseManager', function ($app) {
+            return new ApiResponseManager();
         });
     }
 }

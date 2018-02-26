@@ -2,7 +2,8 @@
 
 namespace Modules\FeedApi\Controllers;
 
-use App\Business\Api\ApiRequest;
+use App\Business\Api\Request\ApiRequest;
+use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Error\ErrorCode;
 use App\Business\Message\MessageManager;
 use App\Http\Controllers\Controller;
@@ -13,10 +14,14 @@ class SiteController extends Controller
 {
 
 	private $messageManager;
+	private $apiResponseManager;
 
-	public function __construct(MessageManager $messageManager)
-	{
+	public function __construct(
+		MessageManager $messageManager,
+		ApiResponseManager $apiResponseManager
+	) {
 		$this->messageManager = $messageManager;
+		$this->apiResponseManager = $apiResponseManager;
 	}
     /**
      * Create a new site from a Request.
@@ -32,13 +37,7 @@ class SiteController extends Controller
 
 		if (!$result) {
 			//something went wrong?
-			return json_encode([
-				"errors" => [
-					"code"    => ErrorCode::ERROR_SAVE_MESSAGE,
-					"status"  => "500",
-					"title" => ErrorCode::getMessage(ErrorCode::ERROR_SAVE_MESSAGE)
-				],
-			]);
+			return $this->apiResponseManager->createErrorResponse(500, ErrorCode::ERROR_SAVE_MESSAGE);
 		}
 
 		//response
