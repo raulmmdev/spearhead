@@ -24,6 +24,7 @@ class SiteController extends Controller
 		$this->messageManager = $messageManager;
 		$this->apiResponseManager = $apiResponseManager;
 	}
+
     /**
      * Create a new site from a Request.
      *

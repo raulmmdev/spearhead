@@ -1,9 +1,9 @@
 <?php
 namespace App\Business\Site;
 
-use App\Http\Requests\SaveSite;
+use App\Http\Requests\Qwindo\SaveSite;
 use App\Model\Entity\Site;
-  
+
 class SiteManager
 {
 	/**
@@ -14,7 +14,7 @@ class SiteManager
      */
     public function createSiteFromRequest(SaveSite $request)
     {
-    	try { 
+        try {
     		$site = new Site();
     		$site->name = $request->name;
 

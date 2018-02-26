@@ -1,20 +1,15 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Qwindo;
 
 use App\Business\Site\SiteManager;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Qwindo\Interfaces\SiteManagerAwareInterface;
 
-class SaveSite extends FormRequest
+class SaveSite extends BaseRequest implements SiteManagerAwareInterface
 {
 
     protected $siteManager;
-
-    public function __construct(SiteManager $siteManager)
-    {
-        parent::__construct();
-        $this->siteManager = $siteManager;
-    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -38,8 +33,13 @@ class SaveSite extends FormRequest
         ];
     }
 
-    public function resolve()
+    protected function resolve()
     {
         return $this->siteManager->createSiteFromRequest($this);
+    }
+
+    public function setSiteManager(SiteManager $siteManager)
+    {
+        $this->siteManager = $siteManager;
     }
 }

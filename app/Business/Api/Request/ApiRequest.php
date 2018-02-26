@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Business\Api\Request;
 
@@ -35,12 +35,12 @@ class ApiRequest implements ResolvableInterface
 		$this->messageManager = $messageManager;
 	}
 
-	public function getBody() : string 
+	public function getBody() : string
 	{
 		return $this->body;
 	}
 
-	public function setBody(string $body) 
+	public function setBody(string $body)
 	{
 		$this->body = $body;
 	}

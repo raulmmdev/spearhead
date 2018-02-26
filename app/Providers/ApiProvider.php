@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Business\Api\Response\ApiResponseManager;
+use App\Business\FormRequest\FormRequestFactory;
+use App\Business\Injector\Injector;
 use App\Business\Message\MessageManager;
 use App\Business\Site\SiteManager;
 use Illuminate\Support\ServiceProvider;
@@ -30,12 +32,21 @@ class ApiProvider extends ServiceProvider
             return new SiteManager();
         });
 
+        $this->app->bind('App\Business\Injector\Injector', function ($app) {
+            return new Injector(new SiteManager());
+        });
+
         $this->app->bind('App\Business\Message\MessageManager', function ($app) {
-            return new MessageManager();
+            return new MessageManager(new FormRequestFactory(new Injector(new SiteManager())), new SiteManager());
         });
 
         $this->app->bind('App\Business\Api\Response\ApiResponseManager', function ($app) {
             return new ApiResponseManager();
+        });
+
+
+        $this->app->bind('App\Business\FormRequest\FormRequestFactory', function ($app) {
+            return new FormRequestFactory(new Injector(new SiteManager()));
         });
     }
 }
