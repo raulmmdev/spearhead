@@ -2,6 +2,7 @@
 
 namespace Modules\FeedApi\Controllers;
 
+use \Symfony\Component\HttpFoundation\Response;
 use App\Business\Api\Request\ApiRequest;
 use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Error\ErrorCode;
@@ -31,18 +32,18 @@ class SiteController extends Controller
      */
     public function createSite(Request $request)
 	{
-		//create the site
 		$apiRequest = new ApiRequest($request, $this->messageManager);
 		$result = $apiRequest->resolve(ApiRequest::MSG_CREATE_SITE);
 
 		if (!$result) {
-			//something went wrong?
-			return $this->apiResponseManager->createErrorResponse(500, ErrorCode::ERROR_SAVE_MESSAGE);
+			return $this
+				->apiResponseManager
+				->createErrorResponse(
+					Response::HTTP_INTERNAL_SERVER_ERROR,
+					ErrorCode::ERROR_SAVE_MESSAGE
+				);
 		}
 
-		//response
-		ApiRequestResource::withoutWrapping(); //remove the top data element wrapper
-        return new ApiRequestResource($result);
+		return $this->apiResponseManager->createResponse(Response::HTTP_CREATED, ApiRequest::MSG_DESCRIPTIONS[ApiRequest::MSG_CREATE_SITE]);
     }
 }
-	

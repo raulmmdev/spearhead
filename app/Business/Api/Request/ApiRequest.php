@@ -9,7 +9,10 @@ use App\Business\Message\MessageManager;
 class ApiRequest implements ResolvableInterface
 {
 
-	const MSG_CREATE_SITE = 'CREATE_SITE';
+	const MSG_CREATE_SITE  = 'CREATE_SITE';
+	const MSG_DESCRIPTIONS = [
+		self::MSG_CREATE_SITE => 'create_site_request',
+	];
 
 	/**
      * contains the request json.
