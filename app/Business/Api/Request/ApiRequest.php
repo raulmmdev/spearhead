@@ -28,7 +28,6 @@ class ApiRequest implements ResolvableInterface
      */
 	private $messageManager;
 
-
 	public function __construct(Request $request, MessageManager $messageManager)
 	{
 		$this->body = $request->getContent();
@@ -45,7 +44,7 @@ class ApiRequest implements ResolvableInterface
 		$this->body = $body;
 	}
 
-	public function resolve(string $messageType): bool
+	public function resolve(string $messageType) : bool
 	{
 		return $this->messageManager->produceJobMessage($messageType, $this->getBody());
 	}

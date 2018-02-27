@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Business\FormRequest;
 
 use App\Business\Api\Request\ApiRequest;
@@ -6,6 +7,8 @@ use App\Business\Injector\Injector;
 
 class FormRequestFactory
 {
+	private $request;
+
 	const CLASS_NAMES = [
 		ApiRequest::MSG_CREATE_SITE => 'App\Http\Requests\Qwindo\SaveSite',
 	];
@@ -20,16 +23,21 @@ class FormRequestFactory
 		$className = self::CLASS_NAMES[$type];
 
 		//create the request, inject the managers
-		$request = new $className();
-		$request = $this->injector->inject($request);
+		$this->request = new $className();
+		$this->request = $this->injector->inject($this->request);
 
 		//fill the instance with data
 		switch($type) {
 			case ApiRequest::MSG_CREATE_SITE:
-				isset($values['name']) && $request['name'] = $values['name'];
+				$this->fillCreateSiteRequest($values);
 				break;
 		}
 
-		return $request;
+		return $this->request;
+	}
+
+	private function fillCreateSiteRequest(array $values)
+	{
+		isset($values['name']) && $this->request['name'] = $values['name'];
 	}
 }
