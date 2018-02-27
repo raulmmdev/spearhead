@@ -179,7 +179,7 @@ return [
         App\Providers\ApiProvider::class,
         App\Modules\ModulesProvider::class,
         Bschmitt\Amqp\AmqpServiceProvider::class,
-
+        Jenssegers\Mongodb\MongodbServiceProvider::class,
     ],
 
     /*
