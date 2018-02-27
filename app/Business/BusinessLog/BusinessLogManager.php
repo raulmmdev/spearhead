@@ -15,7 +15,7 @@ class BusinessLogManager
 		int $siteId = null,
 		int $feedId = null
 	) {
-		$this->createLog(
+		$this->log(
 			BusinessLog::LEVEL_TYPE_INFO,
 			$userType,
 			$elementType,
@@ -36,7 +36,7 @@ class BusinessLogManager
 		int $siteId = null,
 		int $feedId = null
 	) {
-		$this->createLog(
+		$this->log(
 			BusinessLog::LEVEL_TYPE_ERROR,
 			$userType,
 			$elementType,
@@ -57,7 +57,7 @@ class BusinessLogManager
 		int $siteId = null,
 		int $feedId = null
 	) {
-		$this->createLog(
+		$this->log(
 			BusinessLog::LEVEL_TYPE_EXCEPTION,
 			$userType,
 			$elementType,
@@ -72,7 +72,7 @@ class BusinessLogManager
 	/**
      * Creates a generic log message
      */
-    private function createLog(
+    public function log(
     	string $levelType,
 		string $userType,
 		string $elementType,

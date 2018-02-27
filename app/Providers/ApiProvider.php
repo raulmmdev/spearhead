@@ -45,7 +45,8 @@ class ApiProvider extends ServiceProvider
 
         $this->app->bind('App\Business\FormRequest\FormRequestFactory', function ($app) {
             return new FormRequestFactory(
-                $app->make('App\Business\Injector\Injector')
+                $app->make('App\Business\Injector\Injector'),
+                $app->make('App\Business\BusinessLog\BusinessLogManager')
             );
         });
 

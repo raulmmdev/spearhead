@@ -5,6 +5,7 @@ use \App\Business\Api\Request\ApiRequest;
 use \App\Business\BusinessLog\BusinessLogManager;
 use \App\Business\FormRequest\FormRequestFactory;
 use \App\Business\Site\SiteManager;
+use \App\Http\Requests\BaseRequest;
 use \App\Http\Requests\Qwindo\SaveSite;
 use \App\Http\Requests\SaveSite\Qwindo;
 use \App\Model\Document\BusinessLog;
@@ -13,10 +14,6 @@ class MessageManager
 {
 	const QUEUES = [
 		ApiRequest::MSG_CREATE_SITE => 'site',
-	];
-
-	const BUSINESS_LOG_ELEMENT_TYPES = [
-		ApiRequest::MSG_CREATE_SITE => BusinessLog::ELEMENT_TYPE_SITE,
 	];
 
 	public function __construct(
@@ -57,41 +54,21 @@ class MessageManager
 	 */
 	public function consumeJobMessage(string $type, bool $asDaemon)
 	{
-		$console = new \Symfony\Component\Console\Output\ConsoleOutput();
-
-		\Amqp::consume(self::QUEUES[$type], function ($message, $resolver) use ($type, $console, $asDaemon) {
+		\Amqp::consume(self::QUEUES[$type], function ($message, $resolver) use ($type, $asDaemon) {
 			//unserialize
 			$body = json_decode($message->body, true);
 
-			//validate && resolve
+			//validate
 			$request = $this->formRequestFactory->create($type, $body);
-			$object = $request->resolveIfValid();
 
-			if (count($request->getErrors())) {
-				$this->businessLogManager->error(
-					BusinessLog::USER_TYPE_MERCHANT,
-					self::BUSINESS_LOG_ELEMENT_TYPES[$type],
-					"Error processing a message [ {$type} ]",
-					json_encode([
-						'body' => $body,
-						'errors' => $request->getErrors(),
-					])
-				);
-
-				$console->writeln("<error>Error processing a message [ {$type} ]</error>");
-			} else {
-				$this->businessLogManager->info(
-					BusinessLog::USER_TYPE_MERCHANT,
-					self::BUSINESS_LOG_ELEMENT_TYPES[$type],
-					"Successfully processed a message [ {$type} ]",
-					json_encode([
-						'body' => $body,
-						'response' => $object,
-					])
-				);
-
-				$console->writeln("<info>Successfully processed a message [ {$type} ]</info>");
+			//no errors? resolve
+			$object = null;
+			if (empty($request->getErrors())) {
+				$object = $request->resolveIfValid();
 			}
+
+			//log accordingly
+			$this->reportToBusinessLogger($request, $type, $body, $object);
 
 			//next message
 			$resolver->acknowledge($message);
@@ -101,5 +78,40 @@ class MessageManager
 				$resolver->stopWhenProcessed();
 			}
 		});
+	}
+
+	private function reportToBusinessLogger(BaseRequest $request, string $type, array $body, $object = null)
+	{
+		$console = new \Symfony\Component\Console\Output\ConsoleOutput();
+
+		if (empty($request->getErrors())) {
+			$businessLogType = BusinessLog::LEVEL_TYPE_INFO;
+			$error_message = "Successfully processed a message [ {$type} ]";
+
+			$error_description = json_encode([
+				'body' => $body,
+				'response' => $object,
+			]);
+
+			$console->writeln("<info>Successfully processed a message [ {$type} ]</info>");
+		} else {
+			$businessLogType = BusinessLog::LEVEL_TYPE_ERROR;
+			$error_message = "Error processing a message [ {$type} ]";
+
+			$error_description = json_encode([
+				'body' => $body,
+				'errors' => $request->getErrors(),
+			]);
+
+			$console->writeln("<error>Error processing a message [ {$type} ]</error>");
+		}
+
+		$this->businessLogManager->log(
+			$businessLogType,
+			BusinessLog::USER_TYPE_MERCHANT,
+			BusinessLog::BUSINESS_LOG_ELEMENT_TYPES[$type],
+			$error_message,
+			$error_description
+		);
 	}
 }
