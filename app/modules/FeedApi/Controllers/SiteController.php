@@ -51,11 +51,11 @@ class SiteController extends Controller
 		}
 
 		$this->businessLogManager->info(
-			BusinessLog::HTTP_TYPE_PUSH,
 			BusinessLog::USER_TYPE_MERCHANT, 
 			BusinessLog::ELEMENT_TYPE_SITE,
 			'Site creation request has been received.',
-			$apiRequest->getBody()
+			$apiRequest->getBody(),
+			BusinessLog::HTTP_TYPE_PUSH
 		);
 
 		return $this->apiResponseManager->createResponse(Response::HTTP_CREATED, ApiRequest::MSG_DESCRIPTIONS[ApiRequest::MSG_CREATE_SITE]);

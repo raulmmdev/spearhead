@@ -52,7 +52,8 @@ class ApiProvider extends ServiceProvider
         $this->app->bind('App\Business\Message\MessageManager', function ($app) {
             return new MessageManager(
                 $app->make('App\Business\FormRequest\FormRequestFactory'),
-                $app->make('App\Business\Site\SiteManager')
+                $app->make('App\Business\Site\SiteManager'),
+                $app->make('App\Business\BusinessLog\BusinessLogManager')
             );
         });
 

@@ -7,63 +7,63 @@ use App\Model\Document\BusinessLog;
 class BusinessLogManager
 {
 	public function info(
-		string $httpType,
 		string $userType,
 		string $elementType,
 		string $title,
 		string $message = '',
+		string $httpType = null,
 		int $siteId = null,
 		int $feedId = null
 	) {
 		$this->createLog(
 			BusinessLog::LEVEL_TYPE_INFO,
-			$httpType,
 			$userType,
 			$elementType,
 			$title,
 			$message,
+			$httpType,
 			$siteId,
 			$feedId
 		);
 	}	
 
 	public function error(
-		string $httpType,
 		string $userType,
 		string $elementType,
 		string $title,
 		string $message = '',
+		string $httpType = null,
 		int $siteId = null,
 		int $feedId = null
 	) {
 		$this->createLog(
 			BusinessLog::LEVEL_TYPE_ERROR,
-			$httpType,
 			$userType,
 			$elementType,
 			$title,
 			$message,
+			$httpType,
 			$siteId,
 			$feedId
 		);
 	}	
 
 	public function exception(
-		string $httpType,
 		string $userType,
 		string $elementType,
 		string $title,
 		string $message = '',
+		string $httpType = null,
 		int $siteId = null,
 		int $feedId = null
 	) {
 		$this->createLog(
 			BusinessLog::LEVEL_TYPE_EXCEPTION,
-			$httpType,
 			$userType,
 			$elementType,
 			$title,
 			$message,
+			$httpType,
 			$siteId,
 			$feedId
 		);
@@ -74,11 +74,11 @@ class BusinessLogManager
      */
     private function createLog(
     	string $levelType,
-		string $httpType,
 		string $userType,
 		string $elementType,
 		string $title,
 		string $message = '',
+		string $httpType = null,
 		int $siteId = null,
 		int $feedId = null
 	) {
