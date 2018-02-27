@@ -10,12 +10,11 @@ abstract class BaseRequest extends FormRequest
 	{
 		$validator = \Validator::make($this->all(), $this->rules());
 
-		if ($validator->passes()) {
-			$this->resolve();
-			//@TODO: we have to log the successful update/insert
-		} else {
+		if ($validator->fails()) {
 			die('ko, we change this later');
 		}
+
+		$this->resolve();
 	}
 
 	abstract protected function resolve();

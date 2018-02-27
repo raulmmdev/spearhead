@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Business\Api\Response\ApiResponseManager;
+use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\FormRequest\FormRequestFactory;
 use App\Business\Injector\Injector;
 use App\Business\Message\MessageManager;
@@ -53,6 +54,10 @@ class ApiProvider extends ServiceProvider
                 $app->make('App\Business\FormRequest\FormRequestFactory'),
                 $app->make('App\Business\Site\SiteManager')
             );
+        });
+
+        $this->app->bind('App\Business\BusinessLog\BusinessLogManager', function ($app) {
+            return new BusinessLogManager();
         });
     }
 }

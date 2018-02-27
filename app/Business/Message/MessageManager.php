@@ -34,7 +34,7 @@ class MessageManager
 			]);
 		} catch (\Exception $e) {
 			\Log::error($e->getMessage());
-			\Log::error($e->getTrace());
+			\Log::error($e->getTraceAsString());
 
 			return false;
 		}

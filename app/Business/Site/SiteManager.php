@@ -3,6 +3,7 @@ namespace App\Business\Site;
 
 use App\Http\Requests\Qwindo\SaveSite;
 use App\Model\Entity\Site;
+use App\Model\Document\BusinessLog;
 
 class SiteManager
 {
@@ -17,12 +18,12 @@ class SiteManager
         try {
     		$site = new Site();
     		$site->name = $request->name;
-
     		$site->save();
 
     		return $site;
     	} catch(\Exception $e) {
     		\Log::error($e->getMessage());
+            \Log::error($e->getTraceAsString());
     		return null;
     	}
     }
