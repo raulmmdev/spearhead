@@ -19,12 +19,14 @@ class FormRequestFactory
 	{
 		$className = self::CLASS_NAMES[$type];
 
+		//create the request, inject the managers
 		$request = new $className();
 		$request = $this->injector->inject($request);
 
+		//fill the instance with data
 		switch($type) {
 			case ApiRequest::MSG_CREATE_SITE:
-				$request['name'] = $values['name'];
+				isset($values['name']) && $request['name'] = $values['name'];
 				break;
 		}
 

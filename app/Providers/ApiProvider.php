@@ -32,21 +32,27 @@ class ApiProvider extends ServiceProvider
             return new SiteManager();
         });
 
-        $this->app->bind('App\Business\Injector\Injector', function ($app) {
-            return new Injector(new SiteManager());
-        });
-
-        $this->app->bind('App\Business\Message\MessageManager', function ($app) {
-            return new MessageManager(new FormRequestFactory(new Injector(new SiteManager())), new SiteManager());
-        });
-
         $this->app->bind('App\Business\Api\Response\ApiResponseManager', function ($app) {
             return new ApiResponseManager();
         });
 
+        $this->app->bind('App\Business\Injector\Injector', function ($app) {
+            return new Injector(
+                $app->make('App\Business\Site\SiteManager')
+            );
+        });
 
         $this->app->bind('App\Business\FormRequest\FormRequestFactory', function ($app) {
-            return new FormRequestFactory(new Injector(new SiteManager()));
+            return new FormRequestFactory(
+                $app->make('App\Business\Injector\Injector')
+            );
+        });
+
+        $this->app->bind('App\Business\Message\MessageManager', function ($app) {
+            return new MessageManager(
+                $app->make('App\Business\FormRequest\FormRequestFactory'),
+                $app->make('App\Business\Site\SiteManager')
+            );
         });
     }
 }
