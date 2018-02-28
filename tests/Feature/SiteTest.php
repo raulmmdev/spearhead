@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use \Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Modules\FeedApi\Controllers\SiteController;
@@ -9,33 +10,65 @@ use Tests\TestCase;
 
 class SiteTest extends TestCase
 {
-    /**
-     * create a 'create site' request to qwindo.
-     *
-     * @return void
-     */
-    public function testCreateSite()
-    {
-    	$faker = \Faker\Factory::create();
+	/**
+	 * Successfull case
+	 *
+	 * @return void
+	 */
+	public function testCreateSite() : void
+	{
+		$faker = \Faker\Factory::create();
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ];
+		$headers = [
+			'Accept' => 'application/json',
+			'Content-Type' => 'application/json',
+		];
 
-        $values = [
-            'name' => $faker->company
-        ];
+		$values = [
+			'name' => $faker->company
+		];
 
-        $response = $this
-            ->withHeaders($headers)
-            ->json('POST', '/api/site', $values);
+		$response = $this
+			->withHeaders($headers)
+			->json('POST', '/api/site', $values);
 
-        $response
-            ->assertStatus(201)
-            ->assertJson([
-                'type' => SiteController::RESPONSE_TYPES['createSite'],
-                'attributes' => [],
-            ]);
-    }
+		$response
+			->assertStatus(Response::HTTP_CREATED)
+			->assertJson([
+				'type' => SiteController::RESPONSE_TYPES['createSite'],
+				'attributes' => [],
+			]);
+	}
+
+	/**
+	 * Wrong case
+	 *
+	 * @return void
+	 */
+	public function testCreateSiteNoName() : void
+	{
+		$headers = [
+			'Accept' => 'application/json',
+			'Content-Type' => 'application/json',
+		];
+
+		$values = [
+			'name' => ''
+		];
+
+		$response = $this
+			->withHeaders($headers)
+			->json('POST', '/api/site', $values);
+
+		$response
+			->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+			->assertJson([
+				'message' => 'The given data was invalid.',
+				'errors' => [
+					'name' => [
+						'The name field is required.',
+					]
+				],
+			]);
+	}
 }
