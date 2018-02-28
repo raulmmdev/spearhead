@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\Consumers;
 
-use App\Business\Api\Request\ApiRequest;
 use App\Business\Message\MessageManager;
+use App\Http\Requests\Qwindo\SaveSiteRequest;
 use Illuminate\Console\Command;
 
 class SiteConsumer extends Command
@@ -50,6 +50,6 @@ class SiteConsumer extends Command
     {
         $asDaemon = $this->option('daemon');
 
-        $this->messageManager->consumeJobMessage(ApiRequest::MSG_CREATE_SITE, $asDaemon);
+        $this->messageManager->consumeJobMessage(SaveSiteRequest::QUEUE, $asDaemon);
     }
 }

@@ -2,9 +2,7 @@
 
 namespace App\Model\Document;
 
-use App\Business\Api\Request\ApiRequest;
-
-class BusinessLog extends \Moloquent 
+class BusinessLog extends \Moloquent
 {
 	const LEVEL_TYPE_INFO = 'INFO';
 	const LEVEL_TYPE_ERROR = 'ERROR';
@@ -23,7 +21,7 @@ class BusinessLog extends \Moloquent
 
 	//mappings
 	const BUSINESS_LOG_ELEMENT_TYPES = [
-		ApiRequest::MSG_CREATE_SITE => self::ELEMENT_TYPE_SITE,
+		\App\Http\Requests\Qwindo\SaveSiteRequest::QUEUE => self::ELEMENT_TYPE_SITE,
 	];
 
 	protected $collection = 'business_log';

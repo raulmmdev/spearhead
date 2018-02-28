@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Business\Api\Request\ApiRequest;
+use App\Http\Requests\Qwindo\SaveSiteRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -18,21 +18,21 @@ class MessageManagerTest extends TestCase
 		$this->messageManager = $this->app->make('App\Business\Message\MessageManager');
 	}
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testPublishCreateSiteMessage()
-    {
-    	$faker = \Faker\Factory::create();
+	/**
+	 * A basic test example.
+	 *
+	 * @return void
+	 */
+	public function testPublishCreateSiteMessage()
+	{
+		$faker = \Faker\Factory::create();
 
-    	$values = json_encode([
-    		'name' => $faker->company,
-    	]);
+		$values = [
+			'name' => $faker->company,
+		];
 
-        $result = $this->messageManager->produceJobMessage(ApiRequest::MSG_CREATE_SITE, $values);
+		$result = $this->messageManager->produceJobMessage(SaveSiteRequest::QUEUE, $values);
 
-        $this->assertTrue($result);
-    }
+		$this->assertTrue($result);
+	}
 }

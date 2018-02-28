@@ -1,26 +1,17 @@
 <?php
 namespace App\Business\Message;
 
-use \App\Business\Api\Request\ApiRequest;
 use \App\Business\BusinessLog\BusinessLogManager;
-use \App\Business\FormRequest\FormRequestFactory;
-use \App\Business\Site\SiteManager;
-use \App\Http\Requests\BaseRequest;
 use \App\Model\Document\BusinessLog;
+use \App\Business\Job\JobFactory;
 
 class MessageManager
 {
-	const QUEUES = [
-		ApiRequest::MSG_CREATE_SITE => 'site',
-	];
-
 	public function __construct(
-		FormRequestFactory $formRequestFactory,
-		SiteManager $siteManager,
+		JobFactory $jobFactory,
 		BusinessLogManager $businessLogManager
 	) {
-		$this->formRequestFactory = $formRequestFactory;
-		$this->siteManager = $siteManager;
+		$this->jobFactory = $jobFactory;
 		$this->businessLogManager = $businessLogManager;
 	}
 
@@ -29,13 +20,13 @@ class MessageManager
 	 *
 	 * @return bool
 	 */
-	public function produceJobMessage(string $type, string $body): bool
+	public function produceJobMessage(string $queue, array $values): bool
 	{
 		try {
 			//@TODO we need to wrap these AMQP calls into a QueueHandler
 			//so we decouple the vendor from the source code
-			\Amqp::publish('', $body, [
-				'queue' => self::QUEUES[$type]
+			\Amqp::publish('', json_encode($values), [
+				'queue' => $queue
 			]);
 
 			return true;
@@ -52,23 +43,18 @@ class MessageManager
 	 *
 	 * @return
 	 */
-	public function consumeJobMessage(string $type, bool $asDaemon)
+	public function consumeJobMessage(string $queue, bool $asDaemon)
 	{
-		\Amqp::consume(self::QUEUES[$type], function ($message, $resolver) use ($type, $asDaemon) {
+		\Amqp::consume($queue, function($message, $resolver) use ($queue, $asDaemon) {
 			//unserialize
-			$body = json_decode($message->body, true);
+			$values = json_decode($message->body, true);
 
-			//validate
-			$request = $this->formRequestFactory->create($type, $body);
+			$job = $this->jobFactory->create($queue, $values);
 
-			//no errors? resolve
-			$object = null;
-			if (empty($request->getErrors())) {
-				$object = $request->resolveIfValid();
-			}
+			$object = $job->resolve();
 
 			//log accordingly
-			$this->reportToBusinessLogger($request, $type, $body, $object);
+			$this->reportToBusinessLogger($queue, $values, $object);
 
 			//next message
 			$resolver->acknowledge($message);
@@ -80,38 +66,38 @@ class MessageManager
 		});
 	}
 
-	private function reportToBusinessLogger(BaseRequest $request, string $type, array $body, $object = null)
+	private function reportToBusinessLogger(string $queue, array $values, $object = null)
 	{
 		$console = new \Symfony\Component\Console\Output\ConsoleOutput();
 
-		if (empty($request->getErrors()) && !is_null($object)) {
+		if (!is_null($object)) {
 			$businessLogType = BusinessLog::LEVEL_TYPE_INFO;
 
-			$messageTitle = "Successfully processed a message [ {$type} ]";
+			$messageTitle = "Successfully processed a message on queue [ {$queue} ]";
 
 			$messageBody = json_encode([
-				'request' => $body,
+				'request' => $values,
 				'response' => $object,
 			]);
 
-			$console->writeln("<info>Successfully processed a message [ {$type} ]</info>");
+			$console->writeln("<info>Successfully processed a message on queue [ {$queue} ]</info>");
 		} else {
 			$businessLogType = BusinessLog::LEVEL_TYPE_ERROR;
 
-			$messageTitle = "Error processing a message [ {$type} ]";
+			$messageTitle = "Error processing a message [ {$queue} ]";
 
 			$messageBody = json_encode([
-				'request' => $body,
+				'request' => $values,
 				'errors' => $request->getErrors(),
 			]);
 
-			$console->writeln("<error>Error processing a message [ {$type} ]</error>");
+			$console->writeln("<error>Error processing a message [ {$queue} ]</error>");
 		}
 
 		$this->businessLogManager->log(
 			$businessLogType,
 			BusinessLog::USER_TYPE_MERCHANT,
-			BusinessLog::BUSINESS_LOG_ELEMENT_TYPES[$type],
+			BusinessLog::BUSINESS_LOG_ELEMENT_TYPES[$queue],
 			$messageTitle,
 			$messageBody
 		);

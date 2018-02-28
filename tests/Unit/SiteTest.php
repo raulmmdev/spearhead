@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Business\Job\CreateSiteJob;
 use App\Business\Site\SiteManager;
-use App\Http\Requests\Qwindo\SaveSiteRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -28,12 +28,12 @@ class SiteTest extends TestCase
 	{
 		$faker = \Faker\Factory::create();
 
-		$request = new SaveSiteRequest();
-		$request->setSiteManager($this->siteManager);
+		$saveSiteJob = new CreateSiteJob();
+		$saveSiteJob->setSiteManager($this->siteManager);
 
-		$request['name'] = $faker->company;
+		$saveSiteJob->data['name'] = $faker->company;
 
-		$site = $this->siteManager->createSiteFromRequest($request);
+		$site = $this->siteManager->createFromJob($saveSiteJob);
 
 		$this->assertNotNull($site);
 	}
@@ -45,10 +45,10 @@ class SiteTest extends TestCase
 	 */
 	public function testSiteCreationMissingData()
 	{
-		$request = new SaveSiteRequest();
-		$request->setSiteManager($this->siteManager);
+		$saveSiteJob = new CreateSiteJob();
+		$saveSiteJob->setSiteManager($this->siteManager);
 
-		$site = $this->siteManager->createSiteFromRequest($request);
+		$site = $this->siteManager->createFromJob($saveSiteJob);
 
 		$this->assertNull($site);
 	}

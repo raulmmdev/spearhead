@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Qwindo\Interfaces;
+namespace App\Business\Job\Interfaces;
 
 use App\Business\Site\SiteManager;
 

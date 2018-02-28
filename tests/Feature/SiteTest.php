@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Business\Api\Request\ApiRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Modules\FeedApi\Controllers\SiteController;
 use Tests\TestCase;
 
 class SiteTest extends TestCase
@@ -34,7 +34,7 @@ class SiteTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJson([
-                'type' => ApiRequest::MSG_DESCRIPTIONS[ApiRequest::MSG_CREATE_SITE],
+                'type' => SiteController::RESPONSE_TYPES['createSite'],
                 'attributes' => [],
             ]);
     }

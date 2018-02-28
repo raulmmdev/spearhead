@@ -3,18 +3,20 @@
 namespace Modules\FeedApi\Controllers;
 
 use \Symfony\Component\HttpFoundation\Response;
-use App\Business\Api\Request\ApiRequest;
 use App\Business\Api\Response\ApiResponseManager;
 use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Error\ErrorCode;
 use App\Business\Message\MessageManager;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ApiRequestResource;
+use App\Http\Requests\Qwindo\SaveSiteRequest;
 use App\Model\Document\BusinessLog;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
+	const RESPONSE_TYPES = [
+		'createSite' => 'create_site_request',
+	];
 
 	private $messageManager;
 	private $apiResponseManager;
@@ -36,10 +38,9 @@ class SiteController extends Controller
      * @param Request $request
      * @return SiteResource
      */
-    public function createSite(Request $request)
+    public function createSite(SaveSiteRequest $request)
 	{
-		$apiRequest = new ApiRequest($request, $this->messageManager);
-		$result = $apiRequest->resolve(ApiRequest::MSG_CREATE_SITE);
+		$result = $request->resolve();
 
 		if (!$result) {
 			return $this
@@ -54,10 +55,10 @@ class SiteController extends Controller
 			BusinessLog::USER_TYPE_MERCHANT,
 			BusinessLog::ELEMENT_TYPE_SITE,
 			'Site creation request has been received.',
-			$apiRequest->getBody(),
+			json_encode($request->all()),
 			BusinessLog::HTTP_TYPE_PUSH
 		);
 
-		return $this->apiResponseManager->createResponse(Response::HTTP_CREATED, ApiRequest::MSG_DESCRIPTIONS[ApiRequest::MSG_CREATE_SITE]);
+		return $this->apiResponseManager->createResponse(Response::HTTP_CREATED, self::RESPONSE_TYPES[__FUNCTION__]);
     }
 }

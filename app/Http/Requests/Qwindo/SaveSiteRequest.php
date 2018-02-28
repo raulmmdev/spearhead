@@ -2,14 +2,20 @@
 
 namespace App\Http\Requests\Qwindo;
 
-use App\Business\Site\SiteManager;
-use App\Http\Requests\BaseRequest;
-use App\Http\Requests\Qwindo\Interfaces\SiteManagerAwareInterface;
+use App\Business\Api\Interfaces\ResolvableInterface;
+use App\Business\Message\MessageManager;
+use Illuminate\Foundation\Http\FormRequest;
 
-class SaveSiteRequest extends BaseRequest implements SiteManagerAwareInterface
+class SaveSiteRequest extends FormRequest implements ResolvableInterface
 {
+    const QUEUE = 'site';
 
-    protected $siteManager;
+    protected $messageManager;
+
+    public function __construct(MessageManager $messageManager)
+    {
+        $this->messageManager = $messageManager;
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -33,18 +39,8 @@ class SaveSiteRequest extends BaseRequest implements SiteManagerAwareInterface
         ];
     }
 
-    public function setSiteManager(SiteManager $siteManager)
+    public function resolve()
     {
-        $this->siteManager = $siteManager;
-    }
-
-    public function getSiteManager(): SiteManager
-    {
-        return $this->siteManager;
-    }
-
-    protected function resolve()
-    {
-        return $this->siteManager->createSiteFromRequest($this);
+        return $this->messageManager->produceJobMessage(self::QUEUE, $this->all());
     }
 }

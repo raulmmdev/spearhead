@@ -1,9 +1,9 @@
 <?php
 namespace App\Business\Injector;
 
+use App\Business\Job\BaseJob;
+use App\Business\Job\Interfaces\SiteManagerAwareInterface;
 use App\Business\Site\SiteManager;
-use App\Http\Requests\BaseRequest;
-use App\Http\Requests\Qwindo\Interfaces\SiteManagerAwareInterface;
 
 class Injector
 {
@@ -12,12 +12,12 @@ class Injector
 		$this->siteManager = $siteManager;
 	}
 
-	public function inject(BaseRequest $request)
+	public function inject(BaseJob $job)
 	{
-		if ($request instanceof SiteManagerAwareInterface) {
-			$request->setSiteManager($this->siteManager);
+		if ($job instanceof SiteManagerAwareInterface) {
+			$job->setSiteManager($this->siteManager);
 		}
 
-		return $request;
+		return $job;
 	}
 }
