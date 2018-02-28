@@ -24,6 +24,7 @@ class SiteManager
     	} catch(\Exception $e) {
     		\Log::error($e->getMessage());
             \Log::error($e->getTraceAsString());
+
     		return null;
     	}
     }

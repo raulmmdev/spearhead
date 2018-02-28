@@ -34,17 +34,19 @@ class MessageManager
 	public function produceJobMessage(string $type, string $body): bool
 	{
 		try {
+			//@TODO we need to wrap these AMQP calls into a QueueHandler
+			//so we decouple the vendor from the source code
 			\Amqp::publish('', $body, [
 				'queue' => self::QUEUES[$type]
 			]);
+
+			return true;
 		} catch (\Exception $e) {
 			\Log::error($e->getMessage());
 			\Log::error($e->getTraceAsString());
 
 			return false;
 		}
-
-		return true;
 	}
 
 	/**
@@ -84,22 +86,24 @@ class MessageManager
 	{
 		$console = new \Symfony\Component\Console\Output\ConsoleOutput();
 
-		if (empty($request->getErrors())) {
+		if (empty($request->getErrors()) && !is_null($object)) {
 			$businessLogType = BusinessLog::LEVEL_TYPE_INFO;
-			$error_message = "Successfully processed a message [ {$type} ]";
 
-			$error_description = json_encode([
-				'body' => $body,
+			$messageTitle = "Successfully processed a message [ {$type} ]";
+
+			$messageBody = json_encode([
+				'request' => $body,
 				'response' => $object,
 			]);
 
 			$console->writeln("<info>Successfully processed a message [ {$type} ]</info>");
 		} else {
 			$businessLogType = BusinessLog::LEVEL_TYPE_ERROR;
-			$error_message = "Error processing a message [ {$type} ]";
 
-			$error_description = json_encode([
-				'body' => $body,
+			$messageTitle = "Error processing a message [ {$type} ]";
+
+			$messageBody = json_encode([
+				'request' => $body,
 				'errors' => $request->getErrors(),
 			]);
 
@@ -110,8 +114,8 @@ class MessageManager
 			$businessLogType,
 			BusinessLog::USER_TYPE_MERCHANT,
 			BusinessLog::BUSINESS_LOG_ELEMENT_TYPES[$type],
-			$error_message,
-			$error_description
+			$messageTitle,
+			$messageBody
 		);
 	}
 }

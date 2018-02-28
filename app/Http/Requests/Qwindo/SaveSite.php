@@ -33,13 +33,13 @@ class SaveSite extends BaseRequest implements SiteManagerAwareInterface
         ];
     }
 
-    protected function resolve()
-    {
-        return $this->siteManager->createSiteFromRequest($this);
-    }
-
     public function setSiteManager(SiteManager $siteManager)
     {
         $this->siteManager = $siteManager;
+    }
+
+    protected function resolve()
+    {
+        return $this->siteManager->createSiteFromRequest($this);
     }
 }
