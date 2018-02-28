@@ -8,8 +8,9 @@ use App\Business\Message\MessageManager;
 
 class ApiRequest implements ResolvableInterface
 {
-
+	// Messages to RabbitMQ
 	const MSG_CREATE_SITE  = 'CREATE_SITE';
+
 	const MSG_DESCRIPTIONS = [
 		self::MSG_CREATE_SITE => 'create_site_request',
 	];

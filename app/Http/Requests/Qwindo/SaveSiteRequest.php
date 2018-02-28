@@ -6,7 +6,7 @@ use App\Business\Site\SiteManager;
 use App\Http\Requests\BaseRequest;
 use App\Http\Requests\Qwindo\Interfaces\SiteManagerAwareInterface;
 
-class SaveSite extends BaseRequest implements SiteManagerAwareInterface
+class SaveSiteRequest extends BaseRequest implements SiteManagerAwareInterface
 {
 
     protected $siteManager;
@@ -36,6 +36,11 @@ class SaveSite extends BaseRequest implements SiteManagerAwareInterface
     public function setSiteManager(SiteManager $siteManager)
     {
         $this->siteManager = $siteManager;
+    }
+
+    public function getSiteManager(): SiteManager
+    {
+        return $this->siteManager;
     }
 
     protected function resolve()

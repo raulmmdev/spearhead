@@ -1,7 +1,7 @@
 <?php
 namespace App\Business\Site;
 
-use App\Http\Requests\Qwindo\SaveSite;
+use App\Http\Requests\Qwindo\SaveSiteRequest;
 use App\Model\Entity\Site;
 use App\Model\Document\BusinessLog;
 
@@ -10,10 +10,10 @@ class SiteManager
 	/**
      * Create a new site from a Request.
      *
-     * @param  SaveSite  $request
+     * @param SaveSiteRequest $request
      * @return Site
      */
-    public function createSiteFromRequest(SaveSite $request)
+    public function createSiteFromRequest(SaveSiteRequest $request)
     {
         try {
     		$site = new Site();

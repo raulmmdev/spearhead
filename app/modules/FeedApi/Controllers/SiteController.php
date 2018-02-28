@@ -46,12 +46,12 @@ class SiteController extends Controller
 				->apiResponseManager
 				->createErrorResponse(
 					Response::HTTP_INTERNAL_SERVER_ERROR,
-					ErrorCode::ERROR_SAVE_MESSAGE
+					ErrorCode::ERROR_CODE_SAVE_MESSAGE
 				);
 		}
 
 		$this->businessLogManager->info(
-			BusinessLog::USER_TYPE_MERCHANT, 
+			BusinessLog::USER_TYPE_MERCHANT,
 			BusinessLog::ELEMENT_TYPE_SITE,
 			'Site creation request has been received.',
 			$apiRequest->getBody(),

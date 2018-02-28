@@ -12,7 +12,7 @@ class FormRequestFactory
 	private $request;
 
 	const CLASS_NAMES = [
-		ApiRequest::MSG_CREATE_SITE => 'App\Http\Requests\Qwindo\SaveSite',
+		ApiRequest::MSG_CREATE_SITE => 'App\Http\Requests\Qwindo\SaveSiteRequest',
 	];
 
 	public function __construct(Injector $injector, BusinessLogManager $businessLogManager)
