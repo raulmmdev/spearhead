@@ -8,21 +8,46 @@ use App\Business\Injector\Injector;
 use App\Http\Requests\Qwindo\SaveSiteRequest;
 use App\Model\Document\BusinessLog;
 
+/**
+ * JobFactory
+ */
 class JobFactory
 {
-	private $job;
-
 	const CLASS_NAMES = [
 		SaveSiteRequest::QUEUE => 'App\Business\Job\CreateSiteJob',
 	];
 
+	/**
+	 * Job entity
+	 *
+	 * @access private
+	 * @var BaseJob
+	 */
+	private $job;
+
+	/**
+	 * Object constructor
+	 *
+	 * @access public
+	 * @param Injector           $injector
+	 * @param BusinessLogManager $businessLogManager
+	 * @return void
+	 */
 	public function __construct(Injector $injector, BusinessLogManager $businessLogManager)
 	{
 		$this->injector = $injector;
 		$this->businessLogManager = $businessLogManager;
 	}
 
-	public function create(string $queue, array $values)
+	/**
+	 * Create an instance of specific job
+	 *
+	 * @access public
+	 * @param  string $queue
+	 * @param  array  $values
+	 * @return BaseJob
+	 */
+	public function create(string $queue, array $values) : BaseJob
 	{
 		$className = self::CLASS_NAMES[$queue];
 
@@ -63,7 +88,14 @@ class JobFactory
 		return $this->job;
 	}
 
-	private function fillCreateSiteJob(array $values)
+	/**
+	 * Fills the CreateSiteJob instance data container
+	 *
+	 * @access private
+	 * @param  array  $values
+	 * @return void
+	 */
+	private function fillCreateSiteJob(array $values) : void
 	{
 		isset($values['name']) && $this->job->data['name'] = $values['name'];
 	}

@@ -5,11 +5,15 @@ namespace App\Business\Site;
 use App\Business\Job\CreateSiteJob;
 use App\Model\Entity\Site;
 
+/**
+ * SiteManager
+ */
 class SiteManager
 {
 	/**
 	 * Create a new site from a job.
 	 *
+	 * @access public
 	 * @param CreateSiteJob $job
 	 * @return Site | null
 	 */

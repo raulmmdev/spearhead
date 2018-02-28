@@ -1,26 +1,37 @@
 <?php
+
 namespace App\Business\Message;
 
 use \App\Business\BusinessLog\BusinessLogManager;
 use \App\Model\Document\BusinessLog;
 use \App\Business\Job\JobFactory;
 
+/**
+ * MessageManager
+ */
 class MessageManager
 {
-	public function __construct(
-		JobFactory $jobFactory,
-		BusinessLogManager $businessLogManager
-	) {
+	/**
+	 * Object constructor
+	 *
+	 * @access public
+	 * @param JobFactory         $jobFactory
+	 * @param BusinessLogManager $businessLogManager
+	 */
+	public function __construct(JobFactory $jobFactory, BusinessLogManager $businessLogManager) {
 		$this->jobFactory = $jobFactory;
 		$this->businessLogManager = $businessLogManager;
 	}
 
 	/**
-	 * Create a new message on the message queue.
+	 * Produces a messages into the message queue system
 	 *
+	 * @access public
+	 * @param  string $queue
+	 * @param  array  $values
 	 * @return bool
 	 */
-	public function produceJobMessage(string $queue, array $values): bool
+	public function produceJobMessage(string $queue, array $values) : bool
 	{
 		try {
 			//@TODO we need to wrap these AMQP calls into a QueueHandler
@@ -39,11 +50,14 @@ class MessageManager
 	}
 
 	/**
-	 * consume a message from the message queue.
+	 * Consume messages from the message queue system
 	 *
-	 * @return
+	 * @access public
+	 * @param  string $queue
+	 * @param  bool   $asDaemon
+	 * @return void
 	 */
-	public function consumeJobMessage(string $queue, bool $asDaemon)
+	public function consumeJobMessage(string $queue, bool $asDaemon) : void
 	{
 		\Amqp::consume($queue, function($message, $resolver) use ($queue, $asDaemon) {
 			//unserialize
@@ -66,7 +80,16 @@ class MessageManager
 		});
 	}
 
-	private function reportToBusinessLogger(string $queue, array $values, $object = null)
+	/**
+	 * Produces a BusinessLog message
+	 *
+	 * @access private
+	 * @param  string $queue
+	 * @param  array  $values
+	 * @param  object $object (Optional. Default: null)
+	 * @return void
+	 */
+	private function reportToBusinessLogger(string $queue, array $values, $object = null) : void
 	{
 		$console = new \Symfony\Component\Console\Output\ConsoleOutput();
 

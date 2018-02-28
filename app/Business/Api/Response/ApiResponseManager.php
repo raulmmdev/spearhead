@@ -5,14 +5,19 @@ namespace App\Business\Api\Response;
 use App\Business\Error\ErrorCode;
 use Illuminate\Http\JsonResponse;
 
-class ApiResponseManager
-{
+/**
+ * ApiResponseManager
+ */
+class ApiResponseManager {
 	/**
-	 * Create a new error response.
+	 * createResponse
 	 *
-	 * @return bool
+	 * @param  int    $httpStatusCode
+	 * @param  string $type
+	 * @param  array  $attributes
+	 * @return JsonResponse
 	 */
-	public function createResponse(int $httpStatusCode, string $type, array $attributes = []) : JsonResponse
+	public function createResponse(int $httpStatusCode, string $type, array $attributes = []): JsonResponse
 	{
 		$response = [
 			'type' => $type,
@@ -23,17 +28,19 @@ class ApiResponseManager
 	}
 
 	/**
-	 * Create a new error response.
+	 * createErrorResponse
 	 *
-	 * @return bool
+	 * @param  int    $httpStatusCode
+	 * @param  string $errorCode
+	 * @return JsonResponse
 	 */
-	public function createErrorResponse(int $httpStatusCode, string $errorCode) : JsonResponse
+	public function createErrorResponse(int $httpStatusCode, string $errorCode): JsonResponse
 	{
 		$response = [
 			'errors' => [
 				'code' => $errorCode,
 				'status' => $httpStatusCode,
-				'title' => ErrorCode::ERROR_MESSAGES[$errorCode]
+				'title' => ErrorCode::ERROR_MESSAGES[$errorCode],
 			],
 		];
 

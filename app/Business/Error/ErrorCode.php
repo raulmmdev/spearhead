@@ -1,6 +1,10 @@
 <?php
+
 namespace App\Business\Error;
 
+/**
+ * ErrorCode
+ */
 class ErrorCode
 {
     const ERROR_CODE_SAVE_MESSAGE = 'QWMSG0001';
