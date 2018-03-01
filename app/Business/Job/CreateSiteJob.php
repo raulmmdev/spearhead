@@ -5,6 +5,7 @@ namespace App\Business\Job;
 use App\Business\Job\BaseJob;
 use App\Business\Job\Interfaces\SiteManagerAwareInterface;
 use App\Business\Site\SiteManager;
+use App\Model\Entity\Site;
 
 /**
  * CreateSiteJob
