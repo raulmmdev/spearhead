@@ -7,7 +7,8 @@ use App\Business\Site\SiteManager;
 /**
  * SiteManagerAwareInterface
  */
-interface SiteManagerAwareInterface {
-	public function setSiteManager(SiteManager $siteManager);
-	public function getSiteManager(): SiteManager;
+interface SiteManagerAwareInterface
+{
+    public function setSiteManager(SiteManager $siteManager);
+    public function getSiteManager(): SiteManager;
 }

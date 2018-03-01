@@ -4,7 +4,7 @@ namespace App\Modules;
 /**
  * ModulesProvider
  */
-class ModulesProvider extends  \Illuminate\Support\ServiceProvider
+class ModulesProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
      * boot
@@ -16,10 +16,10 @@ class ModulesProvider extends  \Illuminate\Support\ServiceProvider
     {
         $modules = config("module.modules");
         while (list(,$module) = each($modules)) {
-            if(file_exists(__DIR__.'/'.$module.'/routes.php')) {
+            if (file_exists(__DIR__.'/'.$module.'/routes.php')) {
                 include __DIR__.'/'.$module.'/routes.php';
             }
-            if(is_dir(__DIR__.'/'.$module.'/Views')) {
+            if (is_dir(__DIR__.'/'.$module.'/Views')) {
                 $this->loadViewsFrom(__DIR__.'/'.$module.'/Views', $module);
             }
         }
@@ -28,5 +28,7 @@ class ModulesProvider extends  \Illuminate\Support\ServiceProvider
     /**
      * register
      */
-    public function register() {}
+    public function register()
+    {
+    }
 }

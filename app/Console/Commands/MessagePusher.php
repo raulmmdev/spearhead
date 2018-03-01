@@ -78,7 +78,7 @@ class MessagePusher extends Command
                 } else {
                     $this->error('[ '. $i .' ] Message with values [ '. json_encode($values) .' ]... Fail');
                 }
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->error('[ '. $i .' ] Message with values [ '. json_encode($values) .' ]... Exception');
                 $this->error($e->getMessage());
             }

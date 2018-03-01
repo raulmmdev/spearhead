@@ -8,7 +8,7 @@ use App\Business\Demo\DemoService;
 class DemoController extends Controller
 {
 
-	/**
+    /**
      * The demo service.
      *
      * @var demoService
@@ -27,8 +27,8 @@ class DemoController extends Controller
     }
 
 
-	public function index()
-	{
+    public function index()
+    {
         echo("Hola mundo");
         \Log::info($this->demoService->serviceMethod());
         //throw new \Exception("This is just a test exception!");

@@ -60,5 +60,3 @@ class AssignWorkers extends Command
         $this->info("[ {$workers} ] successfully created");
     }
 }
-
-

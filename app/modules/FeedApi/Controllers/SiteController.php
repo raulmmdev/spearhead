@@ -17,46 +17,46 @@ use Illuminate\Http\Request;
  */
 class SiteController extends Controller
 {
-	const RESPONSE_TYPES = [
-		'createSite' => 'create_site_request',
-	];
+    const RESPONSE_TYPES = [
+        'createSite' => 'create_site_request',
+    ];
 
-	/**
-	 * $messageManager
-	 * @access private
-	 * @var MessageManager
-	 */
-	private $messageManager;
+    /**
+     * $messageManager
+     * @access private
+     * @var MessageManager
+     */
+    private $messageManager;
 
-	/**
-	 * $apiResponseManager
-	 * @access private
-	 * @var ApiResponseManager
-	 */
-	private $apiResponseManager;
+    /**
+     * $apiResponseManager
+     * @access private
+     * @var ApiResponseManager
+     */
+    private $apiResponseManager;
 
-	/**
-	 * $businessLogManager
-	 * @access private
-	 * @var BusinessLogManager
-	 */
-	private $businessLogManager;
+    /**
+     * $businessLogManager
+     * @access private
+     * @var BusinessLogManager
+     */
+    private $businessLogManager;
 
-	/**
-	 * @access public
-	 * @param MessageManager
-	 * @param ApiResponseManager
-	 * @param BusinessLogManager
-	 */
-	public function __construct(
-		MessageManager $messageManager,
-		ApiResponseManager $apiResponseManager,
-		BusinessLogManager $businessLogManager
-	) {
-		$this->messageManager = $messageManager;
-		$this->apiResponseManager = $apiResponseManager;
-		$this->businessLogManager = $businessLogManager;
-	}
+    /**
+     * @access public
+     * @param MessageManager
+     * @param ApiResponseManager
+     * @param BusinessLogManager
+     */
+    public function __construct(
+        MessageManager $messageManager,
+        ApiResponseManager $apiResponseManager,
+        BusinessLogManager $businessLogManager
+    ) {
+        $this->messageManager = $messageManager;
+        $this->apiResponseManager = $apiResponseManager;
+        $this->businessLogManager = $businessLogManager;
+    }
 
     /**
      * Create a new site job from a Request.
@@ -66,31 +66,31 @@ class SiteController extends Controller
      * @return JsonResponse
      */
     public function createSite(SaveSiteRequest $request): \Illuminate\Http\JsonResponse
-	{
-		$result = $request->resolve();
+    {
+        $result = $request->resolve();
 
-		if (!$result) {
-			return $this
-				->apiResponseManager
-				->createErrorResponse(
-					Response::HTTP_INTERNAL_SERVER_ERROR,
-					ErrorCode::ERROR_CODE_SAVE_MESSAGE
-				);
-		}
+        if (!$result) {
+            return $this
+                ->apiResponseManager
+                ->createErrorResponse(
+                    Response::HTTP_INTERNAL_SERVER_ERROR,
+                    ErrorCode::ERROR_CODE_SAVE_MESSAGE
+                );
+        }
 
-		$this->businessLogManager->info(
-			BusinessLog::USER_TYPE_MERCHANT,
-			BusinessLog::ELEMENT_TYPE_SITE,
-			'Site creation request has been received.',
-			json_encode($request->all()),
-			BusinessLog::HTTP_TYPE_PUSH
-		);
+        $this->businessLogManager->info(
+            BusinessLog::USER_TYPE_MERCHANT,
+            BusinessLog::ELEMENT_TYPE_SITE,
+            'Site creation request has been received.',
+            json_encode($request->all()),
+            BusinessLog::HTTP_TYPE_PUSH
+        );
 
-		return $this
-			->apiResponseManager
-			->createResponse(
-				Response::HTTP_CREATED,
-				self::RESPONSE_TYPES[__FUNCTION__]
-			);
+        return $this
+            ->apiResponseManager
+            ->createResponse(
+                Response::HTTP_CREATED,
+                self::RESPONSE_TYPES[__FUNCTION__]
+            );
     }
 }
