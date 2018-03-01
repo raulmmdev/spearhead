@@ -4,11 +4,15 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * AssignWorkers
+ */
 class AssignWorkers extends Command
 {
     /**
      * The name and signature of the console command.
      *
+     * @access protected
      * @var string
      */
     protected $signature = 'consumer:assign-workers
@@ -18,6 +22,7 @@ class AssignWorkers extends Command
     /**
      * The console command description.
      *
+     * @access protected
      * @var string
      */
     protected $description = 'Create workers for a specified queue';
@@ -25,6 +30,7 @@ class AssignWorkers extends Command
     /**
      * Create a new command instance.
      *
+     * @access public
      * @return void
      */
     public function __construct()
@@ -35,9 +41,10 @@ class AssignWorkers extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @access public
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $queue = $this->argument('queue');
         $workers = (int) $this->argument('workers');

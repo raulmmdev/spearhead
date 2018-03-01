@@ -6,11 +6,15 @@ use App\Business\Message\MessageManager;
 use App\Http\Requests\Qwindo\SaveSiteRequest;
 use Illuminate\Console\Command;
 
+/**
+ * SiteConsumer
+ */
 class SiteConsumer extends Command
 {
     /**
      * The name and signature of the console command.
      *
+     * @access protected
      * @var string
      */
     protected $signature = 'consumer:site {--daemon}';
@@ -18,6 +22,7 @@ class SiteConsumer extends Command
     /**
      * The console command description.
      *
+     * @access protected
      * @var string
      */
     protected $description = 'Read message from site queue and create sites accordingly';
@@ -25,6 +30,7 @@ class SiteConsumer extends Command
     /**
      * The console command description.
      *
+     * @access protected
      * @var MessageManager
      */
     protected $messageManager;
@@ -44,9 +50,10 @@ class SiteConsumer extends Command
     /**
      * Execute the console command.
      *
+     * @access public
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $asDaemon = $this->option('daemon');
 

@@ -1,9 +1,18 @@
-<?php 
+<?php
 namespace App\Modules;
 
+/**
+ * ModulesProvider
+ */
 class ModulesProvider extends  \Illuminate\Support\ServiceProvider
 {
-    public function boot()
+    /**
+     * boot
+     *
+     * @access public
+     * @return void
+     */
+    public function boot(): void
     {
         $modules = config("module.modules");
         while (list(,$module) = each($modules)) {
@@ -16,5 +25,8 @@ class ModulesProvider extends  \Illuminate\Support\ServiceProvider
         }
     }
 
+    /**
+     * register
+     */
     public function register() {}
 }

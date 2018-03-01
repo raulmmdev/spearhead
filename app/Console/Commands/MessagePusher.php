@@ -8,11 +8,15 @@ use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Testing\WithFaker;
 
+/**
+ * MessagePusher
+ */
 class MessagePusher extends Command
 {
     /**
      * The name and signature of the console command.
      *
+     * @access protected
      * @var string
      */
     protected $signature = 'message:push
@@ -23,13 +27,15 @@ class MessagePusher extends Command
     /**
      * The console command description.
      *
+     * @access protected
      * @var string
      */
     protected $description = 'Pushes messages into the Message Queue';
 
     /**
-     * Create a new command instance.
+     * Create a new command instance
      *
+     * @access public
      * @return void
      */
     public function __construct()
@@ -40,9 +46,10 @@ class MessagePusher extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @access public
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $queue = $this->argument('queue');
         $number = (int) $this->argument('number');
@@ -80,7 +87,14 @@ class MessagePusher extends Command
         }
     }
 
-    private function fillRequest(string $queue)
+    /**
+     * Fill the request data
+     *
+     * @access private
+     * @param  string $queue
+     * @return array
+     */
+    private function fillRequest(string $queue): array
     {
         $faker = \Faker\Factory::create();
 

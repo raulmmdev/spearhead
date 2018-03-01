@@ -12,16 +12,42 @@ use App\Http\Requests\Qwindo\SaveSiteRequest;
 use App\Model\Document\BusinessLog;
 use Illuminate\Http\Request;
 
+/**
+ * SiteController
+ */
 class SiteController extends Controller
 {
 	const RESPONSE_TYPES = [
 		'createSite' => 'create_site_request',
 	];
 
+	/**
+	 * $messageManager
+	 * @access private
+	 * @var MessageManager
+	 */
 	private $messageManager;
+
+	/**
+	 * $apiResponseManager
+	 * @access private
+	 * @var ApiResponseManager
+	 */
 	private $apiResponseManager;
+
+	/**
+	 * $businessLogManager
+	 * @access private
+	 * @var BusinessLogManager
+	 */
 	private $businessLogManager;
 
+	/**
+	 * @access public
+	 * @param MessageManager
+	 * @param ApiResponseManager
+	 * @param BusinessLogManager
+	 */
 	public function __construct(
 		MessageManager $messageManager,
 		ApiResponseManager $apiResponseManager,
@@ -33,12 +59,13 @@ class SiteController extends Controller
 	}
 
     /**
-     * Create a new site from a Request.
+     * Create a new site job from a Request.
      *
-     * @param Request $request
-     * @return SiteResource
+     * @access public
+     * @param SaveSiteRequest $request
+     * @return JsonResponse
      */
-    public function createSite(SaveSiteRequest $request)
+    public function createSite(SaveSiteRequest $request): \Illuminate\Http\JsonResponse
 	{
 		$result = $request->resolve();
 
@@ -59,6 +86,11 @@ class SiteController extends Controller
 			BusinessLog::HTTP_TYPE_PUSH
 		);
 
-		return $this->apiResponseManager->createResponse(Response::HTTP_CREATED, self::RESPONSE_TYPES[__FUNCTION__]);
+		return $this
+			->apiResponseManager
+			->createResponse(
+				Response::HTTP_CREATED,
+				self::RESPONSE_TYPES[__FUNCTION__]
+			);
     }
 }

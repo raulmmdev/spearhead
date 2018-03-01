@@ -17,8 +17,11 @@ class ApiResponseManager {
 	 * @param  array  $attributes
 	 * @return JsonResponse
 	 */
-	public function createResponse(int $httpStatusCode, string $type, array $attributes = []): JsonResponse
-	{
+	public function createResponse(
+		int $httpStatusCode,
+		string $type,
+		array $attributes = []
+	): JsonResponse {
 		$response = [
 			'type' => $type,
 			'attributes' => $attributes,

@@ -6,12 +6,22 @@ use App\Business\Api\Interfaces\ResolvableInterface;
 use App\Business\Message\MessageManager;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * SaveSiteRequest
+ */
 class SaveSiteRequest extends FormRequest implements ResolvableInterface
 {
     const QUEUE = 'site';
 
+    /**
+     * @access protected
+     * @var $messageManager
+     */
     protected $messageManager;
 
+    /**
+     * @param MessageManager
+     */
     public function __construct(MessageManager $messageManager)
     {
         $this->messageManager = $messageManager;
@@ -20,9 +30,10 @@ class SaveSiteRequest extends FormRequest implements ResolvableInterface
     /**
      * Determine if the user is authorized to make this request.
      *
+     * @access public
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -30,6 +41,7 @@ class SaveSiteRequest extends FormRequest implements ResolvableInterface
     /**
      * Get the validation rules that apply to the request.
      *
+     * @access public
      * @return array
      */
     public function rules(): array
@@ -39,7 +51,11 @@ class SaveSiteRequest extends FormRequest implements ResolvableInterface
         ];
     }
 
-    public function resolve()
+    /**
+     * @access public
+     * @return bool
+     */
+    public function resolve(): bool
     {
         return $this->messageManager->produceJobMessage(self::QUEUE, $this->all());
     }
