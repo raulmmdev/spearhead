@@ -65,11 +65,13 @@ class MessageManager
             $values = json_decode($message->body, true);
 
             $job = $this->jobFactory->create($queue, $values);
-
             $object = $job->resolve();
 
             //log accordingly
             $this->reportToBusinessLogger($queue, $values, $object);
+
+            //print console output
+            $this->printConsoleOutput($queue, $values, $object);
 
             //next message
             $resolver->acknowledge($message);
@@ -92,37 +94,22 @@ class MessageManager
      */
     private function reportToBusinessLogger(string $queue, array $values, $object = null) : void
     {
-        $console = new \Symfony\Component\Console\Output\ConsoleOutput();
-
         $message = $values['name'];
-
-        $strpadQueue = str_pad($queue, 8, ' ', STR_PAD_RIGHT);
-        $strpadMessage = str_pad($message, 60, ' ', STR_PAD_RIGHT);
 
         if (!is_null($object)) {
             $businessLogType = BusinessLog::LEVEL_TYPE_INFO;
-
             $messageTitle = "Successfully processed the message [ {$message} ] from queue [ {$queue} ] ";
-            $messageTitleConsole = "Successfully processed the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";
-
             $messageBody = json_encode([
                 'request' => $values,
                 'response' => $object,
             ]);
-
-            $console->writeln("<info>{$messageTitleConsole}</info>");
         } else {
             $businessLogType = BusinessLog::LEVEL_TYPE_ERROR;
-
             $messageTitle = "Error processing the message [ {$message} ] from queue [ {$queue} ]";
-            $messageTitleConsole = "Error processing the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";
-
             $messageBody = json_encode([
                 'request' => $values,
                 'errors' => $request->getErrors(),
             ]);
-
-            $console->writeln("<error>{$messageTitleConsole}</error>");
         }
 
         $this->businessLogManager->log(
@@ -132,5 +119,30 @@ class MessageManager
             $messageTitle,
             $messageBody
         );
+    }
+
+    /**
+     * print output to console
+     *
+     * @access private
+     * @param  string $queue
+     * @param  array  $values
+     * @param  object $object (Optional. Default: null)
+     * @return void
+     */
+    private function printConsoleOutput(string $queue, array $values, $object = null) : void
+    {
+        $console = new \Symfony\Component\Console\Output\ConsoleOutput();
+
+        $messageContent = $values['name'];
+        $strpadMessage = str_pad($messageContent, 60, ' ', STR_PAD_RIGHT);
+        $strpadQueue = str_pad($queue, 8, ' ', STR_PAD_RIGHT);
+        if (!is_null($object)) {
+            $messageTitleConsole = "Successfully processed the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";
+            $console->writeln("<info>{$messageTitleConsole}</info>");
+        } else {
+            $messageTitleConsole = "Error processing the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";
+            $console->writeln("<error>{$messageTitleConsole}</error>");
+        }
     }
 }
