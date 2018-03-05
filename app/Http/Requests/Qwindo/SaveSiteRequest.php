@@ -3,13 +3,14 @@
 namespace App\Http\Requests\Qwindo;
 
 use App\Business\Api\Interfaces\ResolvableInterface;
+use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Message\MessageManager;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\ApiRequest;
 
 /**
  * SaveSiteRequest
  */
-class SaveSiteRequest extends FormRequest implements ResolvableInterface
+class SaveSiteRequest extends ApiRequest implements ResolvableInterface
 {
     const QUEUE = 'site';
 
@@ -19,11 +20,11 @@ class SaveSiteRequest extends FormRequest implements ResolvableInterface
      */
     protected $messageManager;
 
-    /**
-     * @param MessageManager
-     */
-    public function __construct(MessageManager $messageManager)
-    {
+    public function __construct(
+        MessageManager $messageManager,
+        ApiResponseManager $apiResponseManager
+    ) {
+        parent::__construct($apiResponseManager);
         $this->messageManager = $messageManager;
     }
 

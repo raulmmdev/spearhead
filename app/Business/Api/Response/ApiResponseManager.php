@@ -13,6 +13,7 @@ class ApiResponseManager
     /**
      * createResponse
      *
+     * @access public
      * @param  int    $httpStatusCode
      * @param  string $type
      * @param  array  $attributes
@@ -34,6 +35,7 @@ class ApiResponseManager
     /**
      * createErrorResponse
      *
+     * @access public
      * @param  int    $httpStatusCode
      * @param  string $errorCode
      * @return JsonResponse
@@ -49,5 +51,34 @@ class ApiResponseManager
         ];
 
         return new JsonResponse($response, $httpStatusCode);
+    }
+
+    /**
+     * create a json api standard validation error array
+     *
+     * @access public
+     * @param  array  $errors
+     * @return string
+     */
+    public function formatValidationErrors(array $errors): array
+    {
+        $formattedErrors= [];
+
+        foreach ($errors as $source => $errorList) {
+            $errorSource = [ "pointer" => "/data/attributes/".$source];
+            foreach ($errorList as $errorMessage) {
+                $formattedErrors[] = [
+                    "source" => $errorSource,
+                    "title" => "Invalid Attribute",
+                    "details" => $errorMessage,
+                ];
+            }
+        }
+
+        $response = [
+            "errors" => $formattedErrors,
+        ];
+
+        return $response;
     }
 }
