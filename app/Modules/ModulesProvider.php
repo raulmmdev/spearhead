@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules;
 
 /**
@@ -14,8 +15,9 @@ class ModulesProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot(): void
     {
-        $modules = config("module.modules");
-        while (list(,$module) = each($modules)) {
+        $modules = config('module.modules');
+
+        foreach ($modules as $module) {
             if (file_exists(__DIR__.'/'.$module.'/routes.php')) {
                 include __DIR__.'/'.$module.'/routes.php';
             }

@@ -49,14 +49,16 @@ class AssignWorkers extends Command
         $queue = $this->argument('queue');
         $workers = (int) $this->argument('workers');
 
-        $command = "php artisan consumer:{$queue} --daemon > /dev/null 2>&1 &";
-
-        $this->info($command);
+        $command = "php artisan consumer:{$queue} --daemon";
+        $backgroundCommand = "{$command} > /dev/null 2>&1 &";
 
         foreach (range(1, $workers) as $i) {
-            exec($command);
+            exec($backgroundCommand);
         }
 
-        $this->info("[ {$workers} ] successfully created");
+        $strpadWorkers = str_pad($workers, 8, ' ', STR_PAD_LEFT);
+        $strpadQueue = str_pad($queue, 8, ' ', STR_PAD_RIGHT);
+        
+        $this->info("Successfully assigned [ {$strpadWorkers} ] workers to queue [ {$strpadQueue} ]");
     }
 }

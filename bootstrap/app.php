@@ -41,7 +41,6 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
-
 $app->configureMonologUsing(function ($monolog) {
 	$options = [
     	'index' => 'laralogs',
@@ -69,7 +68,6 @@ $app->configureMonologUsing(function ($monolog) {
 	$client = new Elastica\Client();
     $monolog->pushHandler(new Monolog\Handler\ElasticSearchHandler($client, $options));
 });
-
 
 /*
 |--------------------------------------------------------------------------

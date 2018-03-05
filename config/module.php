@@ -2,7 +2,7 @@
 
 return [
     'modules'=> [
-        "FeedApi",
-        "ShopApi",
+        'FeedApi',
+        'ShopApi',
     ],
 ];

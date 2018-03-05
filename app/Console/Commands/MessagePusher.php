@@ -61,11 +61,17 @@ class MessagePusher extends Command
         ];
 
         foreach (range(1, $number) as $i) {
+
             $values = $this->fillRequest($queue);
 
             $endpoint = config('app.url') ."/api/{$queue}";
 
             $client = new Client();
+
+            $strpadI = str_pad($i, 8, ' ', STR_PAD_LEFT);
+            $strpadQueue = str_pad($queue, 8, ' ', STR_PAD_RIGHT);
+            $strpadMessage = str_pad($values['name'], 60, ' ', STR_PAD_RIGHT);
+            $consoleLine = "[ {$strpadI} ] Pushing on queue [ {$strpadQueue} ] the message [ {$strpadMessage} ]...";
 
             try {
                 $response = $client->post($endpoint, [
@@ -74,12 +80,12 @@ class MessagePusher extends Command
                 ]);
 
                 if ($response->getStatusCode() === Response::HTTP_CREATED) {
-                    $this->info('[ '. $i .' ] Message with values [ '. json_encode($values) .' ]... Success');
+                    $this->info("{$consoleLine} Success");
                 } else {
-                    $this->error('[ '. $i .' ] Message with values [ '. json_encode($values) .' ]... Fail');
+                    $this->error("{$consoleLine} Fail");
                 }
             } catch (\Exception $e) {
-                $this->error('[ '. $i .' ] Message with values [ '. json_encode($values) .' ]... Exception');
+                $this->error("{$consoleLine} Exception");
                 $this->error($e->getMessage());
             }
 

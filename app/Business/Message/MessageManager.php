@@ -94,28 +94,35 @@ class MessageManager
     {
         $console = new \Symfony\Component\Console\Output\ConsoleOutput();
 
+        $message = $values['name'];
+
+        $strpadQueue = str_pad($queue, 8, ' ', STR_PAD_RIGHT);
+        $strpadMessage = str_pad($message, 60, ' ', STR_PAD_RIGHT);
+
         if (!is_null($object)) {
             $businessLogType = BusinessLog::LEVEL_TYPE_INFO;
 
-            $messageTitle = "Successfully processed a message on queue [ {$queue} ]";
+            $messageTitle = "Successfully processed the message [ {$message} ] from queue [ {$queue} ] ";
+            $messageTitleConsole = "Successfully processed the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";
 
             $messageBody = json_encode([
                 'request' => $values,
                 'response' => $object,
             ]);
 
-            $console->writeln("<info>Successfully processed a message on queue [ {$queue} ]</info>");
+            $console->writeln("<info>{$messageTitleConsole}</info>");
         } else {
             $businessLogType = BusinessLog::LEVEL_TYPE_ERROR;
 
-            $messageTitle = "Error processing a message [ {$queue} ]";
+            $messageTitle = "Error processing the message [ {$message} ] from queue [ {$queue} ]";
+            $messageTitleConsole = "Error processing the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";
 
             $messageBody = json_encode([
                 'request' => $values,
                 'errors' => $request->getErrors(),
             ]);
 
-            $console->writeln("<error>Error processing a message [ {$queue} ]</error>");
+            $console->writeln("<error>{$messageTitleConsole}</error>");
         }
 
         $this->businessLogManager->log(

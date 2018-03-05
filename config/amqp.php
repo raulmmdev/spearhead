@@ -48,6 +48,7 @@ return [
             'consumer_exclusive'    => false,
             'consumer_nowait'       => false,
             'timeout'               => 0,
+            
             'persistent'            => true, //prevent the consumer to stop if no messages on queue at start
         ],
     ],

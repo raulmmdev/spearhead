@@ -30,7 +30,7 @@ class SiteTest extends TestCase
 
 		$response = $this
 			->withHeaders($headers)
-			->json('POST', '/api/site', $values);
+			->json('POST', config('app.url') . '/api/site', $values);
 
 		$response
 			->assertStatus(Response::HTTP_CREATED)
@@ -58,7 +58,7 @@ class SiteTest extends TestCase
 
 		$response = $this
 			->withHeaders($headers)
-			->json('POST', '/api/site', $values);
+			->json('POST', config('app.url') . '/api/site', $values);
 
 		$response
 			->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
