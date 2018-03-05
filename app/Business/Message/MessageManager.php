@@ -32,16 +32,17 @@ class MessageManager
      * @param  array  $values
      * @return bool
      */
-    public function produceJobMessage(string $queue, array $values) : bool
+    public function produceJobMessage(string $queue, array $values) :? string
     {
         try {
             //@TODO we need to wrap these AMQP calls into a QueueHandler
             //so we decouple the vendor from the source code
+            $values['uuid'] = uniqid();
             \Amqp::publish('', json_encode($values), [
                 'queue' => $queue
             ]);
 
-            return true;
+            return $values['uuid'];
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             \Log::error($e->getTraceAsString());
@@ -94,18 +95,18 @@ class MessageManager
      */
     private function reportToBusinessLogger(string $queue, array $values, $object = null) : void
     {
-        $message = $values['name'];
+        $uuid = $values['uuid'];
 
         if (!is_null($object)) {
             $businessLogType = BusinessLog::LEVEL_TYPE_INFO;
-            $messageTitle = "Successfully processed the message [ {$message} ] from queue [ {$queue} ] ";
+            $messageTitle = "Successfully processed the message [ {$uuid} ] from queue [ {$queue} ] ";
             $messageBody = json_encode([
                 'request' => $values,
                 'response' => $object,
             ]);
         } else {
             $businessLogType = BusinessLog::LEVEL_TYPE_ERROR;
-            $messageTitle = "Error processing the message [ {$message} ] from queue [ {$queue} ]";
+            $messageTitle = "Error processing the message [ {$uuid} ] from queue [ {$queue} ]";
             $messageBody = json_encode([
                 'request' => $values,
                 'errors' => $request->getErrors(),
@@ -134,8 +135,8 @@ class MessageManager
     {
         $console = new \Symfony\Component\Console\Output\ConsoleOutput();
 
-        $messageContent = $values['name'];
-        $strpadMessage = str_pad($messageContent, 60, ' ', STR_PAD_RIGHT);
+        $uuid = $values['uuid'];
+        $strpadMessage = str_pad($uuid, 20, ' ', STR_PAD_RIGHT);
         $strpadQueue = str_pad($queue, 8, ' ', STR_PAD_RIGHT);
         if (!is_null($object)) {
             $messageTitleConsole = "Successfully processed the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";

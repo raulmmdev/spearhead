@@ -81,7 +81,7 @@ class SiteController extends Controller
         $this->businessLogManager->info(
             BusinessLog::USER_TYPE_MERCHANT,
             BusinessLog::ELEMENT_TYPE_SITE,
-            'Site creation request has been received.',
+            'Site creation request '.$result.' has been received.',
             json_encode($request->all()),
             BusinessLog::HTTP_TYPE_PUSH
         );

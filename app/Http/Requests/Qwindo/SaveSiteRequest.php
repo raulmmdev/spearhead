@@ -56,7 +56,7 @@ class SaveSiteRequest extends ApiRequest implements ResolvableInterface
      * @access public
      * @return bool
      */
-    public function resolve(): bool
+    public function resolve() :? string
     {
         return $this->messageManager->produceJobMessage(self::QUEUE, $this->all());
     }
