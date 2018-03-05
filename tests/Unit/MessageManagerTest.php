@@ -9,30 +9,30 @@ use Tests\TestCase;
 
 class MessageManagerTest extends TestCase
 {
-	protected $messageManager;
+    protected $messageManager;
 
-	public function setup()
-	{
-		parent::setUp();
+    public function setup()
+    {
+        parent::setUp();
 
-		$this->messageManager = $this->app->make('App\Business\Message\MessageManager');
-	}
+        $this->messageManager = $this->app->make('App\Business\Message\MessageManager');
+    }
 
-	/**
-	 * A basic test example.
-	 *
-	 * @return void
-	 */
-	public function testPublishCreateSiteMessage()
-	{
-		$faker = \Faker\Factory::create();
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testPublishCreateSiteMessage()
+    {
+        $faker = \Faker\Factory::create();
 
-		$values = [
-			'name' => $faker->company,
-		];
+        $values = [
+            'name' => $faker->company,
+        ];
 
-		$result = $this->messageManager->produceJobMessage(SaveSiteRequest::QUEUE, $values);
+        $result = $this->messageManager->produceJobMessage(SaveSiteRequest::QUEUE, $values);
 
-		$this->assertTrue($result);
-	}
+        $this->assertNotNull($result);
+    }
 }
