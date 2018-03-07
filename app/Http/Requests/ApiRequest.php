@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use \Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -60,6 +61,6 @@ class ApiRequest extends FormRequest
                 $validator->errors()->getMessages()
             );
 
-        throw new HttpResponseException(response()->json($response, 422));
+        throw new HttpResponseException(response()->json($response, Response::HTTP_UNPROCESSABLE_ENTITY));
     }
 }

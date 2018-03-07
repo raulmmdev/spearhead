@@ -2,6 +2,8 @@
 
 namespace App\Business\Job;
 
+use Illuminate\Database\Eloquent\Model;
+
 /**
  * BaseJob
  */
@@ -14,6 +16,33 @@ abstract class BaseJob
      * @var array
      */
     private $errors = [];
+
+    /**
+     * Data container
+     *
+     * @access public
+     * @var array
+     */
+    public $data = [];
+
+    /**
+     * Object container
+     *
+     * @access private
+     * @var object
+     */
+    private $object = null;
+
+    /**
+     * Errors helper
+     *
+     * @access public
+     * @return boolean
+     */
+    public function hasErrors() : bool
+    {
+        return count($this->errors) > 0;
+    }
 
     /**
      * Errors getter
@@ -36,6 +65,29 @@ abstract class BaseJob
     public function setErrors(array $errors)
     {
         $this->errors = $errors;
+    }
+
+    /**
+     * Object getter
+     *
+     * @access public
+     * @return object
+     */
+    public function getObject() : object
+    {
+        return $this->object;
+    }
+
+    /**
+     * Object setter
+     *
+     * @access public
+     * @param Model $object
+     * @return void
+     */
+    public function setObject(Model $object)
+    {
+        $this->object = $object;
     }
 
     /**

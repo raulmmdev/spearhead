@@ -21,14 +21,6 @@ class CreateSiteJob extends BaseJob implements SiteManagerAwareInterface
     private $siteManager;
 
     /**
-     * Object data container
-     *
-     * @access public
-     * @var array
-     */
-    public $data = [];
-
-    /**
      * SiteManager setter
      *
      * @access public

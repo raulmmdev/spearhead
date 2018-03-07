@@ -30,12 +30,10 @@ class SiteTest extends TestCase
 
 		$saveSiteJob = new CreateSiteJob();
 		$saveSiteJob->setSiteManager($this->siteManager);
-
 		$saveSiteJob->data['name'] = $faker->company;
+		$saveSiteJob = $this->siteManager->createFromJob($saveSiteJob);
 
-		$site = $this->siteManager->createFromJob($saveSiteJob);
-
-		$this->assertNotNull($site);
+		$this->assertFalse($saveSiteJob->hasErrors());
 	}
 
 	/**
@@ -47,9 +45,8 @@ class SiteTest extends TestCase
 	{
 		$saveSiteJob = new CreateSiteJob();
 		$saveSiteJob->setSiteManager($this->siteManager);
+		$saveSiteJob = $this->siteManager->createFromJob($saveSiteJob);
 
-		$site = $this->siteManager->createFromJob($saveSiteJob);
-
-		$this->assertNull($site);
+		$this->assertTrue($saveSiteJob->hasErrors());
 	}
 }

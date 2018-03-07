@@ -2,9 +2,10 @@
 
 namespace App\Business\Message;
 
-use \App\Business\BusinessLog\BusinessLogManager;
-use \App\Model\Document\BusinessLog;
-use \App\Business\Job\JobFactory;
+use App\Business\BusinessLog\BusinessLogManager;
+use App\Business\Job\JobFactory;
+use App\Model\Document\BusinessLog;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
  * MessageManager
@@ -37,7 +38,8 @@ class MessageManager
         try {
             //@TODO we need to wrap these AMQP calls into a QueueHandler
             //so we decouple the vendor from the source code
-            $values['uuid'] = uniqid();
+            $values['uuid'] = uniqid('', $more_entropy = true);
+            
             \Amqp::publish('', json_encode($values), [
                 'queue' => $queue
             ]);
@@ -62,22 +64,22 @@ class MessageManager
     public function consumeJobMessage(string $queue, bool $asDaemon) : void
     {
         \Amqp::consume($queue, function ($message, $resolver) use ($queue, $asDaemon) {
-            //unserialize
+            // unserialize
             $values = json_decode($message->body, true);
 
             $job = $this->jobFactory->create($queue, $values);
-            $object = $job->resolve();
+            $job = $job->resolve();
 
-            //log accordingly
-            $this->reportToBusinessLogger($queue, $values, $object);
+            // log accordingly
+            $this->reportToBusinessLogger($queue, $values, $job);
 
-            //print console output
-            $this->printConsoleOutput($queue, $values, $object);
+            // print console output
+            $this->printConsoleOutput($queue, $values, $job);
 
-            //next message
+            // next message
             $resolver->acknowledge($message);
 
-            //stop if no more messages to process
+            // stop if no more messages to process
             if ($asDaemon === false) {
                 $resolver->stopWhenProcessed();
             }
@@ -90,26 +92,26 @@ class MessageManager
      * @access private
      * @param  string $queue
      * @param  array  $values
-     * @param  object $object (Optional. Default: null)
+     * @param  object $job (Optional. Default: null)
      * @return void
      */
-    private function reportToBusinessLogger(string $queue, array $values, $object = null) : void
+    private function reportToBusinessLogger(string $queue, array $values, $job = null) : void
     {
         $uuid = $values['uuid'];
 
-        if (!is_null($object)) {
-            $businessLogType = BusinessLog::LEVEL_TYPE_INFO;
-            $messageTitle = "Successfully processed the message [ {$uuid} ] from queue [ {$queue} ] ";
-            $messageBody = json_encode([
-                'request' => $values,
-                'response' => $object,
-            ]);
-        } else {
+        if ($job->hasErrors()) {
             $businessLogType = BusinessLog::LEVEL_TYPE_ERROR;
             $messageTitle = "Error processing the message [ {$uuid} ] from queue [ {$queue} ]";
             $messageBody = json_encode([
                 'request' => $values,
-                'errors' => $request->getErrors(),
+                'errors' => $job->getErrors(),
+            ]);
+        } else {
+            $businessLogType = BusinessLog::LEVEL_TYPE_INFO;
+            $messageTitle = "Successfully processed the message [ {$uuid} ] from queue [ {$queue} ] ";
+            $messageBody = json_encode([
+                'request' => $values,
+                'response' => $job->getObject(),
             ]);
         }
 
@@ -128,22 +130,24 @@ class MessageManager
      * @access private
      * @param  string $queue
      * @param  array  $values
-     * @param  object $object (Optional. Default: null)
+     * @param  object $job (Optional. Default: null)
      * @return void
      */
-    private function printConsoleOutput(string $queue, array $values, $object = null) : void
+    private function printConsoleOutput(string $queue, array $values, $job = null) : void
     {
-        $console = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $console = new ConsoleOutput();
 
         $uuid = $values['uuid'];
-        $strpadMessage = str_pad($uuid, 20, ' ', STR_PAD_RIGHT);
+
         $strpadQueue = str_pad($queue, 8, ' ', STR_PAD_RIGHT);
-        if (!is_null($object)) {
-            $messageTitleConsole = "Successfully processed the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";
-            $console->writeln("<info>{$messageTitleConsole}</info>");
-        } else {
-            $messageTitleConsole = "Error processing the message [ {$strpadMessage} ] from queue [ {$strpadQueue} ]";
+        $elapsedTime = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+
+        if ($job->hasErrors()) {
+            $messageTitleConsole = "Error processing the message [ {$uuid} ] from queue [ {$strpadQueue} ] ({$elapsedTime} seconds)";
             $console->writeln("<error>{$messageTitleConsole}</error>");
+        } else {
+            $messageTitleConsole = "Successfully processed the message [ {$uuid} ] from queue [ {$strpadQueue} ] ({$elapsedTime} seconds)";
+            $console->writeln("<info>{$messageTitleConsole}</info>");
         }
     }
 }

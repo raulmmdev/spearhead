@@ -2,11 +2,15 @@
 
 namespace App\Console\Commands;
 
-use \Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Qwindo\SaveSiteRequest;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Testing\WithFaker;
+use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * MessagePusher
@@ -20,9 +24,9 @@ class MessagePusher extends Command
      * @var string
      */
     protected $signature = 'message:push
-                    {queue=site : Queue to be pushed to ["site", "product", "category", "image"]}
-                    {number=10 : Number of messages to be created.}
-                    {usleep=0 : Max microseconds between messages}';
+                    {queue=site : Queue name to be pushed to ["site", "product", "category", "image"].}
+                    {number=10 : Number of randomg messages to be created.}
+                    {usleep=0 : Max microseconds between messages.}';
 
     /**
      * The console command description.
@@ -30,7 +34,7 @@ class MessagePusher extends Command
      * @access protected
      * @var string
      */
-    protected $description = 'Pushes messages into the Message Queue';
+    protected $description = 'Pushes random messages into the Message Queue';
 
     /**
      * Create a new command instance
@@ -54,6 +58,12 @@ class MessagePusher extends Command
         $queue = $this->argument('queue');
         $number = (int) $this->argument('number');
         $usleep = (int) $this->argument('usleep');
+        $stats = [];
+
+        $console = new ConsoleOutput();
+        $progressBar = new ProgressBar($console, $number);
+        
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
         $headers = [
             'Accept' => 'application/json',
@@ -61,36 +71,55 @@ class MessagePusher extends Command
         ];
 
         foreach (range(1, $number) as $i) {
-
             $values = $this->fillRequest($queue);
-
-            $endpoint = config('app.url') ."/api/{$queue}";
 
             $client = new Client();
 
-            $strpadI = str_pad($i, 8, ' ', STR_PAD_LEFT);
-            $strpadQueue = str_pad($queue, 8, ' ', STR_PAD_RIGHT);
-            $strpadMessage = str_pad($values['name'], 60, ' ', STR_PAD_RIGHT);
-            $consoleLine = "[ {$strpadI} ] Pushing on queue [ {$strpadQueue} ] the message [ {$strpadMessage} ]...";
-
             try {
-                $response = $client->post($endpoint, [
+                $response = $client->post(config('app.url') ."/api/{$queue}", [
                     \GuzzleHttp\RequestOptions::HEADERS => $headers,
                     \GuzzleHttp\RequestOptions::JSON => $values,
                 ]);
 
-                if ($response->getStatusCode() === Response::HTTP_CREATED) {
-                    $this->info("{$consoleLine} Success");
-                } else {
-                    $this->error("{$consoleLine} Fail");
+                if (!isset($stats[$response->getStatusCode()])) {
+                    $stats[$response->getStatusCode()] = 0;
                 }
+
+                $stats[$response->getStatusCode()] ++;
             } catch (\Exception $e) {
-                $this->error("{$consoleLine} Exception");
                 $this->error($e->getMessage());
             }
 
             usleep(rand(0, $usleep));
+
+            $progressBar->advance();
         }
+
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+        $this->comment('');
+        $this->comment('');
+
+        $rows = [];
+        foreach ($stats as $code => $total) {
+            $rows[] = [
+                $total,
+                sprintf("%d (%s)", $code, Response::$statusTexts[$code]),
+            ];
+        }
+        
+        $table = new Table($console);
+        $table->setHeaders(['Total Messages', 'HTTP Status Response']);
+        $table->setRows($rows);
+        $table->render();
+
+        $this->comment('');
+
+        $elapsedTime = microtime($get_as_float = true) - $_SERVER['REQUEST_TIME_FLOAT'];
+        $memoryUsage = Helper::formatMemory(memory_get_usage(true));
+
+        $this->comment("Required time [ {$elapsedTime} seconds ]");
+        $this->comment("Required memory [ {$memoryUsage} ]");
     }
 
     /**

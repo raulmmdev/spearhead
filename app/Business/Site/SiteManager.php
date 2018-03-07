@@ -15,21 +15,26 @@ class SiteManager
      *
      * @access public
      * @param CreateSiteJob $job
-     * @return Site | null
+     * @return CreateSiteJob | null
      */
-    public function createFromJob(CreateSiteJob $job) : ?Site
+    public function createFromJob(CreateSiteJob $job) : ?CreateSiteJob
     {
         try {
             $site = new Site();
             $site->name = $job->data['name'];
             $site->save();
 
-            return $site;
+            $job->setObject($site);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             \Log::error($e->getTraceAsString());
 
-            return null;
+            $job->setErrors([
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
+        
+        return $job;
     }
 }

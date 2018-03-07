@@ -17,7 +17,8 @@ class SiteConsumer extends Command
      * @access protected
      * @var string
      */
-    protected $signature = 'consumer:site {--daemon}';
+    protected $signature = 'consumer:site 
+                            {--daemon : Keeps the script listening to Message Queue after completing the task.}';
 
     /**
      * The console command description.
@@ -56,7 +57,10 @@ class SiteConsumer extends Command
     public function handle(): void
     {
         $asDaemon = $this->option('daemon');
-
+  
         $this->messageManager->consumeJobMessage(SaveSiteRequest::QUEUE, $asDaemon);
+
+        $elapsedTime = microtime($get_as_float = true) - $_SERVER['REQUEST_TIME_FLOAT'];
+        $this->comment("Required time [ {$elapsedTime} seconds ]");
     }
 }
