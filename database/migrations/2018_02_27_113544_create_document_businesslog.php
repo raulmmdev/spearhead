@@ -14,7 +14,7 @@ class CreateDocumentBusinesslog extends Migration
     public function up()
     {
         if (! Schema::connection('mongodb')->hasTable('business_log')) {
-            Schema::connection('mongodb')->create('business_log', function(Blueprint $collection) {
+            Schema::connection('mongodb')->create('business_log', function (Blueprint $collection) {
                 $collection->bigIncrements('id')->unique();
                 $collection->bigInteger('site_id');
                 $collection->bigInteger('feed_id');

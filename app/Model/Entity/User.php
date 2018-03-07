@@ -10,6 +10,14 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * The table associated with the model.
+     *
+     * @access protected
+     * @var string
+     */
+    protected $table = 'user';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -26,4 +34,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * DB RELATIONSHIPS
+     */
+
+    /**
+     * One user has many API features
+     */
+    public function apiFeatures()
+    {
+        return $this->hasMany('App\Model\Entity\ApiFeature');
+    }
 }
