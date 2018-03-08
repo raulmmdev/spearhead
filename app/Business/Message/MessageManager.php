@@ -5,6 +5,7 @@ namespace App\Business\Message;
 use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Job\JobFactory;
 use App\Model\Document\BusinessLog;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
@@ -36,9 +37,9 @@ class MessageManager
     public function produceJobMessage(string $queue, array $values) :? string
     {
         try {
-            //@TODO we need to wrap these AMQP calls into a QueueHandler
-            //so we decouple the vendor from the source code
-            $values['uuid'] = uniqid('', $more_entropy = true);
+            // @TODO we need to wrap these AMQP calls into a QueueHandler
+            // so we decouple the vendor from the source code
+            $values['uuid'] = (string) \Str::orderedUuid();
             
             \Amqp::publish('', json_encode($values), [
                 'queue' => $queue
