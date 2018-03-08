@@ -42,4 +42,13 @@ class ApiFeature extends Model
     {
         $this->attributes['user_id'] = $id;
     }
+
+    /**
+     * isEnabled
+     * @return boolean [description]
+     */
+    public function isEnabled(): bool
+    {
+        return false;
+    }
 }
