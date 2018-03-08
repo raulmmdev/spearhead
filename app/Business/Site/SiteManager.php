@@ -21,7 +21,7 @@ class SiteManager
     {
         try {
             $site = new Site();
-            $site->name = $job->data['name'];
+            $site->setName($job->data['name']);
             $site->save();
 
             $job->setObject($site);

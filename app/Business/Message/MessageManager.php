@@ -5,7 +5,6 @@ namespace App\Business\Message;
 use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Job\JobFactory;
 use App\Model\Document\BusinessLog;
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
@@ -39,8 +38,8 @@ class MessageManager
         try {
             // @TODO we need to wrap these AMQP calls into a QueueHandler
             // so we decouple the vendor from the source code
-            $values['uuid'] = (string) \Str::orderedUuid();
-            
+            $values['uuid'] = uniqid('', $moreEntropy = true);
+
             \Amqp::publish('', json_encode($values), [
                 'queue' => $queue
             ]);

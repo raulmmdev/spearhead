@@ -2,12 +2,10 @@
 
 namespace App\Model\Entity;
 
-use Illuminate\Database\Eloquent\Model;
-
 /**
  * Site
  */
-class Site extends Model
+class Site extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -24,4 +22,11 @@ class Site extends Model
      * @var bool
      */
     public $timestamps = true;
+
+    /**
+     * The attributes that are mass assignable
+     *
+     * @var array
+     */
+    protected $fillable = ['name'];
 }
