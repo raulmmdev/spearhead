@@ -9,7 +9,6 @@ use App\Business\Wsse\WsseMerchantToken;
 use App\Model\Entity\ApiFeature;
 use Closure;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthDigest
 {

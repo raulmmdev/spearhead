@@ -18,6 +18,7 @@ class ApiFeatureSeeder extends Seeder
         $feature->user()->associate($user);
         $feature->login = 'login';
         $feature->key = 'key';
+        $feature->status = ApiFeature::STATUS_ENABLED;
 
         $feature->save();
     }

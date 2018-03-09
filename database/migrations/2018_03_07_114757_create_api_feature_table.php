@@ -18,6 +18,7 @@ class CreateApiFeatureTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('login')->unique();
             $table->string('key');
+            $table->enum('status', ['ENABLED', 'DISABLED', 'BLOCKED']);
             $table->timestamps();
 
             //constraints

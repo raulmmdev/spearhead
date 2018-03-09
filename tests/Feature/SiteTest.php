@@ -19,18 +19,21 @@ class SiteTest extends TestCase
     {
         $faker = \Faker\Factory::create();
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ];
-
         $values = [
             'name' => $faker->company
         ];
 
+        $url = config('app.url') . '/api/site';
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Auth' => $this->createAuth($url, $values),
+        ];
+
         $response = $this
             ->withHeaders($headers)
-            ->json('POST', config('app.url') . '/api/site', $values);
+            ->json('POST', $url, $values);
 
         $response
             ->assertStatus(Response::HTTP_CREATED)
@@ -47,18 +50,21 @@ class SiteTest extends TestCase
      */
     public function testCreateSiteNoName() : void
     {
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ];
-
         $values = [
             'name' => ''
         ];
 
+        $url = config('app.url') . '/api/site';
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Auth' => $this->createAuth($url, $values),
+        ];
+
         $response = $this
             ->withHeaders($headers)
-            ->json('POST', config('app.url') . '/api/site', $values);
+            ->json('POST', $url, $values);
 
         $response
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
@@ -73,5 +79,24 @@ class SiteTest extends TestCase
                     ]
                 ]
             ]);
+    }
+
+    /**
+     * return a valid header
+     *
+     * @access private
+     * @return string
+     */
+    private function createAuth(string $url, array $body): string
+    {
+        $hash_id = 'login';
+        $qwindo_key = 'key';
+        $timestamp = microtime(true);
+        $data = json_encode($body);
+
+        //here we generate the auth token that will allow us to check the authorization for the call
+        $token = hash_hmac('sha512', $url.$timestamp.$data, $qwindo_key);
+        //generate the authorization base64 encoded
+        return base64_encode(sprintf('%s:%s:%s', $hash_id, $timestamp, $token));
     }
 }

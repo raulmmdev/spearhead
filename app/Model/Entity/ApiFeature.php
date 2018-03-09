@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ApiFeature extends Model
 {
+    const STATUS_ENABLED = 'ENABLED';
+    const STATUS_DISABLED = 'DISABLED';
+    const STATUS_BLOCKED = 'BLOCKED';
+
     /**
      * The table associated with the model.
      *
@@ -49,6 +53,6 @@ class ApiFeature extends Model
      */
     public function isEnabled(): bool
     {
-        return false;
+        return $this->status === self::STATUS_ENABLED;
     }
 }
