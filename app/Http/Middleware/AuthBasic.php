@@ -83,7 +83,7 @@ class AuthBasic
             $diff = round($currentTime - $timestamp);
 
             //timeout?
-            if ($diff > 10) {
+            if ($diff > env('API_DIGEST_TIMEOUT', 15)) {
                 $response = $this->createErrorResponse(
                     Response::HTTP_REQUEST_TIMEOUT,
                     ErrorCode::ERROR_CODE_REQUEST_TIMEOUT
