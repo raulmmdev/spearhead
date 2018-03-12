@@ -31,7 +31,6 @@ class AuthBasic
      */
     public function handle($request, Closure $next)
     {
-
         $headers = $request->headers;
         $content = $request->getContent();
 
@@ -128,7 +127,7 @@ class AuthBasic
      */
     private function logFailure(string $reason): void
     {
-        \Log::debug("[Failed authentication] ".$reason);
+        \Log::debug('[Failed authentication] '.$reason);
     }
 
     /**
