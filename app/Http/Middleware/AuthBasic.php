@@ -33,7 +33,7 @@ class AuthBasic
     {
 
         $headers = $request->headers;
-        $json = json_encode(json_decode($request->getContent()));
+        $content = $request->getContent();
 
         $url  = $request->url();
         $url .= ($request->getQueryString())
@@ -46,6 +46,7 @@ class AuthBasic
             list($hash_id, $timestamp, $token) = explode(':', $auth);
             $timestamp = (float) $timestamp;
 
+            //missing components?
             if (!$hash_id || !$timestamp || !$token) {
                 $response = $this->createErrorResponse(
                     Response::HTTP_FORBIDDEN,
@@ -57,6 +58,7 @@ class AuthBasic
 
             $user = ApiFeature::where('login', $hash_id)->first();
 
+            //no user detected?
             if ($user === null) {
                 $this->logFailure(sprintf('User [%s] not found', $hash_id));
                 $response = $this->createErrorResponse(
@@ -67,6 +69,7 @@ class AuthBasic
                 throw new HttpResponseException($response);
             }
 
+            //user is disabled?
             if (false === $user->isEnabled()) {
                 $this->logFailure(sprintf('User [%s] is disabled', $hash_id));
                 $response = $this->createErrorResponse(
@@ -80,6 +83,7 @@ class AuthBasic
             $currentTime = microtime(true);
             $diff = round($currentTime - $timestamp);
 
+            //timeout?
             if ($diff > 10) {
                 $response = $this->createErrorResponse(
                     Response::HTTP_REQUEST_TIMEOUT,
@@ -89,8 +93,9 @@ class AuthBasic
                 throw new HttpResponseException($response);
             }
 
-            $expectedToken = hash_hmac('sha512', $url.$timestamp.$json, $user->key);
+            $expectedToken = hash_hmac('sha512', $url.$timestamp.$content, $user->key);
 
+            //token matches?
             if ($expectedToken === $token) {
                 return $next($request);
             } else {
