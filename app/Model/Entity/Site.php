@@ -29,4 +29,12 @@ class Site extends BaseModel
      * @var array
      */
     protected $fillable = ['name'];
+
+    /**
+     * One user has many API features
+     */
+    public function apiFeatures()
+    {
+        return $this->hasMany('App\Model\Entity\ApiFeature');
+    }
 }

@@ -26,10 +26,10 @@ class AuthBasic
 
     public function __construct(
         ApiResponseManager $apiResponseManager,
-        ApiFeatureRepository $featureRepo
+        ApiFeatureRepository $apiFeatureRepo
     ) {
         $this->apiResponseManager = $apiResponseManager;
-        $this->featureRepo = $featureRepo;
+        $this->apiFeatureRepo = $apiFeatureRepo;
         $this->requestTimeout = env('API_DIGEST_TIMEOUT', 15);
     }
 
@@ -50,80 +50,82 @@ class AuthBasic
             ? '?'. $request->getQueryString()
             : '';
 
-        if ($request->headers->has('Auth')) {
-            $auth = base64_decode($headers->get('Auth'));
-
-            list($hash_id, $timestamp, $token) = explode(':', $auth);
-            $timestamp = (float) $timestamp;
-
-            //missing components?
-            if (!$hash_id || !$timestamp || !$token) {
-                $response = $this->createErrorResponse(
-                    Response::HTTP_FORBIDDEN,
-                    ErrorCode::ERROR_CODE_MALFORMED_AUTH
-                );
-
-                throw new HttpResponseException($response);
-            }
-
-            $user = $this->featureRepo->findByField('login', $hash_id)->first();
-
-            //no user detected?
-            if ($user === null) {
-                $this->logFailure(sprintf('User [%s] not found', $hash_id));
-                $response = $this->createErrorResponse(
-                    Response::HTTP_FORBIDDEN,
-                    ErrorCode::ERROR_CODE_WRONG_CREDENTIALS
-                );
-
-                throw new HttpResponseException($response);
-            }
-
-            //user is disabled?
-            if (false === $user->isEnabled()) {
-                $this->logFailure(sprintf('User [%s] is disabled', $hash_id));
-                $response = $this->createErrorResponse(
-                    Response::HTTP_FORBIDDEN,
-                    ErrorCode::ERROR_CODE_WRONG_CREDENTIALS
-                );
-
-                throw new HttpResponseException($response);
-            }
-
-            $currentTime = microtime(true);
-            $diff = round($currentTime - $timestamp);
-
-            //timeout?
-            if ($diff > $this->requestTimeout) {
-                $response = $this->createErrorResponse(
-                    Response::HTTP_REQUEST_TIMEOUT,
-                    ErrorCode::ERROR_CODE_REQUEST_TIMEOUT
-                );
-
-                throw new HttpResponseException($response);
-            }
-
-            $expectedToken = hash_hmac('sha512', $url.$timestamp.$content, $user->key);
-
-            //token matches?
-            if ($expectedToken === $token) {
-                $request->merge(['user' => $user]);
-                return $next($request);
-            } else {
-                $this->logFailure(
-                    sprintf('Invalid digest, received [%s] but expected [%s]', $token, $expectedToken)
-                );
-                $response = $this->createErrorResponse(
-                    Response::HTTP_FORBIDDEN,
-                    ErrorCode::ERROR_CODE_WRONG_CREDENTIALS
-                );
-
-                throw new HttpResponseException($response);
-            }
-        } else {
+        //header?
+        $authorizedHeaders = $this->getValidHeaders($request);
+        if (!$request->headers->has('Auth')) {
             $response = $this->createErrorResponse(
                 Response::HTTP_FORBIDDEN,
                 ErrorCode::ERROR_CODE_MISSING_AUTH
+            );
+
+            throw new HttpResponseException($response);
+        }
+
+        $auth = base64_decode($headers->get('Auth'));
+
+        list($hash_id, $timestamp, $token) = explode(':', $auth);
+        $timestamp = (float) $timestamp;
+
+        //missing components?
+        if (!$hash_id || !$timestamp || !$token) {
+            $response = $this->createErrorResponse(
+                Response::HTTP_FORBIDDEN,
+                ErrorCode::ERROR_CODE_MALFORMED_AUTH
+            );
+
+            throw new HttpResponseException($response);
+        }
+
+        $user = $this->apiFeatureRepo->findByField('login', $hash_id)->first();
+
+        //no user detected?
+        if ($user === null) {
+            $this->logFailure(sprintf('User [%s] not found', $hash_id));
+            $response = $this->createErrorResponse(
+                Response::HTTP_FORBIDDEN,
+                ErrorCode::ERROR_CODE_WRONG_CREDENTIALS
+            );
+
+            throw new HttpResponseException($response);
+        }
+
+        //user is disabled?
+        if (false === $user->isEnabled()) {
+            $this->logFailure(sprintf('User [%s] is disabled', $hash_id));
+            $response = $this->createErrorResponse(
+                Response::HTTP_FORBIDDEN,
+                ErrorCode::ERROR_CODE_WRONG_CREDENTIALS
+            );
+
+            throw new HttpResponseException($response);
+        }
+
+        $currentTime = microtime(true);
+        $diff = round($currentTime - $timestamp);
+
+        //timeout?
+        if ($diff > $this->requestTimeout) {
+            $response = $this->createErrorResponse(
+                Response::HTTP_REQUEST_TIMEOUT,
+                ErrorCode::ERROR_CODE_REQUEST_TIMEOUT
+            );
+
+            throw new HttpResponseException($response);
+        }
+
+        $expectedToken = hash_hmac('sha512', $url.$timestamp.$content, $user->key);
+
+        //token matches?
+        if ($expectedToken === $token) {
+            $request->merge(['user' => $user]);
+            return $next($request);
+        } else {
+            $this->logFailure(
+                sprintf('Invalid digest, received [%s] but expected [%s]', $token, $expectedToken)
+            );
+            $response = $this->createErrorResponse(
+                Response::HTTP_FORBIDDEN,
+                ErrorCode::ERROR_CODE_WRONG_CREDENTIALS
             );
 
             throw new HttpResponseException($response);

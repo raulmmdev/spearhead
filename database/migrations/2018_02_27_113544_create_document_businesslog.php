@@ -13,6 +13,7 @@ class CreateDocumentBusinesslog extends Migration
      */
     public function up()
     {
+        echo('Creating business log collection'.PHP_EOL);
         if (! Schema::connection('mongodb')->hasTable('business_log')) {
             Schema::connection('mongodb')->create('business_log', function (Blueprint $collection) {
                 $collection->bigIncrements('id')->unique();

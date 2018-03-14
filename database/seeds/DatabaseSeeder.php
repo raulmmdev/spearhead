@@ -16,7 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            ApiFeatureSeeder::class
+            SiteSeeder::class,
+            SiteProviderFeatureSeeder::class,
+            ApiFeatureSeeder::class,
         ]);
     }
 }

@@ -46,4 +46,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Model\Entity\ApiFeature');
     }
+
+    /**
+     * One user has many SiteProvider features
+     */
+    public function siteProviderFeatures()
+    {
+        return $this->hasMany('App\Model\Entity\SiteProviderFeature');
+    }
 }

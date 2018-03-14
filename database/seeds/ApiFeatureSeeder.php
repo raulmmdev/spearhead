@@ -13,9 +13,11 @@ class ApiFeatureSeeder extends Seeder
     public function run()
     {
         $user = App\Model\Entity\User::find(App\Model\Entity\User::pluck('id')[0]);
+        $site = App\Model\Entity\User::find(App\Model\Entity\Site::pluck('id')[0]);
 
         $feature = new ApiFeature();
         $feature->user()->associate($user);
+        $feature->site()->associate($site);
         $feature->login = 'login';
         $feature->key = 'key';
         $feature->status = ApiFeature::STATUS_ENABLED;

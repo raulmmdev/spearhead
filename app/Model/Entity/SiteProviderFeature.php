@@ -5,9 +5,9 @@ namespace App\Model\Entity;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * ApiFeature
+ * SiteProviderFeature
  */
-class ApiFeature extends Model
+class SiteProviderFeature extends Model
 {
     const STATUS_ENABLED = 'ENABLED';
     const STATUS_DISABLED = 'DISABLED';
@@ -19,7 +19,7 @@ class ApiFeature extends Model
      * @access protected
      * @var string
      */
-    protected $table = 'api_feature';
+    protected $table = 'site_provider_feature';
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,14 +39,6 @@ class ApiFeature extends Model
     public function user()
     {
         return $this->belongsTo('App\Model\Entity\User', 'user_id', 'id');
-    }
-
-    /**
-     * An API feature belongs to one Site
-     */
-    public function site()
-    {
-        return $this->belongsTo('App\Model\Entity\Site', 'site_id', 'id');
     }
 
     //getters and setters
