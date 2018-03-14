@@ -6,6 +6,7 @@ use \Symfony\Component\HttpFoundation\Response;
 use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Error\ErrorCode;
 use App\Model\Entity\ApiFeature;
+use App\Model\Entity\Repository\ApiFeatureRepository;
 use Closure;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -17,9 +18,19 @@ class AuthBasic
      */
     protected $apiResponseManager;
 
-    public function __construct(ApiResponseManager $apiResponseManager)
-    {
+    /**
+     * @access protected
+     * @var $featureRepo
+     */
+    protected $featureRepo;
+
+    public function __construct(
+        ApiResponseManager $apiResponseManager,
+        ApiFeatureRepository $featureRepo
+    ) {
         $this->apiResponseManager = $apiResponseManager;
+        $this->featureRepo = $featureRepo;
+        $this->requestTimeout = env('API_DIGEST_TIMEOUT', 15);
     }
 
     /**
@@ -55,7 +66,7 @@ class AuthBasic
                 throw new HttpResponseException($response);
             }
 
-            $user = ApiFeature::where('login', $hash_id)->first();
+            $user = $this->featureRepo->findByField('login', $hash_id)->first();
 
             //no user detected?
             if ($user === null) {
@@ -83,7 +94,7 @@ class AuthBasic
             $diff = round($currentTime - $timestamp);
 
             //timeout?
-            if ($diff > env('API_DIGEST_TIMEOUT', 15)) {
+            if ($diff > $this->requestTimeout) {
                 $response = $this->createErrorResponse(
                     Response::HTTP_REQUEST_TIMEOUT,
                     ErrorCode::ERROR_CODE_REQUEST_TIMEOUT
@@ -96,6 +107,7 @@ class AuthBasic
 
             //token matches?
             if ($expectedToken === $token) {
+                $request->merge(['user' => $user]);
                 return $next($request);
             } else {
                 $this->logFailure(

@@ -34,7 +34,7 @@ class SiteManager
                 'trace' => $e->getTraceAsString(),
             ]);
         }
-        
+
         return $job;
     }
 }
