@@ -2,12 +2,13 @@
 
 namespace App\Model\Entity;
 
+use App\Business\User\Interfaces\UserInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * SiteProviderFeature
  */
-class SiteProviderFeature extends Model
+class SiteProviderFeature extends Model implements UserInterface
 {
     const STATUS_ENABLED = 'ENABLED';
     const STATUS_DISABLED = 'DISABLED';

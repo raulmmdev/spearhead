@@ -28,7 +28,7 @@ class SiteTest extends TestCase
         $headers = [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Auth' => $this->createAuth($url, $values),
+            'SiteProvider' => $this->createAuth($url, $values),
         ];
 
         $response = $this
@@ -59,7 +59,7 @@ class SiteTest extends TestCase
         $headers = [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Auth' => $this->createAuth($url, $values),
+            'SiteProvider' => $this->createAuth($url, $values),
         ];
 
         $response = $this
