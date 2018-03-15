@@ -125,6 +125,7 @@ class AuthBasic
 
         //token matches?
         if ($expectedToken === $token) {
+            //merge the user to the request as basic security context
             $request->merge(['user' => $user]);
             return $next($request);
         } else {
