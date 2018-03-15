@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Http\Requests\Qwindo\SaveSiteRequest;
+use App\Http\Requests\ApiRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -31,7 +31,7 @@ class MessageManagerTest extends TestCase
             'name' => $faker->company,
         ];
 
-        $result = $this->messageManager->produceJobMessage(SaveSiteRequest::QUEUE, $values);
+        $result = $this->messageManager->produceJobMessage(ApiRequest::QUEUE_SITE, ApiRequest::ACTION_CREATE, $values);
 
         $this->assertNotNull($result);
     }

@@ -12,8 +12,6 @@ use App\Http\Requests\ApiRequest;
  */
 class SaveSiteRequest extends ApiRequest implements ResolvableInterface
 {
-    const QUEUE = 'site';
-
     /**
      * @access protected
      * @var $messageManager
@@ -58,6 +56,10 @@ class SaveSiteRequest extends ApiRequest implements ResolvableInterface
      */
     public function resolve() :? string
     {
-        return $this->messageManager->produceJobMessage(self::QUEUE, $this->all());
+        return $this->messageManager->produceJobMessage(
+            ApiRequest::QUEUE_SITE,
+            ApiRequest::ACTION_CREATE,
+            $this->all()
+        );
     }
 }

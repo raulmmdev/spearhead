@@ -9,12 +9,21 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ApiRequest extends FormRequest
 {
+    const QUEUE_SITE = 'site';
+    const QUEUE_CATEGORY = 'category';
+    const QUEUE_PRODUCT = 'product';
+    const QUEUE_IMAGE = 'image';
+
+    const ACTION_UPSERT = 'UPSERT';
+    const ACTION_CREATE = 'CREATE';
+    const ACTION_UPDATE = 'UPDATE';
+    const ACTION_DELETE = 'DELETE';
+
     /**
      * @access protected
      * @var $apiResponseManager
      */
     protected $apiResponseManager;
-
 
     public function __construct(
         \App\Business\Api\Response\ApiResponseManager $apiResponseManager

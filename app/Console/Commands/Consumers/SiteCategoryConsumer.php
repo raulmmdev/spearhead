@@ -3,13 +3,13 @@
 namespace App\Console\Commands\Consumers;
 
 use App\Business\Message\MessageManager;
-use App\Http\Requests\Qwindo\SaveSiteRequest;
+use App\Http\Requests\ApiRequest;
 use Illuminate\Console\Command;
 
 /**
- * SiteConsumer
+ * SiteCategoryConsumer
  */
-class SiteConsumer extends Command
+class SiteCategoryConsumer extends Command
 {
     /**
      * The name and signature of the console command.
@@ -17,7 +17,7 @@ class SiteConsumer extends Command
      * @access protected
      * @var string
      */
-    protected $signature = 'consumer:site
+    protected $signature = 'consumer:category
                             {--daemon : Keeps the script listening to Message Queue after completing the task.}';
 
     /**
@@ -26,7 +26,7 @@ class SiteConsumer extends Command
      * @access protected
      * @var string
      */
-    protected $description = 'Read messages from [ site ] queue';
+    protected $description = 'Read messages from [ category ] queue';
 
     /**
      * The console command description.
@@ -58,7 +58,7 @@ class SiteConsumer extends Command
     {
         $asDaemon = $this->option('daemon');
 
-        $this->messageManager->consumeJobMessage(SaveSiteRequest::QUEUE, $asDaemon);
+        $this->messageManager->consumeJobMessage(ApiRequest::QUEUE_CATEGORY, $asDaemon);
 
         $elapsedTime = microtime($get_as_float = true) - $_SERVER['REQUEST_TIME_FLOAT'];
         $this->comment("Required time [ {$elapsedTime} seconds ]");

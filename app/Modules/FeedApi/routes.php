@@ -6,5 +6,9 @@ Route::group([
     //'middleware' => 'App\Http\Middleware\AuthDigest'
     'middleware' => 'App\Http\Middleware\AuthBasic'
 ], function () {
-    Route::post('/api/site', 'SiteController@createSite');
+    Route::prefix('api')->group(function(){
+        Route::post('site', 'SiteController@createSite');
+
+        Route::match(['post', 'put'], 'category', 'SiteCategoryController@upsertSiteCategory');
+    });
 });

@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Model\Entity\ApiFeature;
+use App\Model\Entity\User;
+use Illuminate\Database\Seeder;
 
 class ApiFeatureSeeder extends Seeder
 {
@@ -12,14 +13,13 @@ class ApiFeatureSeeder extends Seeder
      */
     public function run()
     {
-        $user = App\Model\Entity\User::find(App\Model\Entity\User::pluck('id')[0]);
+        $user = User::find(User::pluck('id')[0]);
 
         $feature = new ApiFeature();
         $feature->user()->associate($user);
         $feature->login = 'login';
         $feature->key = 'key';
         $feature->status = ApiFeature::STATUS_ENABLED;
-
         $feature->save();
     }
 }

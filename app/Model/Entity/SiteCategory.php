@@ -2,12 +2,10 @@
 
 namespace App\Model\Entity;
 
-use Illuminate\Database\Eloquent\Model;
-
 /**
- * ApiFeature
+ * SiteCategory
  */
-class ApiFeature extends BaseModel
+class SiteCategory extends BaseModel
 {
     //------------------------------------------------------------------------------------------------------------------
     // PROPERTIES
@@ -15,7 +13,6 @@ class ApiFeature extends BaseModel
 
     const STATUS_ENABLED = 'ENABLED';
     const STATUS_DISABLED = 'DISABLED';
-    const STATUS_BLOCKED = 'BLOCKED';
 
     /**
      * The table associated with the model.
@@ -23,7 +20,7 @@ class ApiFeature extends BaseModel
      * @access protected
      * @var string
      */
-    protected $table = 'api_feature';
+    protected $table = 'site_category';
 
     /**
      * Indicates if the model should be timestamped.
@@ -33,16 +30,29 @@ class ApiFeature extends BaseModel
      */
     public $timestamps = true;
 
+    /**
+     * The attributes that are mass assignable
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'source_id',
+        'parent_id',
+        'title',
+        'cashback',
+        'status',
+    ];
+
     //------------------------------------------------------------------------------------------------------------------
     // RELATIONSHIPS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * An API feature belongs to one User
+     * A category belongs to a site
      */
-    public function user()
+    public function site()
     {
-        return $this->belongsTo('App\Model\Entity\User', 'user_id', 'id');
+        return $this->belongsTo('App\Model\Entity\Site', 'site_id', 'id');
     }
 
     //------------------------------------------------------------------------------------------------------------------

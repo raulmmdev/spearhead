@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Business\Job\CreateSiteJob;
 use App\Business\Site\SiteManager;
+use App\Http\Requests\ApiRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -28,12 +29,13 @@ class SiteTest extends TestCase
 	{
 		$faker = \Faker\Factory::create();
 
-		$saveSiteJob = new CreateSiteJob();
-		$saveSiteJob->setSiteManager($this->siteManager);
-		$saveSiteJob->data['name'] = $faker->company;
-		$saveSiteJob = $this->siteManager->createFromJob($saveSiteJob);
+		$siteJob = new CreateSiteJob();
+		$siteJob->setSiteManager($this->siteManager);
+		$siteJob->data['crud_operation'] = ApiRequest::ACTION_CREATE;
+		$siteJob->data['name'] = $faker->company;
+		$siteJob = $this->siteManager->createFromJob($siteJob);
 
-		$this->assertFalse($saveSiteJob->hasErrors());
+		$this->assertFalse($siteJob->hasErrors());
 	}
 
 	/**
@@ -43,10 +45,10 @@ class SiteTest extends TestCase
 	 */
 	public function testSiteCreationMissingData()
 	{
-		$saveSiteJob = new CreateSiteJob();
-		$saveSiteJob->setSiteManager($this->siteManager);
-		$saveSiteJob = $this->siteManager->createFromJob($saveSiteJob);
+		$siteJob = new CreateSiteJob();
+		$siteJob->setSiteManager($this->siteManager);
+		$siteJob = $this->siteManager->createFromJob($siteJob);
 
-		$this->assertTrue($saveSiteJob->hasErrors());
+		$this->assertTrue($siteJob->hasErrors());
 	}
 }

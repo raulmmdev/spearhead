@@ -8,6 +8,7 @@ use App\Business\Injector\Injector;
 use App\Business\Job\JobFactory;
 use App\Business\Message\MessageManager;
 use App\Business\Site\SiteManager;
+use App\Business\SiteCategory\SiteCategoryManager;
 use Illuminate\Support\ServiceProvider;
 
 class ApiProvider extends ServiceProvider
@@ -33,13 +34,18 @@ class ApiProvider extends ServiceProvider
             return new SiteManager();
         });
 
+        $this->app->bind('App\Business\SiteCategory\SiteCategoryManager', function ($app) {
+            return new SiteCategoryManager();
+        });
+
         $this->app->bind('App\Business\Api\Response\ApiResponseManager', function ($app) {
             return new ApiResponseManager();
         });
 
         $this->app->bind('App\Business\Injector\Injector', function ($app) {
             return new Injector(
-                $app->make('App\Business\Site\SiteManager')
+                $app->make('App\Business\Site\SiteManager'),
+                $app->make('App\Business\SiteCategory\SiteCategoryManager')
             );
         });
 

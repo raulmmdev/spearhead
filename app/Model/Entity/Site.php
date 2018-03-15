@@ -7,6 +7,14 @@ namespace App\Model\Entity;
  */
 class Site extends BaseModel
 {
+    //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
+
+    const STATUS_ENABLED = 'ENABLED';
+    const STATUS_DISABLED = 'DISABLED';
+    const STATUS_BLOCKED = 'BLOCKED';
+
     /**
      * The table associated with the model.
      *
@@ -28,5 +36,35 @@ class Site extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name', 'status'
+    ];
+
+    //------------------------------------------------------------------------------------------------------------------
+    // RELATIONSHIPS
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * One site has many categories
+     */
+    public function categories()
+    {
+        return $this->hasMany('App\Model\Entity\SiteCategory');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * isEnabled
+     *
+     * @access public
+     * @return boolean [description]
+     */
+    public function isEnabled(): bool
+    {
+        return $this->status === self::STATUS_ENABLED;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

@@ -24,7 +24,10 @@ class BusinessLog extends \Moloquent
 
     //mappings to relate log to queues
     const BUSINESS_LOG_ELEMENT_TYPES = [
-        \App\Http\Requests\Qwindo\SaveSiteRequest::QUEUE => self::ELEMENT_TYPE_SITE,
+        \App\Http\Requests\ApiRequest::QUEUE_SITE => self::ELEMENT_TYPE_SITE,
+        \App\Http\Requests\ApiRequest::QUEUE_CATEGORY => self::ELEMENT_TYPE_CATEGORY,
+        \App\Http\Requests\ApiRequest::QUEUE_PRODUCT => self::ELEMENT_TYPE_PRODUCT,
+        \App\Http\Requests\ApiRequest::QUEUE_IMAGE => self::ELEMENT_TYPE_IMAGE,
     ];
 
     /**

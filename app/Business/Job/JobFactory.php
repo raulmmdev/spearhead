@@ -2,10 +2,11 @@
 
 namespace App\Business\Job;
 
-use App\Business\Api\Request\ApiRequest;
 use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Injector\Injector;
+use App\Http\Requests\ApiRequest;
 use App\Http\Requests\Qwindo\SaveSiteRequest;
+use App\Http\Requests\Qwindo\UpsertSiteCategoryRequest;
 use App\Model\Document\BusinessLog;
 
 /**
@@ -13,8 +14,18 @@ use App\Model\Document\BusinessLog;
  */
 class JobFactory
 {
+    //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
+
     const CLASS_NAMES = [
-        SaveSiteRequest::QUEUE => 'App\Business\Job\CreateSiteJob',
+        ApiRequest::QUEUE_SITE => [
+            ApiRequest::ACTION_CREATE => 'App\Business\Job\CreateSiteJob',
+        ],
+
+        ApiRequest::QUEUE_CATEGORY => [
+            ApiRequest::ACTION_UPSERT => 'App\Business\Job\UpsertSiteCategoryJob',
+        ],
     ];
 
     /**
@@ -24,6 +35,10 @@ class JobFactory
      * @var BaseJob
      */
     private $job;
+
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Object constructor
@@ -39,6 +54,8 @@ class JobFactory
         $this->businessLogManager = $businessLogManager;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Create an instance of specific job
      *
@@ -49,7 +66,7 @@ class JobFactory
      */
     public function create(string $queue, array $values) : BaseJob
     {
-        $className = self::CLASS_NAMES[$queue];
+        $className = self::CLASS_NAMES[$queue][$values['crud_operation']];
 
         //create the job, inject the managers
         $this->job = new $className();
@@ -58,8 +75,12 @@ class JobFactory
         //fill the instance with data
         try {
             switch ($queue) {
-                case SaveSiteRequest::QUEUE:
-                    $this->fillCreateSiteJob($values);
+                case ApiRequest::QUEUE_SITE:
+                    $this->fillSiteJob($values);
+                    break;
+
+                case ApiRequest::QUEUE_CATEGORY:
+                    $this->fillSiteCategoryJob($values);
                     break;
             }
         } catch (\Exception $e) {
@@ -88,15 +109,37 @@ class JobFactory
         return $this->job;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // PRIVATED METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
-     * Fills the CreateSiteJob instance data container
+     * Fills the SiteJob instance data container
      *
      * @access private
-     * @param  array  $values
+     * @param  array $values
      * @return void
      */
-    private function fillCreateSiteJob(array $values) : void
+    private function fillSiteJob(array $values) : void
     {
-        isset($values['name']) && $this->job->data['name'] = $values['name'];
+        $this->job->data['name'] = $values['name'];
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Fills the SiteCategoryJob instance data container
+     *
+     * @access private
+     * @param  array $values
+     * @return void
+     */
+    private function fillSiteCategoryJob(array $values) : void
+    {
+        $this->job->data['site'] = $values['site'];
+        $this->job->data['tree'] = $values['tree'];
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

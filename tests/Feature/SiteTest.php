@@ -6,10 +6,17 @@ use \Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Modules\FeedApi\Controllers\SiteController;
+use Tests\Feature\Traits\Auth;
 use Tests\TestCase;
 
 class SiteTest extends TestCase
 {
+    use Auth;
+
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Successfull case
      *
@@ -19,20 +26,14 @@ class SiteTest extends TestCase
     {
         $faker = \Faker\Factory::create();
 
+        $url = config('app.url') . '/api/site';
+
         $values = [
             'name' => $faker->company
         ];
 
-        $url = config('app.url') . '/api/site';
-
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'Auth' => $this->createAuth($url, $values),
-        ];
-
         $response = $this
-            ->withHeaders($headers)
+            ->withHeaders($this->getHeaders($url, $values))
             ->json('POST', $url, $values);
 
         $response
@@ -43,6 +44,8 @@ class SiteTest extends TestCase
             ]);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Wrong case
      *
@@ -50,20 +53,14 @@ class SiteTest extends TestCase
      */
     public function testCreateSiteNoName() : void
     {
+        $url = config('app.url') . '/api/site';
+
         $values = [
             'name' => ''
         ];
 
-        $url = config('app.url') . '/api/site';
-
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'Auth' => $this->createAuth($url, $values),
-        ];
-
         $response = $this
-            ->withHeaders($headers)
+            ->withHeaders($this->getHeaders($url, $values))
             ->json('POST', $url, $values);
 
         $response
@@ -81,22 +78,6 @@ class SiteTest extends TestCase
             ]);
     }
 
-    /**
-     * return a valid header
-     *
-     * @access private
-     * @return string
-     */
-    private function createAuth(string $url, array $body): string
-    {
-        $hash_id = 'login';
-        $qwindo_key = 'key';
-        $timestamp = microtime(true);
-        $data = json_encode($body);
-
-        //here we generate the auth token that will allow us to check the authorization for the call
-        $token = hash_hmac('sha512', $url.$timestamp.$data, $qwindo_key);
-        //generate the authorization base64 encoded
-        return base64_encode(sprintf('%s:%s:%s', $hash_id, $timestamp, $token));
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

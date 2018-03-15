@@ -12,6 +12,10 @@ use Symfony\Component\Console\Output\ConsoleOutput;
  */
 class MessageManager
 {
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Object constructor
      *
@@ -25,17 +29,24 @@ class MessageManager
         $this->businessLogManager = $businessLogManager;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Produces a messages into the message queue system
      *
      * @access public
      * @param  string $queue
+     * @param  string $action
      * @param  array  $values
      * @return bool
      */
-    public function produceJobMessage(string $queue, array $values) :? string
+    public function produceJobMessage(string $queue, string $action, array $values) :? string
     {
         try {
+            $values['crud_operation'] = $action;
+
+            $values['site'] = ['id' => 1];
+
             // @TODO we need to wrap these AMQP calls into a QueueHandler
             // so we decouple the vendor from the source code
             $values['uuid'] = uniqid('', $moreEntropy = true);
@@ -52,6 +63,8 @@ class MessageManager
             return false;
         }
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Consume messages from the message queue system
@@ -85,6 +98,8 @@ class MessageManager
             }
         });
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Produces a BusinessLog message
@@ -124,8 +139,12 @@ class MessageManager
         );
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // PRIVATED METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
-     * print output to console
+     * Print output to console
      *
      * @access private
      * @param  string $queue
@@ -150,4 +169,7 @@ class MessageManager
             $console->writeln("<info>{$messageTitleConsole}</info>");
         }
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }
