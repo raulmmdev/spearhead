@@ -39,7 +39,7 @@ class MessageManager
      * @param  string $queue
      * @param  string $action
      * @param  array  $values
-     * @return bool
+     * @return string
      */
     public function produceJobMessage(string $queue, string $action, array $values) :? string
     {

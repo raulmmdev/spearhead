@@ -17,7 +17,7 @@ class SiteManager
      * @param CreateSiteJob $job
      * @return CreateSiteJob | null
      */
-    public function createFromJob(CreateSiteJob $job) : ?CreateSiteJob
+    public function createFromJob(CreateSiteJob $job) :? CreateSiteJob
     {
         try {
             $site = new Site();

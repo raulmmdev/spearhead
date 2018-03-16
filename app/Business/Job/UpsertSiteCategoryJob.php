@@ -60,7 +60,7 @@ class UpsertSiteCategoryJob extends BaseJob implements SiteCategoryManagerAwareI
      * @access public
      * @return UpsertSiteCategoryJob | null
      */
-    public function resolve() : ?UpsertSiteCategoryJob
+    public function resolve() :? UpsertSiteCategoryJob
     {
         return $this->siteCategoryManager->upsertFromJob($this);
     }
