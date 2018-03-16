@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Qwindo\SaveSiteRequest;
 use App\Model\Document\BusinessLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * SiteController
@@ -67,6 +68,7 @@ class SiteController extends Controller
      */
     public function createSite(SaveSiteRequest $request): \Illuminate\Http\JsonResponse
     {
+        //$user = Auth::guard('api')->user();
         $result = $request->resolve();
 
         if (!$result) {

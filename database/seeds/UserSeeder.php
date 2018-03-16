@@ -22,9 +22,9 @@ class UserSeeder extends Seeder
         $user->save();
 
         $user = new User();
-        $user->name = 'Carlos Jesús';
-        $user->email = 'micael@multisafepay.com';
-        $user->password = bcrypt('porlosclavosdecristo');
+        $user->name = 'Multisafepay';
+        $user->email = 'msp@multisafepay.com';
+        $user->password = bcrypt('plokiju123');
         $user->save();
     }
 }

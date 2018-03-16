@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSiteProviderFeaturesTable extends Migration
+class CreateSiteProviderFeatureTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateSiteProviderFeaturesTable extends Migration
      */
     public function up()
     {
+        echo('Creating site_provider table '.PHP_EOL);
         Schema::create('site_provider_feature', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('login')->unique();
             $table->string('key');
+            $table->enum('status', ['ENABLED', 'DISABLED', 'BLOCKED'])->default('ENABLED');
             $table->timestamps();
 
             //constraints

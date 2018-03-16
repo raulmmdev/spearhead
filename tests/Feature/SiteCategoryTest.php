@@ -31,7 +31,7 @@ class SiteCategoryTest extends TestCase
         $values = json_decode(file_get_contents(database_path('seeds/json/categories/vinq.json')), true);
 
         $response = $this
-            ->withHeaders($this->getHeaders($url, $values))
+            ->withHeaders($this->getHeadersAsAuth($url, $values))
             ->json('POST', $url, $values);
 
         $response
@@ -63,7 +63,7 @@ class SiteCategoryTest extends TestCase
         ];
 
         $response = $this
-            ->withHeaders($this->getHeaders($url, $values))
+            ->withHeaders($this->getHeadersAsAuth($url, $values))
             ->json('POST', $url, $values);
 
         $response
@@ -102,7 +102,7 @@ class SiteCategoryTest extends TestCase
         ];
 
         $response = $this
-            ->withHeaders($this->getHeaders($url, $values))
+            ->withHeaders($this->getHeadersAsAuth($url, $values))
             ->json('POST', $url, $values);
 
         $response
@@ -142,7 +142,7 @@ class SiteCategoryTest extends TestCase
         ];
 
         $response = $this
-            ->withHeaders($this->getHeaders($url, $values))
+            ->withHeaders($this->getHeadersAsAuth($url, $values))
             ->json('POST', $url, $values);
 
         $response

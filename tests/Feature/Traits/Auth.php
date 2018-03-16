@@ -5,6 +5,13 @@ namespace Tests\Feature\Traits;
 trait Auth
 {
     //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
+
+    private $AUTH_TYPE_DEFAULT = 'Auth';
+    private $AUTH_TYPE_SITE_PROVIDER = 'SiteProvider';
+
+    //------------------------------------------------------------------------------------------------------------------
     // PRIVATED METHODS
     //------------------------------------------------------------------------------------------------------------------
 
@@ -12,16 +19,49 @@ trait Auth
      * Creates a valid headers
      *
      * @access private
+     * @param  string $authType
      * @param  string $url
      * @param  array $body
      * @return string
      */
-    private function getHeaders(string $url, array $body) : array
+    private function getHeadersAsSiteProvider(string $url, array $body) : array
+    {
+        return $this->getHeaders($this->AUTH_TYPE_SITE_PROVIDER, $url, $body);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a valid headers
+     *
+     * @access private
+     * @param  string $authType
+     * @param  string $url
+     * @param  array $body
+     * @return string
+     */
+    private function getHeadersAsAuth(string $url, array $body) : array
+    {
+        return $this->getHeaders($this->AUTH_TYPE_DEFAULT, $url, $body);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a valid headers
+     *
+     * @access private
+     * @param  string $authType
+     * @param  string $url
+     * @param  array $body
+     * @return string
+     */
+    private function getHeaders(string $authType, string $url, array $body) : array
     {
         return [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Auth' => $this->createAuth($url, $body),
+            $authType => $this->createAuth($url, $body),
         ];
     }
 

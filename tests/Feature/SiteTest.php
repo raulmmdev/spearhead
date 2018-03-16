@@ -33,7 +33,7 @@ class SiteTest extends TestCase
         ];
 
         $response = $this
-            ->withHeaders($this->getHeaders($url, $values))
+            ->withHeaders($this->getHeadersAsSiteProvider($url, $values))
             ->json('POST', $url, $values);
 
         $response
@@ -60,7 +60,7 @@ class SiteTest extends TestCase
         ];
 
         $response = $this
-            ->withHeaders($this->getHeaders($url, $values))
+            ->withHeaders($this->getHeadersAsSiteProvider($url, $values))
             ->json('POST', $url, $values);
 
         $response
