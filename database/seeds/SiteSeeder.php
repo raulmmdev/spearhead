@@ -15,8 +15,8 @@ class SiteSeeder extends Seeder
      */
     public function run()
     {
-        $user = new Site();
-        $user->name = 'a test shop';
-        $user->save();
+        $site = new Site();
+        $site->name = 'A test shop';
+        $site->save();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity\Repository;
 
 use Prettus\Repository\Eloquent\BaseRepository;

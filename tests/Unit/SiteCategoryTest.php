@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use App\Business\Job\UpsertSiteCategoryJob;
 use App\Business\SiteCategory\SiteCategoryManager;
 use App\Http\Requests\ApiRequest;
-use App\Model\Entity\Site;
+use App\Model\Entity\ApiFeature;
 use App\Model\Entity\SiteCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -34,9 +34,7 @@ class SiteCategoryTest extends TestCase
 		$job->data = [
             'crud_operation' => ApiRequest::ACTION_UPSERT,
 
-            'site' => [
-            	'id' => Site::pluck('id')[0]
-            ],
+            'user' => ApiFeature::find(ApiFeature::pluck('id')[0]),
 
             'tree' => json_decode(file_get_contents(database_path('seeds/json/categories/vinq.json')), true),
         ];

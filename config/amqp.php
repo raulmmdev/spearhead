@@ -40,7 +40,9 @@ return [
             'queue_exclusive'       => false,
             'queue_auto_delete'     => false,
             'queue_nowait'          => false,
-            'queue_properties'      => ['x-ha-policy' => ['S', 'all']],
+            'queue_properties'      => [
+                'x-ha-policy' => ['S', 'all']
+            ],
 
             'consumer_tag'          => '',
             'consumer_no_local'     => false,
@@ -48,7 +50,7 @@ return [
             'consumer_exclusive'    => false,
             'consumer_nowait'       => false,
             'timeout'               => 0,
-            
+
             'persistent'            => true, //prevent the consumer to stop if no messages on queue at start
         ],
     ],

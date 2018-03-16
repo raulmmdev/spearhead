@@ -35,7 +35,9 @@ class ApiProvider extends ServiceProvider
         });
 
         $this->app->bind('App\Business\SiteCategory\SiteCategoryManager', function ($app) {
-            return new SiteCategoryManager();
+            return new SiteCategoryManager(
+                $app->make('App\Model\Entity\Repository\ApiFeatureRepository')
+            );
         });
 
         $this->app->bind('App\Business\Api\Response\ApiResponseManager', function ($app) {

@@ -5,6 +5,7 @@ namespace App\Business\Message;
 use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Job\JobFactory;
 use App\Model\Document\BusinessLog;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
@@ -45,13 +46,13 @@ class MessageManager
         try {
             $values['crud_operation'] = $action;
 
-            $values['site'] = ['id' => 1];
+            $values['user'] = Auth::guard('api')->user();
 
             // @TODO we need to wrap these AMQP calls into a QueueHandler
             // so we decouple the vendor from the source code
             $values['uuid'] = uniqid('', $moreEntropy = true);
 
-            \Amqp::publish('', json_encode($values), [
+            \Amqp::publish($queue, json_encode($values), [
                 'queue' => $queue
             ]);
 

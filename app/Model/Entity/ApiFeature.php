@@ -11,10 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ApiFeature extends Model implements UserInterface, Authenticatable
 {
-    //------------------------------------------------------------------------------------------------------------------
-    // PROPERTIES
-    //------------------------------------------------------------------------------------------------------------------
-
     const STATUS_ENABLED = 'ENABLED';
     const STATUS_DISABLED = 'DISABLED';
     const STATUS_BLOCKED = 'BLOCKED';
@@ -71,9 +67,7 @@ class ApiFeature extends Model implements UserInterface, Authenticatable
 
     /**
      * isEnabled
-     *
-     * @access public
-     * @return boolean
+     * @return boolean [description]
      */
     public function isEnabled(): bool
     {

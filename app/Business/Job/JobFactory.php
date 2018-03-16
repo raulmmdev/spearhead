@@ -136,7 +136,7 @@ class JobFactory
      */
     private function fillSiteCategoryJob(array $values) : void
     {
-        $this->job->data['site'] = $values['site'];
+        $this->job->data['user'] = $values['user'];
         $this->job->data['tree'] = $values['tree'];
     }
 

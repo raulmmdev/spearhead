@@ -3,6 +3,7 @@
 namespace App\Business\SiteCategory;
 
 use App\Business\Job\UpsertSiteCategoryJob;
+use App\Model\Entity\Repository\ApiFeatureRepository;
 use App\Model\Entity\Site;
 use App\Model\Entity\SiteCategory;
 
@@ -12,7 +13,26 @@ use App\Model\Entity\SiteCategory;
 class SiteCategoryManager
 {
     //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * ApiFeatureRepository container
+     *
+     * @access protected
+     * @var ApiFeatureRepository
+     */
+    protected $apiFeatureRepository;
+
+    //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
+    public function __construct(ApiFeatureRepository $apiFeatureRepository)
+    {
+        $this->apiFeatureRepository = $apiFeatureRepository;
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -24,12 +44,16 @@ class SiteCategoryManager
      */
     public function upsertFromJob(UpsertSiteCategoryJob $job) : ?UpsertSiteCategoryJob
     {
+        // Extract the variables from $job->data into current scope
+        // $job->data['user'] ==> $user;
+        // $job->data['tree'] ==> $tree;
         extract($job->data);
 
         try {
-            $site = Site::find($site['id']);
-
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+            $site = $this->apiFeatureRepository->find($user['id'])->site;
+
             // Disable current tree (if any)
 
             SiteCategory::where('site_id', $site->id)->update([

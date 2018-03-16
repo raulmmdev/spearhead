@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Consumers;
 
 use App\Business\Message\MessageManager;
+use App\Http\Requests\ApiRequest;
 use App\Http\Requests\Qwindo\SaveSiteRequest;
 use Illuminate\Console\Command;
 
@@ -58,7 +59,7 @@ class SiteConsumer extends Command
     {
         $asDaemon = $this->option('daemon');
 
-        $this->messageManager->consumeJobMessage(SaveSiteRequest::QUEUE, $asDaemon);
+        $this->messageManager->consumeJobMessage(ApiRequest::QUEUE_SITE, $asDaemon);
 
         $elapsedTime = microtime($get_as_float = true) - $_SERVER['REQUEST_TIME_FLOAT'];
         $this->comment("Required time [ {$elapsedTime} seconds ]");

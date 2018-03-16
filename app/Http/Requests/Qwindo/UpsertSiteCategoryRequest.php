@@ -68,6 +68,7 @@ class UpsertSiteCategoryRequest extends ApiRequest implements ResolvableInterfac
     protected function validationData() : array
     {
         $tree = $this->all();
+
         return ['tree' => $tree];
     }
 
@@ -82,7 +83,7 @@ class UpsertSiteCategoryRequest extends ApiRequest implements ResolvableInterfac
     public function rules(): array
     {
         return [
-            'tree' => ['required', 'array', new Category],
+            'tree' => ['required', 'array', 'min:1', new Category],
         ];
     }
 

@@ -53,7 +53,7 @@ trait Auth
      * @access private
      * @param  string $authType
      * @param  string $url
-     * @param  array $body
+     * @param  mixed $body
      * @return string
      */
     private function getHeaders(string $authType, string $url, array $body) : array
@@ -75,7 +75,7 @@ trait Auth
      * @param  array $body
      * @return string
      */
-    private function createAuth(string $url, array $body) : string
+    private function createAuth(string $url, $body) : string
     {
         $hash_id = 'login';
         $qwindo_key = 'key';

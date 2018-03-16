@@ -192,7 +192,6 @@ class AuthBasic
         return null;
     }
 
-
     /**
      * getUser
      *

@@ -49,7 +49,7 @@ class Site extends BaseModel
      */
     public function categories()
     {
-        return $this->hasMany('App\Model\Entity\SiteCategory');
+        return $this->hasMany('App\Model\Entity\SiteCategory', 'site_id', 'id');
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ class Site extends BaseModel
      */
     public function apiFeatures()
     {
-        return $this->hasMany('App\Model\Entity\ApiFeature');
+        return $this->hasMany('App\Model\Entity\ApiFeature', 'site_id', 'id');
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -76,6 +76,7 @@ class Site extends BaseModel
     {
         return $this->status === self::STATUS_ENABLED;
     }
+
 
     //------------------------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------
