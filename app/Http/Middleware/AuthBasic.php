@@ -12,6 +12,7 @@ use App\Model\Entity\Repository\SiteProviderFeatureRepository;
 use Closure;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthBasic
 {
@@ -125,8 +126,7 @@ class AuthBasic
 
         //token matches?
         if ($expectedToken === $token) {
-            //merge the user to the request as basic security context
-            $request->merge(['user' => $user]);
+            $guard = Auth::guard('api')->setUser($user);
             return $next($request);
         } else {
             $this->logFailure(
@@ -199,7 +199,7 @@ class AuthBasic
      * @access private
      * @param  Request $request
      * @param  string  $login
-     * @return UserInteface|null
+     * @return UserInterface|null
      */
     private function getUser(Request $request, string $login):? UserInterface
     {
