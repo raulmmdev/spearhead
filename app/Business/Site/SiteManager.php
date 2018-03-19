@@ -5,6 +5,7 @@ namespace App\Business\Site;
 use App\Business\Api\ApiFeatureManager;
 use App\Business\Job\CreateSiteJob;
 use App\Business\User\UserManager;
+use App\Model\Entity\Repository\SiteRepository;
 use App\Model\Entity\Site;
 use App\Model\Entity\User;
 
@@ -29,15 +30,26 @@ class SiteManager
     protected $apiFeatureManager;
 
     /**
+     * $siteRepository
+     * @access protected
+     * @var $siteRepository
+     */
+    protected $siteRepository;
+
+    /**
      * __construct
-     * @param UserManager $userManager
+     * @param UserManager       $userManager
+     * @param ApiFeatureManager $apiFeatureManager
+     * @param SiteRepository    $siteRepository
      */
     public function __construct(
         UserManager $userManager,
-        ApiFeatureManager $apiFeatureManager
+        ApiFeatureManager $apiFeatureManager,
+        SiteRepository $siteRepository
     ) {
         $this->userManager = $userManager;
         $this->apiFeatureManager = $apiFeatureManager;
+        $this->siteRepository = $siteRepository;
     }
 
     /**
@@ -85,11 +97,22 @@ class SiteManager
      */
     private function createSiteFromJob(CreateSiteJob $job, User $user): Site
     {
+        //site exists? make sure its enabled and use it
+        $site = $this->siteRepository->findByField('native_id', $job->data['site']['site_id'])->first();
+        if ($site != null) {
+            $site->setStatus(Site::STATUS_ENABLED);
+
+            $site->save();
+
+            return $site;
+        }
+
         $site = new Site();
         $site->setName($job->data['site']['portal_description']);
         $site->setUrl($job->data['site']['portal_url']);
         $site->setApiKey($job->data['site']['site_apikey']);
         $site->setNativeId($job->data['site']['site_id']);
+        $site->setStatus(Site::STATUS_ENABLED);
         $site->user()->associate($user);
 
         $site->save();

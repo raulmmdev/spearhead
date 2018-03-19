@@ -12,6 +12,7 @@ use App\Business\Site\SiteManager;
 use App\Business\SiteCategory\SiteCategoryManager;
 use App\Business\User\Attribute\UserAttributeManager;
 use App\Business\User\UserManager;
+use App\Model\Entity\Repository\SiteRepository;
 use Illuminate\Support\ServiceProvider;
 
 class ApiProvider extends ServiceProvider
@@ -43,7 +44,8 @@ class ApiProvider extends ServiceProvider
         $this->app->bind('App\Business\Site\SiteManager', function ($app) {
             return new SiteManager(
                 $app->make('App\Business\User\UserManager'),
-                $app->make('App\Business\Api\ApiFeatureManager')
+                $app->make('App\Business\Api\ApiFeatureManager'),
+                $app->make('App\Model\Entity\Repository\SiteRepository')
             );
         });
 
@@ -80,7 +82,9 @@ class ApiProvider extends ServiceProvider
         });
 
         $this->app->bind('App\Business\Api\ApiFeatureManager', function ($app) {
-            return new ApiFeatureManager();
+            return new ApiFeatureManager(
+                $app->make('App\Model\Entity\Repository\ApiFeatureRepository')
+            );
         });
 
         $this->app->bind('App\Business\BusinessLog\BusinessLogManager', function ($app) {
