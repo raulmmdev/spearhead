@@ -5,8 +5,10 @@ namespace App\Business\Injector;
 use App\Business\Job\BaseJob;
 use App\Business\Job\Interfaces\SiteCategoryManagerAwareInterface;
 use App\Business\Job\Interfaces\SiteManagerAwareInterface;
+use App\Business\Job\Interfaces\SiteProductManagerAwareInterface;
 use App\Business\Site\SiteManager;
 use App\Business\SiteCategory\SiteCategoryManager;
+use App\Business\SiteProduct\SiteProductManager;
 
 /**
  * Injector
@@ -19,10 +21,15 @@ class Injector
      * @access public
      * @param SiteManager $siteManager
      */
-    public function __construct(SiteManager $siteManager, SiteCategoryManager $siteCategoryManager)
+    public function __construct(
+        SiteManager $siteManager,
+        SiteCategoryManager $siteCategoryManager,
+        SiteProductManager $siteProductManager
+    )
     {
         $this->siteManager = $siteManager;
         $this->siteCategoryManager = $siteCategoryManager;
+        $this->siteProductManager = $siteProductManager;
     }
 
     /**
@@ -40,6 +47,10 @@ class Injector
 
         if ($job instanceof SiteCategoryManagerAwareInterface) {
             $job->setSiteCategoryManager($this->siteCategoryManager);
+        }
+
+        if ($job instanceof SiteProductManagerAwareInterface) {
+            $job->setSiteProductManager($this->siteProductManager);
         }
 
         return $job;
