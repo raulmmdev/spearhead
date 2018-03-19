@@ -37,7 +37,7 @@ class Site extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name',
+        'name', 'url', 'api_key', 'native_id'
     ];
 
     //------------------------------------------------------------------------------------------------------------------

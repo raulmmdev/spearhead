@@ -19,6 +19,9 @@ class SiteSeeder extends Seeder
 
         $site = new Site();
         $site->name = 'A test shop';
+        $site->setUrl('http://www.multisafepay.com');
+        $site->setApiKey('xxxxxxxxx');
+        $site->setNativeId(9999);
         $site->user()->associate($user);
 
         $site->save();

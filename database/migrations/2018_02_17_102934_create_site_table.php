@@ -18,6 +18,9 @@ class CreateSiteTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('name')->nullable(false);
+            $table->string('url');
+            $table->string('api_key');
+            $table->string('native_id')->unique();
             $table->enum('status', ['ENABLED', 'DISABLED', 'BLOCKED'])->default('ENABLED');
             $table->timestamps();
 

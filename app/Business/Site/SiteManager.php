@@ -87,7 +87,11 @@ class SiteManager
     {
         $site = new Site();
         $site->setName($job->data['site']['portal_description']);
+        $site->setUrl($job->data['site']['portal_url']);
+        $site->setApiKey($job->data['site']['site_apikey']);
+        $site->setNativeId($job->data['site']['site_id']);
         $site->user()->associate($user);
+
         $site->save();
 
         return $site;
