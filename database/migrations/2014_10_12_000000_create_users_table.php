@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
         Schema::create('user', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('country');
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('status', ['ENABLED', 'DISABLED', 'BLOCKED'])->default('ENABLED');

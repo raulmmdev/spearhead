@@ -29,7 +29,7 @@ class User extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'status'
+        'name', 'email', 'password', 'country', 'status'
     ];
 
     /**

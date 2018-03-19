@@ -35,7 +35,8 @@ class ApiProvider extends ServiceProvider
     {
         $this->app->bind('App\Business\User\UserManager', function ($app) {
             return new UserManager(
-                $app->make('App\Business\User\Attribute\UserAttributeManager')
+                $app->make('App\Business\User\Attribute\UserAttributeManager'),
+                $app->make('App\Model\Entity\Repository\UserRepository')
             );
         });
 

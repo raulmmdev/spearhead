@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
         $user = new User();
         $user->name = 'Geralt de Rivia';
         $user->email = 'geralt.rivia@multisafepay.com';
+        $user->country = 'NL';
         $user->password = bcrypt('plokiju123');
         $user->save();
 
@@ -25,6 +26,7 @@ class UserSeeder extends Seeder
         $user->name = 'Multisafepay';
         $user->email = 'msp@multisafepay.com';
         $user->password = bcrypt('plokiju123');
+        $user->country = 'NL';
         $user->save();
     }
 }
