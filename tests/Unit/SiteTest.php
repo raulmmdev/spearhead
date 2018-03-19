@@ -11,44 +11,84 @@ use Tests\TestCase;
 
 class SiteTest extends TestCase
 {
-	protected $siteManager;
+    protected $siteManager;
 
-	public function setup()
-	{
-		parent::setUp();
+    public function setup()
+    {
+        parent::setUp();
 
-		$this->siteManager = $this->app->make('App\Business\Site\SiteManager');
-	}
+        $this->siteManager = $this->app->make('App\Business\Site\SiteManager');
+    }
 
-	/**
-	 * A basic test example.
-	 *
-	 * @return void
-	 */
-	public function testSiteCreation()
-	{
-		$faker = \Faker\Factory::create();
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testSiteCreation()
+    {
+        $faker = \Faker\Factory::create();
 
-		$siteJob = new CreateSiteJob();
-		$siteJob->setSiteManager($this->siteManager);
-		$siteJob->data['crud_operation'] = ApiRequest::ACTION_CREATE;
-		$siteJob->data['name'] = $faker->company;
-		$siteJob = $this->siteManager->createFromJob($siteJob);
+        $data = [
+            'crud_operation' => ApiRequest::ACTION_CREATE,
+            'site' => [
+                'portal_payment_methods' => [
+                    'AMEX' => 'AMEX',
+                    'WALLET' => 'WALLET',
+                    'MAESTRO' => 'MAESTRO',
+                    'VVVGIFTCRD' => 'VVVGIFTCRD',
+                    'IDEAL' => 'IDEAL',
+                    'FASHIONCHQ' => 'FASHIONCHQ',
+                    'MASTERCARD' => 'MASTERCARD',
+                    'MISTERCASH' => 'MISTERCASH',
+                    'VISA' => 'VISA'
+                ],
+                'portal_keurmerk_qshops' => 1,
+                'portal_url' => 'https://www.falkewinkel.nl',
+                'site_apikey' => 'a052e6e31d7514ba727a3b2478a74e20893bb042',
+                'portal_description' => 'VINQ.nl / FALKEwinkel',
+                'feed_type' => '',
+                'portal_keurmerk_thuiswinkel' => 0,
+                'site_id' => 41343,
+                'supportemail' => '',
+                'feed_url' => '',
+                'ca_code' => '108',
+                'supportphone' => '',
+                'qwindo_integration' => true,
+                'portal_fastcheckout' => 0,
+                'mcc' => '5655',
+                'portal_category' => '108',
+                'site_status' => 'blocked'
+            ],
 
-		$this->assertFalse($siteJob->hasErrors());
-	}
+            'merchant' => [
+                'country' => 'NL',
+                'email_address' => 'pieter@vinq.nl',
+                'name' => $faker->company,
+                'merchant_id' => 10352732,
+                'merchant_status' => 'active'
+            ],
+        ];
 
-	/**
-	 * A basic test example.
-	 *
-	 * @return void
-	 */
-	public function testSiteCreationMissingData()
-	{
-		$siteJob = new CreateSiteJob();
-		$siteJob->setSiteManager($this->siteManager);
-		$siteJob = $this->siteManager->createFromJob($siteJob);
+        $siteJob = new CreateSiteJob();
+        $siteJob->setSiteManager($this->siteManager);
+        $siteJob->data = $data;
+        $siteJob = $this->siteManager->createFromJob($siteJob);
 
-		$this->assertTrue($siteJob->hasErrors());
-	}
+        $this->assertFalse($siteJob->hasErrors());
+    }
+
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testSiteCreationMissingData()
+    {
+        $siteJob = new CreateSiteJob();
+        $siteJob->setSiteManager($this->siteManager);
+        $siteJob = $this->siteManager->createFromJob($siteJob);
+
+        $this->assertTrue($siteJob->hasErrors());
+    }
 }

@@ -29,7 +29,43 @@ class SiteTest extends TestCase
         $url = config('app.url') . '/api/site';
 
         $values = [
-            'name' => $faker->company
+            'site' => [
+                'portal_payment_methods' => [
+                    'AMEX' => 'AMEX',
+                    'WALLET' => 'WALLET',
+                    'MAESTRO' => 'MAESTRO',
+                    'VVVGIFTCRD' => 'VVVGIFTCRD',
+                    'IDEAL' => 'IDEAL',
+                    'FASHIONCHQ' => 'FASHIONCHQ',
+                    'MASTERCARD' => 'MASTERCARD',
+                    'MISTERCASH' => 'MISTERCASH',
+                    'VISA' => 'VISA'
+                ],
+                'portal_keurmerk_qshops' => 1,
+                'portal_url' => 'https://www.falkewinkel.nl',
+                'site_apikey' => 'a052e6e31d7514ba727a3b2478a74e20893bb042',
+                'portal_description' => 'VINQ.nl / FALKEwinkel',
+                'feed_type' => '',
+                'portal_keurmerk_thuiswinkel' => 0,
+                'site_id' => 41343,
+                'supportemail' => '',
+                'feed_url' => '',
+                'ca_code' => '108',
+                'supportphone' => '',
+                'qwindo_integration' => true,
+                'portal_fastcheckout' => 0,
+                'mcc' => '5655',
+                'portal_category' => '108',
+                'site_status' => 'blocked'
+            ],
+
+            'merchant' => [
+                'country' => 'NL',
+                'email_address' => 'pieter@vinq.nl',
+                'name' => $faker->company,
+                'merchant_id' => 10352732,
+                'merchant_status' => 'active'
+            ],
         ];
 
         $response = $this
@@ -51,12 +87,12 @@ class SiteTest extends TestCase
      *
      * @return void
      */
-    public function testCreateSiteNoName() : void
+    /*public function testCreateSiteNoMerchant() : void
     {
         $url = config('app.url') . '/api/site';
 
         $values = [
-            'name' => ''
+            'merchant' => ''
         ];
 
         $response = $this
@@ -69,14 +105,14 @@ class SiteTest extends TestCase
                 'errors' => [
                     [
                         'source' => [
-                            'pointer' => '/data/attributes/name'
+                            'pointer' => '/data/attributes/merchant'
                         ],
                         'title' => 'Invalid Attribute',
                         'details' => 'The name field is required.'
                     ]
                 ]
             ]);
-    }
+    }*/
 
     //------------------------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------
