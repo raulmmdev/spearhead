@@ -4,12 +4,11 @@ namespace App\Model\Entity;
 
 use App\Business\User\Interfaces\UserInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * ApiFeature
  */
-class ApiFeature extends Model implements UserInterface, Authenticatable
+class ApiFeature extends BaseModel implements UserInterface, Authenticatable
 {
     const STATUS_ENABLED = 'ENABLED';
     const STATUS_DISABLED = 'DISABLED';
@@ -31,18 +30,26 @@ class ApiFeature extends Model implements UserInterface, Authenticatable
      */
     public $timestamps = true;
 
-    //------------------------------------------------------------------------------------------------------------------
-    // RELATIONSHIPS
-    //------------------------------------------------------------------------------------------------------------------
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'site_id', 'login', 'status',
+    ];
 
     /**
-     * An API feature belongs to one User
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
      */
-    public function user()
-    {
-        return $this->belongsTo('App\Model\Entity\User', 'user_id', 'id');
-    }
+    protected $hidden = [
+        'key',
+    ];
 
+    //------------------------------------------------------------------------------------------------------------------
+    // RELATIONSHIPS
     //------------------------------------------------------------------------------------------------------------------
 
     /**

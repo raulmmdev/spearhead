@@ -3,13 +3,12 @@
 namespace App\Model\Entity;
 
 use App\Business\User\Interfaces\UserInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * SiteProviderFeature
  */
-class SiteProviderFeature extends Model implements UserInterface, Authenticatable
+class SiteProviderFeature extends BaseModel implements UserInterface, Authenticatable
 {
     const STATUS_ENABLED = 'ENABLED';
     const STATUS_DISABLED = 'DISABLED';

@@ -2,14 +2,10 @@
 
 namespace App\Model\Entity;
 
-use Illuminate\Notifications\Notifiable;
-
-class User extends BaseModel
+class UserAttribute extends BaseModel
 {
-    use Notifiable;
-    const STATUS_ENABLED = 'ENABLED';
-    const STATUS_DISABLED = 'DISABLED';
-    const ATTRIBUTE_MERCHANT_ID = 'MERCHANT_ID';
+    const STATUS_ACTIVE = 'ACTIVE';
+    const STATUS_INACTIVE = 'INACTIVE';
 
     //------------------------------------------------------------------------------------------------------------------
     // PROPERTIES
@@ -21,7 +17,7 @@ class User extends BaseModel
      * @access protected
      * @var string
      */
-    protected $table = 'user';
+    protected $table = 'user_attribute';
 
     /**
      * The attributes that are mass assignable.
@@ -29,16 +25,7 @@ class User extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'status'
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
+        'user_id', 'name', 'value'
     ];
 
     //------------------------------------------------------------------------------------------------------------------
@@ -46,27 +33,11 @@ class User extends BaseModel
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * One user has many SiteProvider features
+     * One user attribute belongs to a user
      */
-    public function siteProviderFeatures()
+    public function user()
     {
-        return $this->hasMany('App\Model\Entity\SiteProviderFeature');
-    }
-
-    /**
-     * One user has many attributes
-     */
-    public function attributes()
-    {
-        return $this->hasMany('App\Model\Entity\UserAttribute');
-    }
-
-    /**
-     * One user has many sites
-     */
-    public function sites()
-    {
-        return $this->hasMany('App\Model\Entity\Site');
+        return $this->belongsTo('App\Model\Entity\User', 'user_id', 'id');
     }
 
     //------------------------------------------------------------------------------------------------------------------

@@ -18,7 +18,6 @@ class ApiFeatureSeeder extends Seeder
         $site = User::find(Site::pluck('id')[0]);
 
         $feature = new ApiFeature();
-        $feature->user()->associate($user);
         $feature->site()->associate($site);
         $feature->login = 'login';
         $feature->key = 'key';

@@ -26,7 +26,7 @@ class SiteCategoryTest extends TestCase
     {
         $faker = \Faker\Factory::create();
 
-        $url = config('app.url') . '/api/category';
+        $url = config('app.url') . '/api/categories/data';
 
         $values = json_decode(file_get_contents(database_path('seeds/json/categories/vinq.json')), true);
 
@@ -51,7 +51,7 @@ class SiteCategoryTest extends TestCase
      */
     public function testUpsertSiteCategoryWrongLocale() : void
     {
-        $url = config('app.url') . '/api/category';
+        $url = config('app.url') . '/api/categories/data';
 
         $values = [
             0 => [
@@ -90,7 +90,7 @@ class SiteCategoryTest extends TestCase
      */
     public function testUpsertSiteCategoryWrongLocaleContent() : void
     {
-        $url = config('app.url') . '/api/category';
+        $url = config('app.url') . '/api/categories/data';
 
         $values = [
             0 => [
@@ -129,7 +129,7 @@ class SiteCategoryTest extends TestCase
      */
     public function testUpsertSiteCategoryWrongCashback() : void
     {
-        $url = config('app.url') . '/api/category';
+        $url = config('app.url') . '/api/categories/data';
 
         $values = [
             0 => [

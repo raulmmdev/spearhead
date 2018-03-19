@@ -16,9 +16,16 @@ class CreateSiteTable extends Migration
         echo('Creating site table '.PHP_EOL);
         Schema::create('site', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
             $table->string('name')->nullable(false);
             $table->enum('status', ['ENABLED', 'DISABLED', 'BLOCKED'])->default('ENABLED');
             $table->timestamps();
+
+            //constraints
+            $table
+                ->foreign('user_id')
+                ->references('id')->on('user')
+                ->onDelete('cascade');
         });
     }
 

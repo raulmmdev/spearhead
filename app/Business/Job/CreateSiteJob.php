@@ -49,7 +49,7 @@ class CreateSiteJob extends BaseJob implements SiteManagerAwareInterface
      * @access public
      * @return CreateSiteJob | null
      */
-    public function resolve() : ?CreateSiteJob
+    public function resolve() :? CreateSiteJob
     {
         return $this->siteManager->createFromJob($this);
     }

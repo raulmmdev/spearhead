@@ -8,9 +8,9 @@ use App\Business\Message\MessageManager;
 use App\Http\Requests\ApiRequest;
 
 /**
- * SaveSiteRequest
+ * CreateSiteRequest
  */
-class SaveSiteRequest extends ApiRequest implements ResolvableInterface
+class CreateSiteRequest extends ApiRequest implements ResolvableInterface
 {
     /**
      * @access protected
@@ -45,9 +45,10 @@ class SaveSiteRequest extends ApiRequest implements ResolvableInterface
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|max:255',
-        ];
+        return [];
+        /*return [
+            'site.name' => 'required|max:255',
+        ];*/
     }
 
     /**

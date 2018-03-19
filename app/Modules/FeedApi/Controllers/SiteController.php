@@ -8,7 +8,7 @@ use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Error\ErrorCode;
 use App\Business\Message\MessageManager;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Qwindo\SaveSiteRequest;
+use App\Http\Requests\Qwindo\CreateSiteRequest;
 use App\Model\Document\BusinessLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,10 +63,10 @@ class SiteController extends Controller
      * Create a new site job from a Request.
      *
      * @access public
-     * @param SaveSiteRequest $request
+     * @param CreateSiteRequest $request
      * @return JsonResponse
      */
-    public function createSite(SaveSiteRequest $request): \Illuminate\Http\JsonResponse
+    public function createSite(CreateSiteRequest $request): \Illuminate\Http\JsonResponse
     {
         //$user = Auth::guard('api')->user();
         $result = $request->resolve();

@@ -122,7 +122,8 @@ class JobFactory
      */
     private function fillSiteJob(array $values) : void
     {
-        $this->job->data['name'] = $values['name'];
+        $this->job->data['merchant'] = $values['merchant'];
+        $this->job->data['site'] = $values['site'];
     }
 
     //------------------------------------------------------------------------------------------------------------------

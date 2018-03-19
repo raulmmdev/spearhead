@@ -55,11 +55,19 @@ class Site extends BaseModel
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * One user has many API features
+     * One site has many API features
      */
     public function apiFeatures()
     {
         return $this->hasMany('App\Model\Entity\ApiFeature', 'site_id', 'id');
+    }
+
+    /**
+     * A site belongs to a user
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Model\Entity\User', 'user_id', 'id');
     }
 
     //------------------------------------------------------------------------------------------------------------------

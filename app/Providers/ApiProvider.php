@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Business\Api\ApiFeatureManager;
 use App\Business\Api\Response\ApiResponseManager;
 use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Injector\Injector;
@@ -9,6 +10,8 @@ use App\Business\Job\JobFactory;
 use App\Business\Message\MessageManager;
 use App\Business\Site\SiteManager;
 use App\Business\SiteCategory\SiteCategoryManager;
+use App\Business\User\Attribute\UserAttributeManager;
+use App\Business\User\UserManager;
 use Illuminate\Support\ServiceProvider;
 
 class ApiProvider extends ServiceProvider
@@ -30,8 +33,17 @@ class ApiProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind('App\Business\User\UserManager', function ($app) {
+            return new UserManager(
+                $app->make('App\Business\User\Attribute\UserAttributeManager')
+            );
+        });
+
         $this->app->bind('App\Business\Site\SiteManager', function ($app) {
-            return new SiteManager();
+            return new SiteManager(
+                $app->make('App\Business\User\UserManager'),
+                $app->make('App\Business\Api\ApiFeatureManager')
+            );
         });
 
         $this->app->bind('App\Business\SiteCategory\SiteCategoryManager', function ($app) {
@@ -64,6 +76,10 @@ class ApiProvider extends ServiceProvider
                 $app->make('App\Business\Injector\Injector'),
                 $app->make('App\Business\BusinessLog\BusinessLogManager')
             );
+        });
+
+        $this->app->bind('App\Business\Api\ApiFeatureManager', function ($app) {
+            return new ApiFeatureManager();
         });
 
         $this->app->bind('App\Business\BusinessLog\BusinessLogManager', function ($app) {

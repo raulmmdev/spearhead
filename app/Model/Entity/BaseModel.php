@@ -28,9 +28,11 @@ class BaseModel extends Model
         $isGetter = starts_with($method, 'get');
         $studlyCasedAttribute = substr($method, strlen('get'));
 
+        $properties = array_merge($this->fillable, $this->hidden, ['id']);
+
         $attributesMap = [];
-        if (count($this->fillable)) {
-            foreach ($this->fillable as $attr) {
+        if (count($properties)) {
+            foreach ($properties as $attr) {
                 $attributesMap[studly_case($attr)] = $attr;
             }
         }
