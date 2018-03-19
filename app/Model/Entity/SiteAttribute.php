@@ -2,7 +2,7 @@
 
 namespace App\Model\Entity;
 
-class UserAttribute extends BaseModel
+class SiteAttribute extends BaseModel
 {
     //------------------------------------------------------------------------------------------------------------------
     // PROPERTIES
@@ -14,7 +14,7 @@ class UserAttribute extends BaseModel
      * @access protected
      * @var string
      */
-    protected $table = 'user_attribute';
+    protected $table = 'site_attribute';
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +22,7 @@ class UserAttribute extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'user_id', 'name', 'value'
+        'site_id', 'name', 'value'
     ];
 
     //------------------------------------------------------------------------------------------------------------------
@@ -30,11 +30,11 @@ class UserAttribute extends BaseModel
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * One user attribute belongs to a user
+     * One site attribute belongs to a site
      */
     public function user()
     {
-        return $this->belongsTo('App\Model\Entity\User', 'user_id', 'id');
+        return $this->belongsTo('App\Model\Entity\Site', 'site_id', 'id');
     }
 
     //------------------------------------------------------------------------------------------------------------------

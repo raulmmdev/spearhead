@@ -70,6 +70,14 @@ class Site extends BaseModel
         return $this->belongsTo('App\Model\Entity\User', 'user_id', 'id');
     }
 
+    /**
+     * One site has many attributes
+     */
+    public function attributes()
+    {
+        return $this->hasMany('App\Model\Entity\SiteAttribute');
+    }
+
     //------------------------------------------------------------------------------------------------------------------
     // MISCELANEOUS
     //------------------------------------------------------------------------------------------------------------------
