@@ -5,7 +5,7 @@ return [
         'POST' => ['SiteProvider'],
         'PUT' => ['Auth', 'SiteProvider'],
     ],
-    'api/category' => [
+    'api/categories/data' => [
         'POST' => ['Auth'],
         'PUT' => ['Auth'],
     ],

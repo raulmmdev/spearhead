@@ -36,7 +36,8 @@ class ApiProvider extends ServiceProvider
 
         $this->app->bind('App\Business\SiteCategory\SiteCategoryManager', function ($app) {
             return new SiteCategoryManager(
-                $app->make('App\Model\Entity\Repository\ApiFeatureRepository')
+                $app->make('App\Model\Entity\Repository\ApiFeatureRepository'),
+                $app->make('App\Model\Entity\Repository\SiteCategoryRepository')
             );
         });
 

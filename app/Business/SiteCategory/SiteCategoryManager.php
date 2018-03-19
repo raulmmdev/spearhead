@@ -4,8 +4,10 @@ namespace App\Business\SiteCategory;
 
 use App\Business\Job\UpsertSiteCategoryJob;
 use App\Model\Entity\Repository\ApiFeatureRepository;
+use App\Model\Entity\Repository\SiteRepository;
 use App\Model\Entity\Site;
 use App\Model\Entity\SiteCategory;
+use App\Model\Entity\Repository\SiteCategoryRepository;
 
 /**
  * SiteCategoryManager
@@ -24,13 +26,24 @@ class SiteCategoryManager
      */
     protected $apiFeatureRepository;
 
+    /**
+     * SiteCategoryRepository container
+     *
+     * @access protected
+     * @var siteCategoryRepository
+     */
+    protected $siteCategoryRepository;
+
     //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS
     //------------------------------------------------------------------------------------------------------------------
 
-    public function __construct(ApiFeatureRepository $apiFeatureRepository)
-    {
+    public function __construct(
+        ApiFeatureRepository $apiFeatureRepository,
+        SiteCategoryRepository $siteCategoryRepository
+    ) {
         $this->apiFeatureRepository = $apiFeatureRepository;
+        $this->siteCategoryRepository = $siteCategoryRepository;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -42,7 +55,7 @@ class SiteCategoryManager
      * @param UpsertSiteCategoryJob $job
      * @return UpsertSiteCategoryJob | null
      */
-    public function upsertFromJob(UpsertSiteCategoryJob $job) : ?UpsertSiteCategoryJob
+    public function upsertFromJob(UpsertSiteCategoryJob $job) :? UpsertSiteCategoryJob
     {
         // Extract the variables from $job->data into current scope
         // $job->data['user'] ==> $user;
@@ -51,18 +64,12 @@ class SiteCategoryManager
 
         try {
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+            //get the site, clear the current category tree
             $site = $this->apiFeatureRepository->find($user['id'])->site;
-
-            // Disable current tree (if any)
-
-            SiteCategory::where('site_id', $site->id)->update([
-                'status' => SiteCategory::STATUS_DISABLED
-            ]);
+            $this->disableSiteCategoryTree($site);
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             // Load new tree
-
             if (is_array($tree) && count($tree)) {
                 foreach ($tree as $entry) {
                     $category = $this->processEntry($site, $entry, $parentId = null);
@@ -85,6 +92,16 @@ class SiteCategoryManager
         return $job;
     }
 
+    /**
+     * disableSiteCategoryTree
+     * @param  Site   $site
+     * @return void
+     */
+    public function disableSiteCategoryTree(Site $site): void
+    {
+        $this->siteCategoryRepository->disableSiteTree($site);
+    }
+
     //------------------------------------------------------------------------------------------------------------------
     // PRIVATED METHODS
     //------------------------------------------------------------------------------------------------------------------
@@ -101,7 +118,7 @@ class SiteCategoryManager
     private function processEntry(Site $site, array $entry, $parentId) : SiteCategory
     {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        // Exist current thee?
+        // Exist current tree?
 
         $category = SiteCategory::where('site_id', $site->id)->where('source_id', $entry['id'])->first();
 
@@ -141,5 +158,4 @@ class SiteCategoryManager
 
     //------------------------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------
-
 }
