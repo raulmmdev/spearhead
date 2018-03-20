@@ -32,7 +32,7 @@ class SiteAttribute extends BaseModel
     /**
      * One site attribute belongs to a site
      */
-    public function user()
+    public function site()
     {
         return $this->belongsTo('App\Model\Entity\Site', 'site_id', 'id');
     }

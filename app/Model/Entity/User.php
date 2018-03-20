@@ -7,8 +7,10 @@ use Illuminate\Notifications\Notifiable;
 class User extends BaseModel
 {
     use Notifiable;
+
     const STATUS_ENABLED = 'ENABLED';
     const STATUS_DISABLED = 'DISABLED';
+
     const ATTRIBUTE_MERCHANT_ID = 'MERCHANT_ID';
 
     //------------------------------------------------------------------------------------------------------------------

@@ -15,6 +15,12 @@ class Site extends BaseModel
     const STATUS_DISABLED = 'DISABLED';
     const STATUS_BLOCKED = 'BLOCKED';
 
+    const ATTRIBUTE_PAYMENT_METHODS = 'PAYMENT_METHODS';
+    const ATTRIBUTE_SUPPORT_EMAIL = 'SUPPORT_EMAIL';
+    const ATTRIBUTE_SUPPORT_PHONE = 'SUPPORT_PHONE';
+    const ATTRIBUTE_CA_CODE = 'CA_CODE';
+    const ATTRIBUTE_MCC_CODE = 'MCC_CODE';
+
     /**
      * The table associated with the model.
      *

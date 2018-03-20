@@ -8,6 +8,7 @@ use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Injector\Injector;
 use App\Business\Job\JobFactory;
 use App\Business\Message\MessageManager;
+use App\Business\Site\Attribute\SiteAttributeManager;
 use App\Business\Site\SiteManager;
 use App\Business\SiteCategory\SiteCategoryManager;
 use App\Business\User\Attribute\UserAttributeManager;
@@ -45,7 +46,8 @@ class ApiProvider extends ServiceProvider
             return new SiteManager(
                 $app->make('App\Business\User\UserManager'),
                 $app->make('App\Business\Api\ApiFeatureManager'),
-                $app->make('App\Model\Entity\Repository\SiteRepository')
+                $app->make('App\Model\Entity\Repository\SiteRepository'),
+                $app->make('App\Business\Site\Attribute\SiteAttributeManager')
             );
         });
 
@@ -89,6 +91,18 @@ class ApiProvider extends ServiceProvider
 
         $this->app->bind('App\Business\BusinessLog\BusinessLogManager', function ($app) {
             return new BusinessLogManager();
+        });
+
+        $this->app->bind('App\Business\User\Attribute\UserAttributeManager', function ($app) {
+            return new UserAttributeManager(
+                $app->make('App\Model\Entity\Repository\UserAttributeRepository')
+            );
+        });
+
+        $this->app->bind('App\Business\Site\Attribute\SiteAttributeManager', function ($app) {
+            return new SiteAttributeManager(
+                $app->make('App\Model\Entity\Repository\SiteAttributeRepository')
+            );
         });
     }
 }

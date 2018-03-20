@@ -5,6 +5,7 @@ namespace App\Business\Site;
 use App\Business\Api\ApiFeatureManager;
 use App\Business\Job\CreateSiteJob;
 use App\Business\User\UserManager;
+use App\Business\Site\Attribute\SiteAttributeManager;
 use App\Model\Entity\Repository\SiteRepository;
 use App\Model\Entity\Site;
 use App\Model\Entity\User;
@@ -37,19 +38,29 @@ class SiteManager
     protected $siteRepository;
 
     /**
+     * $siteAttributeManager
+     * @access protected
+     * @var $siteAttributeManager
+     */
+    protected $siteAttributeManager;
+
+    /**
      * __construct
-     * @param UserManager       $userManager
-     * @param ApiFeatureManager $apiFeatureManager
-     * @param SiteRepository    $siteRepository
+     * @param UserManager          $userManager
+     * @param ApiFeatureManager    $apiFeatureManager
+     * @param SiteRepository       $siteRepository
+     * @param SiteAttributeManager $siteAttributeManager
      */
     public function __construct(
         UserManager $userManager,
         ApiFeatureManager $apiFeatureManager,
-        SiteRepository $siteRepository
+        SiteRepository $siteRepository,
+        SiteAttributeManager $siteAttributeManager
     ) {
         $this->userManager = $userManager;
         $this->apiFeatureManager = $apiFeatureManager;
         $this->siteRepository = $siteRepository;
+        $this->siteAttributeManager = $siteAttributeManager;
     }
 
     /**
@@ -64,11 +75,9 @@ class SiteManager
         \DB::beginTransaction();
 
         try {
-            //create the user
+            //create all the components
             $user = $this->userManager->createFromSiteJob($job);
-            //create the site
             $site = $this->createSiteFromJob($job, $user);
-            //create the api feature
             $feature = $this->apiFeatureManager->create($site);
 
             $job->setObject($site);
@@ -116,6 +125,47 @@ class SiteManager
         $site->user()->associate($user);
 
         $site->save();
+
+        //create attributes
+        $this
+            ->siteAttributeManager
+            ->setSiteAttribute(
+                $site,
+                Site::ATTRIBUTE_PAYMENT_METHODS,
+                json_encode($job->data['site']['portal_payment_methods'])
+            );
+
+        $this
+            ->siteAttributeManager
+            ->setSiteAttribute(
+                $site,
+                Site::ATTRIBUTE_SUPPORT_EMAIL,
+                $job->data['site']['supportemail']
+            );
+
+        $this
+            ->siteAttributeManager
+            ->setSiteAttribute(
+                $site,
+                Site::ATTRIBUTE_SUPPORT_PHONE,
+                $job->data['site']['supportphone']
+            );
+
+        $this
+            ->siteAttributeManager
+            ->setSiteAttribute(
+                $site,
+                Site::ATTRIBUTE_CA_CODE,
+                $job->data['site']['ca_code']
+            );
+
+        $this
+            ->siteAttributeManager
+            ->setSiteAttribute(
+                $site,
+                Site::ATTRIBUTE_MCC_CODE,
+                $job->data['site']['mcc']
+            );
 
         return $site;
     }
