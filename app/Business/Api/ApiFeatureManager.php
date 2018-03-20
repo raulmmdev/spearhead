@@ -49,8 +49,36 @@ class ApiFeatureManager
 
         $feature = new apiFeature();
         $feature->site()->associate($site);
-        $feature->setLogin(uniqid());
-        $feature->setKey(uniqid());
+
+        //TODO:this is marcins crap, we should change it in the future
+        $feature->setLogin(
+            substr(
+                base64_encode(
+                    hash_hmac(
+                        'sha256',
+                        trim($site->getId()).'qwindo_hash_id'.date('Y-m-d H:i:s').trim($site->getApiKey()),
+                        config('qwindo.system')['salt']
+                    )
+                ),
+                0,
+                32
+            )
+        );
+
+        $feature->setKey(
+            substr(
+                base64_encode(
+                    hash_hmac(
+                        'sha256',
+                        trim($site->getApiKey()).'qwindo_api_key'.microtime(true).rand().trim($site->getId()),
+                        config('qwindo.system')['salt']
+                    )
+                ),
+                0,
+                32
+            )
+        );
+
         $feature->setStatus(ApiFeature::STATUS_ENABLED);
 
         $feature->save();
