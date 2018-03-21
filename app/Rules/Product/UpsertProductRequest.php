@@ -4,6 +4,7 @@ namespace App\Rules\Product;
 
 use App\Model\Entity\Product;
 use App\Rules\Attribute;
+use App\Rules\Id;
 use App\Rules\Image;
 use App\Rules\Locale;
 use App\Rules\Metadata;
@@ -51,7 +52,6 @@ class UpsertProductRequest implements Rule
         $validStatuses = [Product::STATUS_ENABLED, Product::STATUS_DISABLED];
 
         $rules = [
-            'product_id' => ['required', 'integer'],
             'sku_number' => 'required|string|between:3,100',
             'gtin' => 'nullable|string|between:1,100',
             'brand' => 'nullable|string|between:2,100',
@@ -70,20 +70,20 @@ class UpsertProductRequest implements Rule
             'short_product_description' => ['required', 'array', 'min:1', new Locale],
             'long_product_description' => ['required', 'array', 'min:1', new Locale],
             'downloadable' => 'required|boolean',
-            'category_ids' => 'required|array|min:1',
+            'category_ids' => ['required', 'array', 'min:1', new Id],
             'variants' => ['array', new UpsertProductVariant],
         ];
 
-        $exists = Product::where('site_id', $this->site->id)->where('source_id', $value['product_id'])->exists();
+        $exists = Product::where('site_id', $this->site->id)->where('source_id', (int) $value['product_id'])->exists();
 
         if ($exists) {
-            array_push($rules['product_id'], ExtendedRule::exists('product', 'source_id')->where(function ($query) {
+            $rules['product_id'] = ['required', 'integer', ExtendedRule::exists('product', 'source_id')->where(function ($query) {
                 $query->where('site_id', $this->site->id);
-            }));
+            })];
         } else {
-            array_push($rules['product_id'], ExtendedRule::unique('product', 'source_id')->where(function ($query) {
+            $rules['product_id'] = ['required', 'integer', ExtendedRule::unique('product', 'source_id')->where(function ($query) {
                 $query->where('site_id', $this->site->id);
-            }));
+            })];
         }
 
         $this->validator = Validator::make($value, $rules, [

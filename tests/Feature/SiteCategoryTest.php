@@ -179,7 +179,52 @@ class SiteCategoryTest extends TestCase
                             'pointer' => '/data/attributes/tree'
                         ],
                         'title' => 'Invalid Attribute',
-                        'details' => 'The cashback must be an integer.'
+                        'details' => 'The tree[cashback] must be an integer.'
+                    ]
+                ]
+            ]);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Wrong children structure
+     *
+     * @return void
+     */
+    public function testUpsertSiteCategoryWrongChildren() : void
+    {
+        $url = config('app.url') . '/api/category';
+
+        $values = [
+            0 => [
+                'id' => 184,
+                'title' => [
+                    'nl_NL' => 'Sale'
+                ],
+                'cashback' => 5,
+                'children' => [
+                    0 => [
+                        'id' => 'AAA',
+                    ]
+                ],
+            ]
+        ];
+
+        $response = $this
+            ->withHeaders($this->getHeadersAsAuth($url, $values))
+            ->json('POST', $url, $values);
+
+        $response
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJson([
+                'errors' => [
+                    [
+                        'source' => [
+                            'pointer' => '/data/attributes/tree'
+                        ],
+                        'title' => 'Invalid Attribute',
+                        'details' => 'The children[title] is required.'
                     ]
                 ]
             ]);

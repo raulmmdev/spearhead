@@ -43,29 +43,36 @@ class UpsertSiteCategoryRequest implements Rule
      */
     public function passes($attribute, $value)
     {
-        $tree = array_values($value);
-
         $rules = [
-            'id' => ['required', 'integer'],
             'title' => ['required', 'array', 'min:1', new Locale(null, 'required|string|between:3,200')],
-            'cashback' => 'integer|min:1',
-            'children' => ['array', new UpsertSiteCategoryRequest],
+            'cashback' => 'integer|min:0',
+            'children' => ['array', 'min:1', new UpsertSiteCategoryRequest],
         ];
 
-        $exists = SiteCategory::where('site_id', $this->site->id)->where('source_id', $tree[0]['id'])->exists();
+        foreach ($value as $category) {
+            $exists = SiteCategory::where('site_id', $this->site->id)->where('source_id', (int) $category['id'])->exists();
 
-        if ($exists) {
-            array_push($rules['id'], ExtendedRule::exists('site_category', 'source_id')->where(function ($query) {
-                $query->where('site_id', $this->site->id);
-            }));
-        } else {
-            array_push($rules['id'], ExtendedRule::unique('site_category', 'source_id')->where(function ($query) {
-                $query->where('site_id', $this->site->id);
-            }));
-        }
+            if ($exists) {
+                $rules['id'] = ['required', 'integer', ExtendedRule::exists('site_category', 'source_id')->where(function ($query) {
+                    $query->where('site_id', $this->site->id);
+                })];
+            } else {
+                $rules['id'] = ['required', 'integer', ExtendedRule::unique('site_category', 'source_id')->where(function ($query) {
+                    $query->where('site_id', $this->site->id);
+                })];
+            }
 
-        foreach ($tree as $category) {
-            $this->validator = Validator::make($category, $rules);
+            $this->validator = Validator::make($category, $rules, [
+                'id.required' => 'The '. $attribute .'[:attribute] is required.',
+                'id.integer' => 'The '. $attribute .'[:attribute] must be an integer.',
+                'title.required' => 'The '. $attribute .'[:attribute] is required.',
+                'title.array' => 'The '. $attribute .'[:attribute] is required.',
+                'title.min' => 'The '. $attribute .'[:attribute] must be at least :min characters.',
+                'cashback.integer' => 'The '. $attribute .'[:attribute] must be an integer.',
+                'cashback.min' => 'The '. $attribute .'[:attribute] must be at least :min.',
+                'children.array' => 'The '. $attribute .'[:attribute] must be an array.',
+                'children.min' => 'The '. $attribute .'[:attribute] must be at least :min characters.',
+            ]);
 
             if ($this->validator->fails()) {
                 return false;

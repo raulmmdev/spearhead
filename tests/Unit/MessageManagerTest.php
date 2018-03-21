@@ -56,9 +56,7 @@ class MessageManagerTest extends TestCase
 
         $values = [
             'crud_operation' => ApiRequest::ACTION_UPSERT,
-
             'user' => ApiFeature::find(ApiFeature::pluck('id')[0]),
-
             'site' => [
                 'name' => $faker->company,
             ]

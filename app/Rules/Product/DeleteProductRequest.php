@@ -51,9 +51,7 @@ class DeleteProductRequest implements Rule
                 $query->where('site_id', $this->site->id);
             })],
         ], [
-            'product_id.required' => 'The :attribute field is required.',
-            'product_id.integer' => 'The :attribute must be an integer.',
-            'product_id.exists' => 'The selected :attribute is invalid. (Does not exists in DB)',
+            'product_id.exists' => 'The selected :attribute is invalid or does not exists in DB.',
         ]);
 
         if ($this->validator->fails()) {

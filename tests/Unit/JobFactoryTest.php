@@ -52,9 +52,7 @@ class JobFactoryTest extends TestCase
 
         $values = [
             'crud_operation' => ApiRequest::ACTION_CREATE,
-
             'user' => ApiFeature::find(ApiFeature::pluck('id')[0]),
-
             'site' => [
                 'name' => $faker->company,
             ],
@@ -81,9 +79,7 @@ class JobFactoryTest extends TestCase
 
         $values = [
             'crud_operation' => ApiRequest::ACTION_UPSERT,
-
             'user' => ApiFeature::find(ApiFeature::pluck('id')[0]),
-
             'tree' => json_decode(file_get_contents(database_path('seeds/json/vinq-6205-541/categories.json')), true),
         ];
 
