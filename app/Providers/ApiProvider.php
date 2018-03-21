@@ -40,6 +40,7 @@ class ApiProvider extends ServiceProvider
                 $app->make('App\Model\Entity\Repository\ApiFeatureRepository'),
                 $app->make('App\Model\Entity\Repository\ProductRepository'),
                 $app->make('App\Model\Entity\Repository\ProductVariantRepository'),
+                $app->make('App\Model\Entity\Repository\SiteCategoryRepository'),
                 $app->make('App\Business\Product\Attribute\ProductAttributeManager'),
                 $app->make('App\Business\ProductVariant\ProductVariantManager')
             );

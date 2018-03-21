@@ -51,19 +51,19 @@ class ProductAttributeManager
      */
     public function setAttribute(Product $product, string $name, string $value = null) : void
     {
-        $attr = $this->productAttributeRepository->findWhere([
+        $attribute = $this->productAttributeRepository->findWhere([
             'product_id' => $product->getId(),
             'name' => $name
         ])->first();
 
-        if ($attr === null) {
-            $attr = new ProductAttribute();
-            $attr->product()->associate($product);
-            $attr->setName($name);
+        if ($attribute === null) {
+            $attribute = new ProductAttribute();
+            $attribute->product()->associate($product);
+            $attribute->setName($name);
         }
 
-        $attr->setValue($value);
-        $attr->save();
+        $attribute->setValue($value);
+        $attribute->save();
     }
 
     //------------------------------------------------------------------------------------------------------------------

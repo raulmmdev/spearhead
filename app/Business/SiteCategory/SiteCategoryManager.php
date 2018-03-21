@@ -126,27 +126,20 @@ class SiteCategoryManager
             'source_id' => $entry['id'],
         ])->first();
 
-        if ($category !== null) {
-            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            // Enable category/child if proceed
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        // Process current category
 
-            $category->title = json_encode($entry['title']);
-            $category->cashback = $entry['cashback'] ?? config('qwindo.cashback.category');
-            $category->status = SiteCategory::STATUS_ENABLED;
-            $category->save();
-        } else {
-            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            // Create the parent category
-
+        if ($category === null) {
             $category = new SiteCategory();
-            $category->source_id = $entry['id'];
-            $category->parent_id = $parentId;
-            $category->title = json_encode($entry['title']);
-            $category->cashback = $entry['cashback'] ?? config('qwindo.cashback.category');
-            $category->status = $entry['status'] ?? SiteCategory::STATUS_ENABLED;
             $category->site()->associate($site);
-            $category->save();
+            $category->setSourceId($entry['id']);
+            $category->setParentId($parentId);
         }
+
+        $category->setTitle(json_encode($entry['title']));
+        $category->setCashback($entry['cashback'] ?? config('qwindo.cashback.category'));
+        $category->setStatus(SiteCategory::STATUS_ENABLED);
+        $category->save();
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Has children?

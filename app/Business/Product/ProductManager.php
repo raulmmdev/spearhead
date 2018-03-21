@@ -12,6 +12,7 @@ use App\Model\Entity\ProductVariant;
 use App\Model\Entity\Repository\ApiFeatureRepository;
 use App\Model\Entity\Repository\ProductRepository;
 use App\Model\Entity\Repository\ProductVariantRepository;
+use App\Model\Entity\Repository\SiteCategoryRepository;
 use App\Model\Entity\Site;
 use App\Model\Entity\SiteCategory;
 
@@ -48,12 +49,14 @@ class ProductManager
         ApiFeatureRepository $apiFeatureRepository,
         ProductRepository $productRepository,
         ProductVariantRepository $productVariantRepository,
+        SiteCategoryRepository $siteCategoryRepository,
         ProductAttributeManager $productAttributeManager,
         ProductVariantManager $productVariantManager
     ) {
         $this->apiFeatureRepository = $apiFeatureRepository;
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
+        $this->siteCategoryRepository = $siteCategoryRepository;
         $this->productAttributeManager = $productAttributeManager;
         $this->productVariantManager = $productVariantManager;
     }
@@ -202,19 +205,8 @@ class ProductManager
             ])->first();
 
             if ($product !== null) {
-                // Disable the product
-                $this->productRepository->update([
-                    'status' => Product::STATUS_DISABLED,
-                ], $product->getId());
-
-                // Disable the product variants
-                if ($product->variants) {
-                    foreach ($product->variants as $variant) {
-                        $this->productVariantRepository->update([
-                            'status' => ProductVariant::STATUS_DISABLED,
-                        ], $variant->getId());
-                    }
-                }
+                $this->productRepository->disableProduct($product);
+                $this->productRepository->disableProductVariants($product);
             }
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -246,7 +238,10 @@ class ProductManager
      */
     public function setCategory(Site $site, Product $product, int $id) : void
     {
-        $category = SiteCategory::where('site_id', $site->id)->where('source_id', $id)->first();
+        $category = $this->siteCategoryRepository->findWhere([
+            'site_id' => $site->id,
+            'source_id' => $id,
+        ])->first();
 
         if ($category) {
             $product->categories()->attach($category->id);
