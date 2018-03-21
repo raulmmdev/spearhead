@@ -100,8 +100,10 @@ class SiteCategoryTest extends TestCase
                             'pointer' => '/data/attributes/tree'
                         ],
                         'title' => 'Invalid Attribute',
-                        'details' => 'The title[nlx_NL] is not a valid locale.'
-                    ]
+                        'details' => [
+                            'title' => ['The title[nlx_NL] is not a valid locale.']
+                        ],
+                    ],
                 ]
             ]);
     }
@@ -139,7 +141,9 @@ class SiteCategoryTest extends TestCase
                             'pointer' => '/data/attributes/tree'
                         ],
                         'title' => 'Invalid Attribute',
-                        'details' => 'The title[nl_NL] is required.'
+                        'details' => [
+                            'title' => ['The title[nl_NL] is required.']
+                        ],
                     ]
                 ]
             ]);
@@ -179,7 +183,9 @@ class SiteCategoryTest extends TestCase
                             'pointer' => '/data/attributes/tree'
                         ],
                         'title' => 'Invalid Attribute',
-                        'details' => 'The cashback must be an integer.'
+                        'details' => [
+                            'cashback' => ['The cashback must be an integer.'],
+                        ],
                     ]
                 ]
             ]);

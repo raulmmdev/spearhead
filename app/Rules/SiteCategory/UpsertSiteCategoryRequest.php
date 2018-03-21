@@ -84,7 +84,7 @@ class UpsertSiteCategoryRequest implements Rule
      */
     public function message()
     {
-        return $this->validator->errors()->first();
+        return $this->validator->errors();
     }
 
     //------------------------------------------------------------------------------------------------------------------

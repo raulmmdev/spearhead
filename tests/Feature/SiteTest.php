@@ -56,7 +56,7 @@ class SiteTest extends TestCase
                 'portal_fastcheckout' => 0,
                 'mcc' => '5655',
                 'portal_category' => '108',
-                'site_status' => 'blocked'
+                'site_status' => 'active'
             ],
 
             'merchant' => [
