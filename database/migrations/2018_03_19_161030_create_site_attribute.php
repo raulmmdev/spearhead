@@ -19,6 +19,12 @@ class CreateSiteAttribute extends Migration
             $table->enum('name', ['PAYMENT_METHODS', 'SUPPORT_EMAIL', 'SUPPORT_PHONE', 'CA_CODE', 'MCC_CODE']);
             $table->string('value')->nullable(true);
             $table->timestamps();
+
+            $table
+                ->foreign('site_id')
+                ->references('id')
+                ->on('site')
+                ->onDelete('cascade');
         });
     }
 

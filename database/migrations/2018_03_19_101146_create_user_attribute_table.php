@@ -19,6 +19,12 @@ class CreateUserAttributeTable extends Migration
             $table->enum('name', ['MERCHANT_ID']);
             $table->string('value')->nullable(true);
             $table->timestamps();
+
+            $table
+                ->foreign('user_id')
+                ->references('id')
+                ->on('user')
+                ->onDelete('cascade');
         });
     }
 

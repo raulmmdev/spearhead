@@ -99,6 +99,14 @@ class SiteController extends Controller
                 BusinessLog::USER_TYPE_MERCHANT,
                 BusinessLog::ELEMENT_TYPE_SITE,
                 'There was an error tryng to process a site creation request.',
+                json_encode($request->all()),
+                BusinessLog::HTTP_TYPE_PUSH
+            );
+
+            $this->businessLogManager->error(
+                BusinessLog::USER_TYPE_ADMIN,
+                BusinessLog::ELEMENT_TYPE_SITE,
+                'There was an error tryng to process a site creation request.',
                 json_encode($request->all()) . json_encode($result),
                 BusinessLog::HTTP_TYPE_PUSH
             );
