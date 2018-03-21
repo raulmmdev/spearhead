@@ -1,0 +1,22 @@
+[
+    {
+        "id": "bolcom",
+        "type": "flat_rate_shipping",
+        "provider": "bolcom",
+        "name": "Pakketpost / Brievenbuspost",
+        "price": "0.00",
+        "allowed_areas": [
+            ""
+        ]
+    },
+    {
+        "id": "sendcloudcarrier",
+        "type": "flat_rate_shipping",
+        "provider": "sendcloudcarrier",
+        "name": null,
+        "price": "0.00",
+        "allowed_areas": [
+            ""
+        ]
+    }
+]
