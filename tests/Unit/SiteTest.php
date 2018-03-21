@@ -5,50 +5,93 @@ namespace Tests\Unit;
 use App\Business\Job\CreateSiteJob;
 use App\Business\Site\SiteManager;
 use App\Http\Requests\ApiRequest;
+use App\Model\Entity\ApiFeature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class SiteTest extends TestCase
 {
-	protected $siteManager;
+    //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
 
-	public function setup()
-	{
-		parent::setUp();
+    /**
+     * Site Manager container
+     *
+     * @access private
+     * @var SiteManager
+     */
+    protected $siteManager;
 
-		$this->siteManager = $this->app->make('App\Business\Site\SiteManager');
-	}
+    /**
+     * Faker container
+     *
+     * @access private
+     * @var Faker
+     */
+    private $faker;
 
-	/**
-	 * A basic test example.
-	 *
-	 * @return void
-	 */
-	public function testSiteCreation()
-	{
-		$faker = \Faker\Factory::create();
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
 
-		$siteJob = new CreateSiteJob();
-		$siteJob->setSiteManager($this->siteManager);
-		$siteJob->data['crud_operation'] = ApiRequest::ACTION_CREATE;
-		$siteJob->data['name'] = $faker->company;
-		$siteJob = $this->siteManager->createFromJob($siteJob);
+    /**
+     * Setup current object
+     *
+     * @access public
+     * @return void
+     */
+    public function setup()
+    {
+        parent::setUp();
 
-		$this->assertFalse($siteJob->hasErrors());
-	}
+        $this->siteManager = $this->app->make('App\Business\Site\SiteManager');
 
-	/**
-	 * A basic test example.
-	 *
-	 * @return void
-	 */
-	public function testSiteCreationMissingData()
-	{
-		$siteJob = new CreateSiteJob();
-		$siteJob->setSiteManager($this->siteManager);
-		$siteJob = $this->siteManager->createFromJob($siteJob);
+        $this->faker = \Faker\Factory::create();
+    }
 
-		$this->assertTrue($siteJob->hasErrors());
-	}
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testSiteCreation()
+    {
+        $job = new CreateSiteJob();
+        $job->setSiteManager($this->siteManager);
+        $job->data = [
+            'crud_operation' => ApiRequest::ACTION_CREATE,
+
+            'user' => ApiFeature::find(ApiFeature::pluck('id')[0]),
+
+            'site' => [
+                'name' => $this->faker->company,
+            ],
+        ];
+        $job = $this->siteManager->createFromJob($job);
+
+        $this->assertFalse($job->hasErrors());
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function testSiteCreationMissingData()
+    {
+        $job = new CreateSiteJob();
+        $job->setSiteManager($this->siteManager);
+        $job = $this->siteManager->createFromJob($job);
+
+        $this->assertTrue($job->hasErrors());
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

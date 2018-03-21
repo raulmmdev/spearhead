@@ -69,7 +69,7 @@ class SiteTest extends TestCase
                 'errors' => [
                     [
                         'source' => [
-                            'pointer' => '/data/attributes/name'
+                            'pointer' => '/data/attributes/site'
                         ],
                         'title' => 'Invalid Attribute',
                         'details' => 'The name field is required.'

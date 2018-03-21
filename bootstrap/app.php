@@ -41,33 +41,35 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
-$app->configureMonologUsing(function ($monolog) {
-	$options = [
-    	'index' => 'laralogs',
-    	'type'  => 'log',
-	];
+if (env('LOG_KIBANA', true)) {
+    $app->configureMonologUsing(function ($monolog) {
+        $options = [
+            'index' => 'laralogs',
+            'type'  => 'log',
+        ];
 
-	$clientOptions = [
-        'host' => null,
-        'port' => null,
-        'path' => null,
-        'url' => null,
-        'proxy' => null,
-        'transport' => null,
-        'persistent' => true,
-        'timeout' => null,
-        'connections' => [], // host, port, path, timeout, transport, compression, persistent, timeout, config -> (curl, headers, url)
-        'roundRobin' => false,
-        'log' => false,
-        'retryOnConflict' => 0,
-        'bigintConversion' => false,
-        'username' => null,
-        'password' => null,
-    ];
+        $clientOptions = [
+            'host' => null,
+            'port' => null,
+            'path' => null,
+            'url' => null,
+            'proxy' => null,
+            'transport' => null,
+            'persistent' => true,
+            'timeout' => null,
+            'connections' => [], // host, port, path, timeout, transport, compression, persistent, timeout, config -> (curl, headers, url)
+            'roundRobin' => false,
+            'log' => false,
+            'retryOnConflict' => 0,
+            'bigintConversion' => false,
+            'username' => null,
+            'password' => null,
+        ];
 
-	$client = new Elastica\Client();
-    $monolog->pushHandler(new Monolog\Handler\ElasticSearchHandler($client, $options));
-});
+        $client = new Elastica\Client();
+        $monolog->pushHandler(new Monolog\Handler\ElasticSearchHandler($client, $options));
+    });
+}
 
 /*
 |--------------------------------------------------------------------------

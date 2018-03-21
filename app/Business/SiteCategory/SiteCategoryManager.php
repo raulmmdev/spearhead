@@ -57,21 +57,19 @@ class SiteCategoryManager
      */
     public function upsertFromJob(UpsertSiteCategoryJob $job) :? UpsertSiteCategoryJob
     {
-        // Extract the variables from $job->data into current scope
-        // $job->data['user'] ==> $user;
-        // $job->data['tree'] ==> $tree;
-        extract($job->data);
-
         try {
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            //get the site, clear the current category tree
-            $site = $this->apiFeatureRepository->find($user['id'])->site;
+            // Get the site, clear the current category tree
+
+            $site = $this->apiFeatureRepository->find($job->data['user']['id'])->site;
+
             $this->disableSiteCategoryTree($site);
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             // Load new tree
-            if (is_array($tree) && count($tree)) {
-                foreach ($tree as $entry) {
+
+            if (is_array($job->data['tree']) && count($job->data['tree'])) {
+                foreach ($job->data['tree'] as $entry) {
                     $category = $this->processEntry($site, $entry, $parentId = null);
                 }
             }
@@ -92,12 +90,15 @@ class SiteCategoryManager
         return $job;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
-     * disableSiteCategoryTree
+     * Disable SiteCategoryTree
+     *
      * @param  Site   $site
      * @return void
      */
-    public function disableSiteCategoryTree(Site $site): void
+    public function disableSiteCategoryTree(Site $site) : void
     {
         $this->siteCategoryRepository->disableSiteTree($site);
     }
@@ -120,7 +121,10 @@ class SiteCategoryManager
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Exist current tree?
 
-        $category = SiteCategory::where('site_id', $site->id)->where('source_id', $entry['id'])->first();
+        $category = $this->siteCategoryRepository->findWhere([
+            'site_id' => $site->id,
+            'source_id' => $entry['id'],
+        ])->first();
 
         if ($category !== null) {
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

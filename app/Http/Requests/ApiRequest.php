@@ -9,12 +9,17 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ApiRequest extends FormRequest
 {
+    //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
+
     const QUEUE_SITE = 'site';
     const QUEUE_CATEGORY = 'category';
     const QUEUE_PRODUCT = 'product';
     const QUEUE_IMAGE = 'image';
 
     const ACTION_UPSERT = 'UPSERT';
+
     const ACTION_CREATE = 'CREATE';
     const ACTION_UPDATE = 'UPDATE';
     const ACTION_DELETE = 'DELETE';
@@ -25,11 +30,17 @@ class ApiRequest extends FormRequest
      */
     protected $apiResponseManager;
 
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     public function __construct(
         \App\Business\Api\Response\ApiResponseManager $apiResponseManager
     ) {
         $this->apiResponseManager = $apiResponseManager;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Determine if the user is authorized to make this request.
@@ -40,6 +51,8 @@ class ApiRequest extends FormRequest
     {
         return true;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Get the validation rules that apply to the request.
@@ -52,6 +65,8 @@ class ApiRequest extends FormRequest
             //
         ];
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Handle a failed validation attempt.
@@ -72,4 +87,7 @@ class ApiRequest extends FormRequest
 
         throw new HttpResponseException(response()->json($response, Response::HTTP_UNPROCESSABLE_ENTITY));
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

@@ -55,6 +55,26 @@ class Site extends BaseModel
     //------------------------------------------------------------------------------------------------------------------
 
     /**
+     * One site has many products
+     */
+    public function products()
+    {
+        return $this->hasMany('App\Model\Entity\Product', 'site_id', 'id');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * One site has many product variants
+     */
+    public function variants()
+    {
+        return $this->hasMany('App\Model\Entity\ProductVariant', 'site_id', 'id');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
      * One user has many API features
      */
     public function apiFeatures()

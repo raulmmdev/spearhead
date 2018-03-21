@@ -13,7 +13,6 @@ class CreateSiteTable extends Migration
      */
     public function up()
     {
-        echo('Creating site table '.PHP_EOL);
         Schema::create('site', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable(false);

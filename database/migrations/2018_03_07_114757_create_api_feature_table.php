@@ -13,7 +13,6 @@ class CreateApiFeatureTable extends Migration
      */
     public function up()
     {
-        echo('Creating api_feature table '.PHP_EOL);
         Schema::create('api_feature', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();

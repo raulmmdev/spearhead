@@ -8,9 +8,8 @@ use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Error\ErrorCode;
 use App\Business\Message\MessageManager;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Qwindo\CreateProductRequest;
-use App\Http\Requests\Qwindo\UpdateProductRequest;
 use App\Http\Requests\Qwindo\DeleteProductRequest;
+use App\Http\Requests\Qwindo\UpsertProductRequest;
 use App\Model\Document\BusinessLog;
 use Illuminate\Http\Request;
 
@@ -24,21 +23,18 @@ class ProductController extends Controller
     //------------------------------------------------------------------------------------------------------------------
 
     const MESSAGE_PATTERNS = [
-        'create' => 'Request [ %s ] related with PRODUCT CREATE has been received.',
-        'update' => 'Request [ %s ] related with PRODUCT UPDATE has been received.',
         'delete' => 'Request [ %s ] related with PRODUCT DELETE has been received.',
+        'upsert' => 'Request [ %s ] related with PRODUCT UPSERT has been received.',
     ];
 
     const RESPONSE_TYPES = [
-        'create' => 'create_product_request',
-        'update' => 'update_product_request',
         'delete' => 'delete_product_request',
+        'upsert' => 'upsert_product_request',
     ];
 
     const RESPONSE_HTTP_STATUS = [
-        'create' => Response::HTTP_CREATED,
-        'update' => Response::HTTP_OK,
         'delete' => Response::HTTP_OK,
+        'upsert' => Response::HTTP_OK,
     ];
 
     /**
@@ -90,27 +86,13 @@ class ProductController extends Controller
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Create job from a Request.
+     * Upsert job from a Request.
      *
      * @access public
-     * @param CreateProductRequest $request
+     * @param UpsertProductRequest $request
      * @return JsonResponse
      */
-    public function create(CreateProductRequest $request): \Illuminate\Http\JsonResponse
-    {
-        return $this->processRequest(__FUNCTION__, $request);
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Update job from a Request.
-     *
-     * @access public
-     * @param UpdateProductRequest $request
-     * @return JsonResponse
-     */
-    public function update(CreateProductRequest $request): \Illuminate\Http\JsonResponse
+    public function upsert(UpsertProductRequest $request): \Illuminate\Http\JsonResponse
     {
         return $this->processRequest(__FUNCTION__, $request);
     }

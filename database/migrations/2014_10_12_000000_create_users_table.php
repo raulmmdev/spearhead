@@ -13,7 +13,6 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        echo('Creating user table '.PHP_EOL);
         Schema::create('user', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');

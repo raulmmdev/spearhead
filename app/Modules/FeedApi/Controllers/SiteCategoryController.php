@@ -21,12 +21,12 @@ class SiteCategoryController extends Controller
     // PROPERTIEs
     //------------------------------------------------------------------------------------------------------------------
 
-    const RESPONSE_TYPES = [
-        'upsertSiteCategory' => 'upsert_category_request',
+    const MESSAGE_PATTERNS = [
+        'upsert' => 'Request [ %s ] related with CATEGORY UPSERT has been received.',
     ];
 
-    const MESSAGE_PATTERNS = [
-        'upsertSiteCategory' => 'Request [ %s ] related with CATEGORY UPSERT has been received.',
+    const RESPONSE_TYPES = [
+        'upsert' => 'upsert_category_request',
     ];
 
     /**
@@ -84,11 +84,11 @@ class SiteCategoryController extends Controller
      * @param UpsertSiteCategoryRequest $request
      * @return JsonResponse
      */
-    public function upsertSiteCategory(UpsertSiteCategoryRequest $request): \Illuminate\Http\JsonResponse
+    public function upsert(UpsertSiteCategoryRequest $request): \Illuminate\Http\JsonResponse
     {
         $result = $request->resolve();
 
-        if (!$result) {
+        if ($result === false) {
             return $this
                 ->apiResponseManager
                 ->createErrorResponse(

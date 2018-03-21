@@ -37,10 +37,10 @@ trait Auth
      * @access private
      * @param  string $authType
      * @param  string $url
-     * @param  array $body
+     * @param  mixed $body
      * @return string
      */
-    private function getHeadersAsAuth(string $url, array $body) : array
+    private function getHeadersAsAuth(string $url, $body) : array
     {
         return $this->getHeaders($this->AUTH_TYPE_DEFAULT, $url, $body);
     }
@@ -56,7 +56,7 @@ trait Auth
      * @param  mixed $body
      * @return string
      */
-    private function getHeaders(string $authType, string $url, array $body) : array
+    private function getHeaders(string $authType, string $url, $body) : array
     {
         return [
             'Accept' => 'application/json',
@@ -72,7 +72,7 @@ trait Auth
      *
      * @access private
      * @param  string $url
-     * @param  array $body
+     * @param  mixed $body
      * @return string
      */
     private function createAuth(string $url, $body) : string

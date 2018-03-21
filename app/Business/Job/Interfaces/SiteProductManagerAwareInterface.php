@@ -2,13 +2,13 @@
 
 namespace App\Business\Job\Interfaces;
 
-use App\Business\SiteProduct\SiteProductManager;
+use App\Business\Product\ProductManager;
 
 /**
- * SiteProductManagerAwareInterface
+ * ProductManagerAwareInterface
  */
-interface SiteProductManagerAwareInterface
+interface ProductManagerAwareInterface
 {
-    public function setSiteProductManager(SiteProductManager $siteProductManager);
-    public function getSiteProductManager() : SiteProductManager;
+    public function setProductManager(ProductManager $productManager);
+    public function getProductManager() : ProductManager;
 }

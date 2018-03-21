@@ -2,11 +2,16 @@
 
 return [
     'api/site' => [
-        'POST' => ['SiteProvider'],
-        'PUT' => ['Auth', 'SiteProvider'],
+        'PUT'    => ['Auth', 'SiteProvider'],
+        'POST'   => ['SiteProvider'],
     ],
-    'api/categories/data' => [
-        'POST' => ['Auth'],
-        'PUT' => ['Auth'],
+    'api/category' => [
+        'PUT'    => ['Auth'],
+        'POST'   => ['Auth'],
+    ],
+    'api/product' => [
+        'PUT'    => ['Auth'],
+        'POST'   => ['Auth'],
+        'DELETE' => ['Auth'],
     ],
 ];
