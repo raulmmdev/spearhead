@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Validator;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Validation\Rule as ExtendedRule;
 
 class TaxLine implements Rule
 {
@@ -32,6 +33,8 @@ class TaxLine implements Rule
     {
         $this->preffix = $this->preffix ?? $attribute;
 
+        $validCountryCodes = config('qwindo.countries');
+
         foreach ($value as $countryCode => $tax) {
             $label = $this->preffix .'['. $countryCode .']';
 
@@ -39,12 +42,13 @@ class TaxLine implements Rule
             // Validate countries
 
             $this->validator = Validator::make([
-                $attribute => $countryCode,
-                'validCountryCodes' => ['US', 'NL'],
+                'country' => $countryCode,
             ], [
-                $attribute => 'in_array:validCountryCodes.*'
+                'country' => ['string', 'size:2', ExtendedRule::in($validCountryCodes)],
             ], [
-                $attribute .'.in_array' => 'The '. $label .' is not a valid country code.',
+                'country.string' => 'The '. $label .' must be a string.',
+                'country.size'  => 'The '. $label .' must be :size characters.',
+                'country.in' => 'The '. $label .' is not a valid country code.',
             ]);
 
             if ($this->validator->fails()) {

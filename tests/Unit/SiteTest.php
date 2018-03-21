@@ -19,7 +19,7 @@ class SiteTest extends TestCase
     /**
      * Site Manager container
      *
-     * @access private
+     * @access protected
      * @var SiteManager
      */
     protected $siteManager;
@@ -27,10 +27,10 @@ class SiteTest extends TestCase
     /**
      * Faker container
      *
-     * @access private
+     * @access protected
      * @var Faker
      */
-    private $faker;
+    protected $faker;
 
     //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS

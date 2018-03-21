@@ -36,6 +36,8 @@ class UpsertProductVariant implements Rule
      */
     public function passes($attribute, $value)
     {
+        $label = $attribute .'[:attribute]';
+
         foreach ($value as $entry) {
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             // Validate each entry
@@ -54,7 +56,7 @@ class UpsertProductVariant implements Rule
                 'attributes' => ['required', 'array', 'min:1', new Attribute],
             ];
 
-            $exists = ProductVariant::where('site_id', $this->site->id)->where('source_id', $entry['product_id'])->exists();
+            $exists = ProductVariant::where('site_id', $this->site->id)->where('source_id', (int) $entry['product_id'])->exists();
 
             if ($exists) {
                 array_push($rules['product_id'], ExtendedRule::exists('product_variant', 'source_id')->where(function ($query) {
@@ -67,10 +69,10 @@ class UpsertProductVariant implements Rule
             }
 
             $this->validator = Validator::make($entry, $rules, [
-                'product_id.required' => 'The :attribute field is required.',
-                'product_id.integer' => 'The :attribute must be an integer.',
-                'product_id.exists' => 'The selected :attribute is invalid. (Does not exists in DB)',
-                'product_id.unique' => 'The :attribute has already been taken.',
+                'product_id.required' => 'The '. $label .' field is required.',
+                'product_id.integer' => 'The '. $label .' must be an integer.',
+                'product_id.exists' => 'The '. $label .' is invalid. (Does not exists in DB)',
+                'product_id.unique' => 'The '. $label .' has already been taken.',
             ]);
 
             if ($this->validator->fails()) {

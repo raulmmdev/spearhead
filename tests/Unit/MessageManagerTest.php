@@ -14,6 +14,12 @@ class MessageManagerTest extends TestCase
     // PROPERTIES
     //------------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Message Manager container
+     *
+     * @access protected
+     * @var MessageManager
+     */
     protected $messageManager;
 
     /**
@@ -52,13 +58,11 @@ class MessageManagerTest extends TestCase
      */
     public function testPublishCreateSiteMessage()
     {
-        $faker = \Faker\Factory::create();
-
         $values = [
             'crud_operation' => ApiRequest::ACTION_UPSERT,
             'user' => ApiFeature::find(ApiFeature::pluck('id')[0]),
             'site' => [
-                'name' => $faker->company,
+                'name' => $this->faker->company,
             ]
         ];
 

@@ -50,6 +50,7 @@ class UpsertProductRequest implements Rule
     public function passes($attribute, $value)
     {
         $validStatuses = [Product::STATUS_ENABLED, Product::STATUS_DISABLED];
+        $validWeghtUnits = config('qwindo.units.weight');
 
         $rules = [
             'sku_number' => 'required|string|between:3,100',
@@ -64,7 +65,7 @@ class UpsertProductRequest implements Rule
             'cashback' => 'integer|min:0',
             'status' => ['string', ExtendedRule::in($validStatuses)],
             'weight' => 'nullable|numeric|min:0',
-            'weight_unit' => 'required|string',
+            'weight_unit' => ['required', 'string', 'min:2', ExtendedRule::in($validWeghtUnits)],
             'attributes' => ['required', 'array', 'min:1', new Attribute],
             'metadata' => ['required', 'array', 'min:3', new Metadata],
             'short_product_description' => ['required', 'array', 'min:1', new Locale],

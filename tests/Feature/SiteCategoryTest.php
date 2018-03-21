@@ -20,10 +20,10 @@ class SiteCategoryTest extends TestCase
     /**
      * Faker container
      *
-     * @access private
+     * @access protected
      * @var Faker
      */
-    private $faker;
+    protected $faker;
 
     //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS
@@ -80,9 +80,9 @@ class SiteCategoryTest extends TestCase
 
         $values = [
             0 => [
-                'id' => 184,
+                'id' => $this->faker->randomNumber(),
                 'title' => [
-                    'nlx_NL' => null
+                    'xx_XX' => $this->faker->text(),
                 ]
             ]
         ];
@@ -100,7 +100,7 @@ class SiteCategoryTest extends TestCase
                             'pointer' => '/data/attributes/tree'
                         ],
                         'title' => 'Invalid Attribute',
-                        'details' => 'The title[nlx_NL] is not a valid locale.'
+                        'details' => 'The title[xx_XX] is not a valid locale code.'
                     ]
                 ]
             ]);
@@ -117,11 +117,13 @@ class SiteCategoryTest extends TestCase
     {
         $url = config('app.url') . '/api/category';
 
+        $locale = $this->faker->locale();
+
         $values = [
             0 => [
-                'id' => 184,
+                'id' => $this->faker->randomNumber(),
                 'title' => [
-                    'nl_NL' => null
+                    $locale => null,
                 ]
             ]
         ];
@@ -139,7 +141,7 @@ class SiteCategoryTest extends TestCase
                             'pointer' => '/data/attributes/tree'
                         ],
                         'title' => 'Invalid Attribute',
-                        'details' => 'The title[nl_NL] is required.'
+                        'details' => 'The title['. $locale .'] is required.'
                     ]
                 ]
             ]);
@@ -158,9 +160,9 @@ class SiteCategoryTest extends TestCase
 
         $values = [
             0 => [
-                'id' => 184,
+                'id' => $this->faker->randomNumber(),
                 'title' => [
-                    'nl_NL' => 'Sale'
+                    $this->faker->locale() => $this->faker->text(),
                 ],
                 'cashback' => 'AAA',
             ]
@@ -198,11 +200,11 @@ class SiteCategoryTest extends TestCase
 
         $values = [
             0 => [
-                'id' => 184,
+                'id' => $this->faker->randomNumber(),
                 'title' => [
-                    'nl_NL' => 'Sale'
+                    $this->faker->locale() => $this->faker->text(),
                 ],
-                'cashback' => 5,
+                'cashback' => $this->faker->randomDigit(),
                 'children' => [
                     0 => [
                         'id' => 'AAA',

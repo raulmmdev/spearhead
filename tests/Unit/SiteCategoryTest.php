@@ -20,7 +20,7 @@ class SiteCategoryTest extends TestCase
     /**
      * Site Category Manager container
      *
-     * @access private
+     * @access protected
      * @var SiteCategoryManager
      */
     protected $siteCategoryManager;
@@ -28,10 +28,10 @@ class SiteCategoryTest extends TestCase
     /**
      * Faker container
      *
-     * @access private
+     * @access protected
      * @var Faker
      */
-    private $faker;
+    protected $faker;
 
     //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS

@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Validator;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Validation\Rule as ExtendedRule;
 
 class Metadata implements Rule
 {
@@ -27,6 +28,8 @@ class Metadata implements Rule
      */
     public function passes($attribute, $value)
     {
+        $validMetadatas = config('qwindo.metadatas');
+
         foreach ($value as $key => $data) {
             $label = $attribute .'['. $key .']';
 
@@ -35,11 +38,12 @@ class Metadata implements Rule
 
             $this->validator = Validator::make([
                 'meta' => $key,
-                'validMetas' => ['title', 'keyword', 'description'],
             ], [
-                'meta' => 'required|in_array:validMetas.*',
+                'meta' => ['string', 'min:1', ExtendedRule::in($validMetadatas)],
             ], [
-                'meta.in_array' => 'The '. $label .' is not a valid meta.',
+                'meta.string' => 'The '. $label .' must be a string.',
+                'meta.min'  => 'The '. $label .' must be at least :min.',
+                'meta.in' => 'The '. $label .' is not a valid meta tag.',
             ]);
 
             if ($this->validator->fails()) {

@@ -20,7 +20,21 @@ class JobFactoryTest extends TestCase
     // PROPERTIES
     //------------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Job Factory container
+     *
+     * @access protected
+     * @var JobFactory
+     */
     protected $jobFactory;
+
+    /**
+     * Faker container
+     *
+     * @access protected
+     * @var Faker
+     */
+    protected $faker;
 
     //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS
@@ -37,6 +51,8 @@ class JobFactoryTest extends TestCase
         parent::setUp();
 
         $this->jobFactory = $this->app->make('App\Business\Job\JobFactory');
+
+        $this->faker = \Faker\Factory::create();
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -48,13 +64,11 @@ class JobFactoryTest extends TestCase
      */
     public function testCreateSaveSiteJob()
     {
-        $faker = \Faker\Factory::create();
-
         $values = [
             'crud_operation' => ApiRequest::ACTION_CREATE,
             'user' => ApiFeature::find(ApiFeature::pluck('id')[0]),
             'site' => [
-                'name' => $faker->company,
+                'name' => $this->faker->company,
             ],
         ];
 
@@ -75,8 +89,6 @@ class JobFactoryTest extends TestCase
      */
     public function testUpsertSiteCategoryJob()
     {
-        $faker = \Faker\Factory::create();
-
         $values = [
             'crud_operation' => ApiRequest::ACTION_UPSERT,
             'user' => ApiFeature::find(ApiFeature::pluck('id')[0]),
@@ -100,10 +112,8 @@ class JobFactoryTest extends TestCase
      */
     public function testUpsertProductJob()
     {
-        $faker = \Faker\Factory::create();
-
         $product = json_decode(file_get_contents(database_path('seeds/json/vinq-6205-541/products-57.json')), true)[0];
-        $product['product_id'] = $faker->randomNumber();
+        $product['product_id'] = $this->faker->randomNumber();
 
         $values = [
             'crud_operation' => ApiRequest::ACTION_UPSERT,

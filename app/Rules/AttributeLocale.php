@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Validator;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Validation\Rule as ExtendedRule;
 
 class AttributeLocale implements Rule
 {
@@ -32,10 +33,9 @@ class AttributeLocale implements Rule
      */
     public function passes($attribute, $value)
     {
-        $validLocales = array_keys(config('qwindo.locales'));
+        $validLocales = config('qwindo.locales');
 
-        foreach ($value as $locale => $data)
-        {
+        foreach ($value as $locale => $data) {
             $label = $this->parentAttribute .'['. $locale .']';
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -43,11 +43,11 @@ class AttributeLocale implements Rule
 
             $this->validator = Validator::make([
                 'locale' => $locale,
-                'validLocales' => $validLocales,
             ], [
-                'locale' => 'in_array:validLocales.*'
+                'locale' => ['string', ExtendedRule::in($validLocales)],
             ], [
-                'locale.in_array' => 'The '. $label .' is not a valid locale.',
+                'locale.string' => 'The '. $label .' must be a string.',
+                'locale.in' => 'The '. $label .' is not a valid locale code.',
             ]);
 
             if ($this->validator->fails()) {

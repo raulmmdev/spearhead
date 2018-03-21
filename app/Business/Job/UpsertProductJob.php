@@ -18,10 +18,10 @@ class UpsertProductJob extends BaseJob implements ProductManagerAwareInterface
     /**
      * ProductManager
      *
-     * @access private
+     * @access protected
      * @var ProductManager
      */
-    private $productManager;
+    protected $productManager;
 
     //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS
