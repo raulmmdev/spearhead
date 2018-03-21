@@ -6,18 +6,36 @@ use App\Business\Api\Interfaces\ResolvableInterface;
 use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Job\JobFactory;
 use App\Http\Requests\ApiRequest;
+use App\Rules\Site\CreateRuleset;
 
 /**
  * CreateSiteRequest
  */
 class CreateSiteRequest extends ApiRequest implements ResolvableInterface
 {
+    //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
+     * Message Manager
+     *
      * @access protected
      * @var $jobFactory
      */
     protected $jobFactory;
 
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Object constructor
+     *
+     * @access public
+     * @param MessageManager     $messageManager
+     * @param ApiResponseManager $apiResponseManager
+     */
     public function __construct(
         JobFactory $jobFactory,
         ApiResponseManager $apiResponseManager
@@ -25,6 +43,8 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
         parent::__construct($apiResponseManager);
         $this->jobFactory = $jobFactory;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Determine if the user is authorized to make this request.
@@ -37,6 +57,22 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
         return true;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Override validationData() to reindex the input data for validation purposes
+     *
+     * @return array
+     */
+    protected function validationData() : array
+    {
+        $data = $this->all();
+
+        return ['site' => $data];
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -45,13 +81,16 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
      */
     public function rules(): array
     {
-        return [];
-        /*return [
-            'site.name' => 'required|max:255',
-        ];*/
+        return [
+            'site' => ['required', 'array', 'min:1', new CreateRuleset],
+        ];
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
+     * Resolve current request
+     *
      * @access public
      * @return bool
      */
@@ -69,4 +108,7 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
 
         return json_encode($response);
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

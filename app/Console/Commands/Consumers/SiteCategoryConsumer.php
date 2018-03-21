@@ -26,7 +26,7 @@ class SiteCategoryConsumer extends Command
      * @access protected
      * @var string
      */
-    protected $description = 'Read messages from [ category ] queue';
+    protected $description = 'Read messages from [ '. ApiRequest::QUEUE_CATEGORY .' ] queue';
 
     /**
      * The console command description.

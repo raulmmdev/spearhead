@@ -13,7 +13,6 @@ class CreateSiteProviderFeatureTable extends Migration
      */
     public function up()
     {
-        echo('Creating site_provider table '.PHP_EOL);
         Schema::create('site_provider_feature', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();

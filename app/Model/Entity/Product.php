@@ -34,12 +34,6 @@ class Product extends BaseProduct
      * @var array
      */
     protected $fillable = [
-        'tax',
-        'brand',
-        'short_description',
-        'long_description',
-        'metadata',
-        'is_downloadable',
     ];
 
     //------------------------------------------------------------------------------------------------------------------
@@ -69,6 +63,26 @@ class Product extends BaseProduct
     public function variants()
     {
         return $this->hasMany('App\Model\Entity\ProductVariant', 'product_id', 'id');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * A product belongs to many site categories
+     */
+    public function categories()
+    {
+        return $this->hasMany('App\Model\Entity\SiteCategory');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * A product has many attributes
+     */
+    public function attributes()
+    {
+        return $this->hasMany('App\Model\Entity\ProductAttribute', 'product_id', 'id');
     }
 
     //------------------------------------------------------------------------------------------------------------------

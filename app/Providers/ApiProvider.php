@@ -8,6 +8,7 @@ use App\Business\BusinessLog\BusinessLogManager;
 use App\Business\Injector\Injector;
 use App\Business\Job\JobFactory;
 use App\Business\Message\MessageManager;
+use App\Business\Product\ProductManager;
 use App\Business\Site\Attribute\SiteAttributeManager;
 use App\Business\Site\SiteManager;
 use App\Business\SiteCategory\SiteCategoryManager;
@@ -51,6 +52,16 @@ class ApiProvider extends ServiceProvider
             );
         });
 
+        $this->app->bind('App\Business\Product\ProductManager', function ($app) {
+            return new ProductManager(
+                $app->make('App\Model\Entity\Repository\ApiFeatureRepository'),
+                $app->make('App\Model\Entity\Repository\ProductRepository'),
+                $app->make('App\Model\Entity\Repository\ProductVariantRepository'),
+                $app->make('App\Business\Product\Attribute\ProductAttributeManager'),
+                $app->make('App\Business\ProductVariant\ProductVariantManager')
+            );
+        });
+
         $this->app->bind('App\Business\SiteCategory\SiteCategoryManager', function ($app) {
             return new SiteCategoryManager(
                 $app->make('App\Model\Entity\Repository\ApiFeatureRepository'),
@@ -65,7 +76,8 @@ class ApiProvider extends ServiceProvider
         $this->app->bind('App\Business\Injector\Injector', function ($app) {
             return new Injector(
                 $app->make('App\Business\Site\SiteManager'),
-                $app->make('App\Business\SiteCategory\SiteCategoryManager')
+                $app->make('App\Business\SiteCategory\SiteCategoryManager'),
+                $app->make('App\Business\Product\ProductManager')
             );
         });
 

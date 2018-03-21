@@ -5,21 +5,53 @@ namespace Tests\Unit;
 use App\Business\Job\CreateSiteJob;
 use App\Business\Site\SiteManager;
 use App\Http\Requests\ApiRequest;
+use App\Model\Entity\ApiFeature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class SiteTest extends TestCase
 {
+    //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Site Manager container
+     *
+     * @access private
+     * @var SiteManager
+     */
     protected $siteManager;
 
+    /**
+     * Faker container
+     *
+     * @access private
+     * @var Faker
+     */
+    private $faker;
+
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Setup current object
+     *
+     * @access public
+     * @return void
+     */
     public function setup()
     {
         parent::setUp();
 
         $this->siteManager = $this->app->make('App\Business\Site\SiteManager');
+        $this->faker = \Faker\Factory::create();
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    //
     /**
      * A basic test example.
      *
@@ -77,6 +109,7 @@ class SiteTest extends TestCase
 
         $this->assertFalse($siteJob->hasErrors());
     }
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * A basic test example.
@@ -85,10 +118,13 @@ class SiteTest extends TestCase
      */
     public function testSiteCreationMissingData()
     {
-        $siteJob = new CreateSiteJob();
-        $siteJob->setSiteManager($this->siteManager);
-        $siteJob = $this->siteManager->createFromJob($siteJob);
+        $job = new CreateSiteJob();
+        $job->setSiteManager($this->siteManager);
+        $job = $this->siteManager->createFromJob($job);
 
-        $this->assertTrue($siteJob->hasErrors());
+        $this->assertTrue($job->hasErrors());
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

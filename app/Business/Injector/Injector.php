@@ -3,18 +3,22 @@
 namespace App\Business\Injector;
 
 use App\Business\Job\BaseJob;
+use App\Business\Job\Interfaces\ProductManagerAwareInterface;
 use App\Business\Job\Interfaces\SiteCategoryManagerAwareInterface;
 use App\Business\Job\Interfaces\SiteManagerAwareInterface;
-use App\Business\Job\Interfaces\SiteProductManagerAwareInterface;
+use App\Business\Product\ProductManager;
 use App\Business\Site\SiteManager;
 use App\Business\SiteCategory\SiteCategoryManager;
-use App\Business\SiteProduct\SiteProductManager;
 
 /**
  * Injector
  */
 class Injector
 {
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Object constructor
      *
@@ -24,13 +28,14 @@ class Injector
     public function __construct(
         SiteManager $siteManager,
         SiteCategoryManager $siteCategoryManager,
-        SiteProductManager $siteProductManager
-    )
-    {
+        ProductManager $productManager
+    ) {
         $this->siteManager = $siteManager;
         $this->siteCategoryManager = $siteCategoryManager;
-        $this->siteProductManager = $siteProductManager;
+        $this->productManager = $productManager;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      * Inject managers into job request class
@@ -49,10 +54,13 @@ class Injector
             $job->setSiteCategoryManager($this->siteCategoryManager);
         }
 
-        if ($job instanceof SiteProductManagerAwareInterface) {
-            $job->setSiteProductManager($this->siteProductManager);
+        if ($job instanceof ProductManagerAwareInterface) {
+            $job->setProductManager($this->productManager);
         }
 
         return $job;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

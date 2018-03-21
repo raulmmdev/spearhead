@@ -23,7 +23,8 @@ class SiteCategoryRepository extends BaseRepository
     }
 
     /**
-     * disableSiteTree
+     * Disable SiteTree
+     *
      * @param  Site   $site
      * @return void
      */

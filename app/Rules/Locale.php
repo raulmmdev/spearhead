@@ -9,6 +9,7 @@ class Locale implements Rule
 {
     private $validator;
     private $validationRules;
+    private $preffix;
 
     /**
      * Create a new rule instance.
@@ -16,8 +17,9 @@ class Locale implements Rule
      * @param  string $validationRules
      * @return void
      */
-    public function __construct(string $validationRules = null)
+    public function __construct(string $preffix = null, string $validationRules = null)
     {
+        $this->preffix = $preffix;
         $this->validationRules = $validationRules;
     }
 
@@ -30,20 +32,24 @@ class Locale implements Rule
      */
     public function passes($attribute, $value)
     {
+        $this->preffix = $this->preffix ?? $attribute;
+
         $validLocales = array_keys(config('qwindo.locales'));
 
         foreach ($value as $locale => $string)
         {
+            $label = $this->preffix .'['. $locale .']';
+
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             // Validate the locale
 
             $this->validator = Validator::make([
-                $attribute => $locale,
-                'validLocales' => ['nl_NL', 'en_GB'],
+                'locale' => $locale,
+                'validLocales' => $validLocales,
             ], [
-                $attribute => 'in_array:validLocales.*'
+                'locale' => 'in_array:validLocales.*'
             ], [
-                $attribute .'.in_array' => 'The :attribute is not a valid locale.',
+                'locale.in_array' => 'The '. $label .' is not a valid locale.',
             ]);
 
             if ($this->validator->fails()) {
@@ -54,13 +60,12 @@ class Locale implements Rule
             // Validate the string
 
             $this->validator = \Validator::make([
-                $attribute => $string,
+                'text' => $string,
             ], [
-                $attribute => $this->validationRules ?? 'required|string',
+                'text' => $this->validationRules ?? 'required|string',
             ], [
-                $attribute .'.required' => 'The :attribute.'. $locale .' field is required.',
-                $attribute .'.string'   => 'The :attribute.'. $locale .' must be a string.',
-                $attribute .'.between'  => 'The :attribute.'. $locale .' must be between :min and :max characters.',
+                'text.required' => 'The '. $label .' is required.',
+                'text.string'   => 'The '. $label .' must be a string.',
             ]);
 
             if ($this->validator->fails()) {

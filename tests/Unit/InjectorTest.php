@@ -10,25 +10,44 @@ use Tests\TestCase;
 
 class InjectorTest extends TestCase
 {
-	protected $injector;
+    //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
 
-	public function setup()
-	{
-		parent::setUp();
+    protected $injector;
 
-		$this->injector = $this->app->make('App\Business\Injector\Injector');
-	}
+    //------------------------------------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * inject a save site request.
-	 *
-	 * @return void
-	 */
-	public function testInjectSaveSite()
-	{
-		$saveSiteJob = new CreateSiteJob();
-		$this->injector->inject($saveSiteJob);
+    /**
+     * Setup current object
+     *
+     * @access public
+     * @return void
+     */
+    public function setup()
+    {
+        parent::setUp();
 
-		$this->assertInstanceOf(SiteManager::class, $saveSiteJob->getSiteManager());
-	}
+        $this->injector = $this->app->make('App\Business\Injector\Injector');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * inject a save site request.
+     *
+     * @return void
+     */
+    public function testInjectSaveSite()
+    {
+        $saveSiteJob = new CreateSiteJob();
+        $this->injector->inject($saveSiteJob);
+
+        $this->assertInstanceOf(SiteManager::class, $saveSiteJob->getSiteManager());
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 }

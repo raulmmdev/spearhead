@@ -31,6 +31,7 @@ class BaseModel extends Model
         $properties = array_merge($this->fillable, $this->hidden, ['id']);
 
         $attributesMap = [];
+
         if (count($properties)) {
             foreach ($properties as $attr) {
                 $attributesMap[studly_case($attr)] = $attr;

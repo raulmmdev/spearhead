@@ -26,6 +26,11 @@ class JobFactory
         ApiRequest::QUEUE_CATEGORY => [
             ApiRequest::ACTION_UPSERT => 'App\Business\Job\UpsertSiteCategoryJob',
         ],
+
+        ApiRequest::QUEUE_PRODUCT => [
+            ApiRequest::ACTION_DELETE => 'App\Business\Job\DeleteProductJob',
+            ApiRequest::ACTION_UPSERT => 'App\Business\Job\UpsertProductJob',
+        ],
     ];
 
     /**
@@ -74,15 +79,7 @@ class JobFactory
 
         //fill the instance with data
         try {
-            switch ($queue) {
-                case ApiRequest::QUEUE_SITE:
-                    $this->fillSiteJob($values);
-                    break;
-
-                case ApiRequest::QUEUE_CATEGORY:
-                    $this->fillSiteCategoryJob($values);
-                    break;
-            }
+            $this->fillJob($queue, $values);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             \Log::error($e->getTraceAsString());
@@ -117,28 +114,28 @@ class JobFactory
      * Fills the SiteJob instance data container
      *
      * @access private
+     * @param  string $queue
      * @param  array $values
      * @return void
      */
-    private function fillSiteJob(array $values) : void
+    private function fillJob(string $queue, array $values) : void
     {
-        $this->job->data['merchant'] = $values['merchant'];
-        $this->job->data['site'] = $values['site'];
-    }
+        switch ($queue) {
+            case ApiRequest::QUEUE_SITE:
+                $this->job->data['site'] = $values['site'];
+                $this->job->data['merchant'] = $values['merchant'];
+                break;
 
-    //------------------------------------------------------------------------------------------------------------------
+            case ApiRequest::QUEUE_CATEGORY:
+                $this->job->data['tree'] = $values['tree'];
+                $this->job->data['user'] = $values['user'];
+                break;
 
-    /**
-     * Fills the SiteCategoryJob instance data container
-     *
-     * @access private
-     * @param  array $values
-     * @return void
-     */
-    private function fillSiteCategoryJob(array $values) : void
-    {
-        $this->job->data['user'] = $values['user'];
-        $this->job->data['tree'] = $values['tree'];
+            case ApiRequest::QUEUE_PRODUCT:
+                $this->job->data['product'] = $values['product'];
+                $this->job->data['user'] = $values['user'];
+                break;
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------

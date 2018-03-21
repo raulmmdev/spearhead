@@ -8,6 +8,10 @@ Route::group([
 ], function () {
     Route::prefix('api')->group(function () {
         Route::post('site', 'SiteController@createSite');
-        Route::match(['post', 'put'], 'categories/data', 'SiteCategoryController@upsertSiteCategory');
+
+        Route::match(['post', 'put'], 'category', 'SiteCategoryController@upsert');
+
+        Route::match(['post', 'put'], 'product', 'ProductController@upsert');
+        Route::delete('product', 'ProductController@delete');
     });
 });

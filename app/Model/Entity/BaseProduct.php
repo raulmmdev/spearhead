@@ -23,14 +23,22 @@ class BaseProduct extends BaseModel
     public $timestamps = true;
 
     /**
+     * The attributes that are not visible
+     *
+     * @var array
+     */
+    protected $base_hidden = [
+    ];
+
+    /**
      * The attributes that are mass assignable
      *
      * @var array
      */
     protected $base_fillable = [
-        // Mandatory
         'source_id',
         'sku_number',
+        'gtin',
         'name',
         'images',
         'sale_price',
@@ -38,11 +46,8 @@ class BaseProduct extends BaseModel
         'stock',
         'cashback',
         'status',
-
-        // Extra
-        'gtin',
         'weight',
-        'attributes',
+        'custom_attributes',
     ];
 
     //------------------------------------------------------------------------------------------------------------------

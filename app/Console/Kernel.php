@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\AssignWorkers',
         'App\Console\Commands\Consumers\SiteConsumer',
         'App\Console\Commands\Consumers\SiteCategoryConsumer',
+        'App\Console\Commands\Consumers\ProductConsumer',
     ];
 
     /**

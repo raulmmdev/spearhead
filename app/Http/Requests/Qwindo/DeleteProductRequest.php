@@ -6,7 +6,7 @@ use App\Business\Api\Interfaces\ResolvableInterface;
 use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Message\MessageManager;
 use App\Http\Requests\ApiRequest;
-use App\Rules\Product\DeleteRuleset;
+use App\Rules\Product\DeleteProductRequest as DeleteRuleset;
 
 /**
  * DeleteProductRequest

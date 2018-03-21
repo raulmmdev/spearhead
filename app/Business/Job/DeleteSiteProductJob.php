@@ -3,13 +3,13 @@
 namespace App\Business\Job;
 
 use App\Business\Job\BaseJob;
-use App\Business\Job\Interfaces\SiteProductManagerAwareInterface;
-use App\Business\SiteProduct\SiteProductManager;
+use App\Business\Job\Interfaces\ProductManagerAwareInterface;
+use App\Business\Product\ProductManager;
 
 /**
- * DeleteSiteProductJob
+ * DeleteProductJob
  */
-class DeleteSiteProductJob extends BaseJob implements SiteProductManagerAwareInterface
+class DeleteProductJob extends BaseJob implements ProductManagerAwareInterface
 {
     //------------------------------------------------------------------------------------------------------------------
     // PROPERTIES
@@ -19,37 +19,37 @@ class DeleteSiteProductJob extends BaseJob implements SiteProductManagerAwareInt
      * CategoryManager
      *
      * @access private
-     * @var SiteProductManager
+     * @var ProductManager
      */
-    private $siteProductManager;
+    private $productManager;
 
     //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * SiteProductManager setter
+     * ProductManager setter
      *
      * @access public
-     * @param SiteProductManager $siteProductManager
+     * @param ProductManager $productManager
      * @return void
      */
-    public function setSiteProductManager(SiteProductManager $siteProductManager) : void
+    public function setProductManager(ProductManager $productManager) : void
     {
-        $this->siteProductManager = $siteProductManager;
+        $this->productManager = $productManager;
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * SiteProductManager getter
+     * ProductManager getter
      *
      * @access public
-     * @return SiteProductManager
+     * @return ProductManager
      */
-    public function getSiteProductManager() : SiteProductManager
+    public function getProductManager() : ProductManager
     {
-        return $this->siteProductManager;
+        return $this->productManager;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -60,9 +60,9 @@ class DeleteSiteProductJob extends BaseJob implements SiteProductManagerAwareInt
      * @access public
      * @return DeleteSiteCategoryJob | null
      */
-    public function resolve() : ?DeleteSiteProductJob
+    public function resolve() : ?DeleteProductJob
     {
-        return $this->siteProductManager->deleteFromJob($this);
+        return $this->productManager->deleteFromJob($this);
     }
 
     //------------------------------------------------------------------------------------------------------------------

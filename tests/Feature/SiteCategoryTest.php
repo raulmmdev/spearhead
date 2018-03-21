@@ -14,7 +14,34 @@ class SiteCategoryTest extends TestCase
     use Auth;
 
     //------------------------------------------------------------------------------------------------------------------
+    // PROPERTIES
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Faker container
+     *
+     * @access private
+     * @var Faker
+     */
+    private $faker;
+
+    //------------------------------------------------------------------------------------------------------------------
     // PUBLIC METHODS
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Setup current object
+     *
+     * @access public
+     * @return void
+     */
+    public function setup() : void
+    {
+        parent::setUp();
+
+        $this->faker = \Faker\Factory::create();
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -24,11 +51,9 @@ class SiteCategoryTest extends TestCase
      */
     public function testUpsertSiteCategory() : void
     {
-        $faker = \Faker\Factory::create();
+        $url = config('app.url') . '/api/category';
 
-        $url = config('app.url') . '/api/categories/data';
-
-        $values = json_decode(file_get_contents(database_path('seeds/json/categories/vinq.json')), true);
+        $values = json_decode(file_get_contents(database_path('seeds/json/vinq-6205-541/categories.json')), true);
 
         $response = $this
             ->withHeaders($this->getHeadersAsAuth($url, $values))
@@ -37,7 +62,7 @@ class SiteCategoryTest extends TestCase
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'type' => SiteCategoryController::RESPONSE_TYPES['upsertSiteCategory'],
+                'type' => SiteCategoryController::RESPONSE_TYPES['upsert'],
                 'attributes' => [],
             ]);
     }
@@ -45,19 +70,19 @@ class SiteCategoryTest extends TestCase
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Wrong locale
+     * Wrong locale content
      *
      * @return void
      */
     public function testUpsertSiteCategoryWrongLocale() : void
     {
-        $url = config('app.url') . '/api/categories/data';
+        $url = config('app.url') . '/api/category';
 
         $values = [
             0 => [
                 'id' => 184,
                 'title' => [
-                    'xx_XX' => 'Sale'
+                    'nlx_NL' => null
                 ]
             ]
         ];
@@ -75,7 +100,7 @@ class SiteCategoryTest extends TestCase
                             'pointer' => '/data/attributes/tree'
                         ],
                         'title' => 'Invalid Attribute',
-                        'details' => 'The title is not a valid locale.'
+                        'details' => 'The title[nlx_NL] is not a valid locale.'
                     ]
                 ]
             ]);
@@ -90,7 +115,7 @@ class SiteCategoryTest extends TestCase
      */
     public function testUpsertSiteCategoryWrongLocaleContent() : void
     {
-        $url = config('app.url') . '/api/categories/data';
+        $url = config('app.url') . '/api/category';
 
         $values = [
             0 => [
@@ -114,7 +139,7 @@ class SiteCategoryTest extends TestCase
                             'pointer' => '/data/attributes/tree'
                         ],
                         'title' => 'Invalid Attribute',
-                        'details' => 'The title.nl_NL field is required.'
+                        'details' => 'The title[nl_NL] is required.'
                     ]
                 ]
             ]);
@@ -129,7 +154,7 @@ class SiteCategoryTest extends TestCase
      */
     public function testUpsertSiteCategoryWrongCashback() : void
     {
-        $url = config('app.url') . '/api/categories/data';
+        $url = config('app.url') . '/api/category';
 
         $values = [
             0 => [

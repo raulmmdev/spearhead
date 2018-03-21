@@ -6,8 +6,7 @@ use App\Business\Api\Interfaces\ResolvableInterface;
 use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Message\MessageManager;
 use App\Http\Requests\ApiRequest;
-use App\Rules\Category;
-use App\Rules\Locale;
+use App\Rules\SiteCategory\UpsertSiteCategoryRequest as UpsertRuleset;
 
 /**
  * UpsertSiteCategoryRequest
@@ -67,9 +66,9 @@ class UpsertSiteCategoryRequest extends ApiRequest implements ResolvableInterfac
      */
     protected function validationData() : array
     {
-        $tree = $this->all();
+        $data = $this->all();
 
-        return ['tree' => $tree];
+        return ['tree' => $data];
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -83,7 +82,7 @@ class UpsertSiteCategoryRequest extends ApiRequest implements ResolvableInterfac
     public function rules(): array
     {
         return [
-            'tree' => ['required', 'array', 'min:1', new Category],
+            'tree' => ['required', 'array', 'min:1', new UpsertRuleset],
         ];
     }
 

@@ -27,7 +27,7 @@ class SiteConsumer extends Command
      * @access protected
      * @var string
      */
-    protected $description = 'Read messages from [ site ] queue';
+    protected $description = 'Read messages from [ '. ApiRequest::QUEUE_SITE .' ] queue';
 
     /**
      * The console command description.
