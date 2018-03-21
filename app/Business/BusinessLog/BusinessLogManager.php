@@ -23,12 +23,12 @@ class BusinessLogManager
     /**
      * Call method
      *
-     * Example: 
+     * Example:
      *      $businessLogManager->info(
-     *          BusinessLog::USER_TYPE_MERCHANT, 
-     *          BusinessLog::ELEMENT_TYPE_SITE, 
-     *          'Site creation request has been received.', 
-     *          json_decode(json_encode($request->all()), 
+     *          BusinessLog::USER_TYPE_MERCHANT,
+     *          BusinessLog::ELEMENT_TYPE_SITE,
+     *          'Site creation request has been received.',
+     *          json_decode(json_encode($request->all()),
      *          BusinessLog::HTTP_TYPE_PUSH
      *      );
      *
@@ -42,7 +42,8 @@ class BusinessLogManager
      * @param  int|null    $feedId
      * @throws \Exception  Method not implemented
      */
-    public function __call($method, $arguments) {
+    public function __call($method, $arguments)
+    {
         if (!array_key_exists($method, self::MESSAGE_LEVELS)) {
             throw new \Exception('Method [ '. $method .' ] not implemented in class [ '. __CLASS__ .' ]', 1);
         }
@@ -55,12 +56,12 @@ class BusinessLogManager
     /**
      * Call static method
      *
-     * Example: 
+     * Example:
      *      BusinessLogManager::info(
-     *          BusinessLog::USER_TYPE_MERCHANT, 
-     *          BusinessLog::ELEMENT_TYPE_SITE, 
-     *          'Site creation request has been received.', 
-     *          json_decode(json_encode($request->all()), 
+     *          BusinessLog::USER_TYPE_MERCHANT,
+     *          BusinessLog::ELEMENT_TYPE_SITE,
+     *          'Site creation request has been received.',
+     *          json_decode(json_encode($request->all()),
      *          BusinessLog::HTTP_TYPE_PUSH
      *      );
      *
@@ -75,7 +76,8 @@ class BusinessLogManager
      * @param  int|null    $feedId
      * @throws \Exception  Method not implemented
      */
-    public static function __callStatic($method, $arguments) {
+    public static function __callStatic($method, $arguments)
+    {
         if (!array_key_exists($method, self::MESSAGE_LEVELS)) {
             throw new \Exception('Method [ '. $method .' ] not implemented in class [ '. __CLASS__ .' ]', 1);
         }

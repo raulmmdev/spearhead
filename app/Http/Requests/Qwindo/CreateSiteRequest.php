@@ -4,7 +4,7 @@ namespace App\Http\Requests\Qwindo;
 
 use App\Business\Api\Interfaces\ResolvableInterface;
 use App\Business\Api\Response\ApiResponseManager;
-use App\Business\Message\MessageManager;
+use App\Business\Job\JobFactory;
 use App\Http\Requests\ApiRequest;
 
 /**
@@ -14,16 +14,16 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
 {
     /**
      * @access protected
-     * @var $messageManager
+     * @var $jobFactory
      */
-    protected $messageManager;
+    protected $jobFactory;
 
     public function __construct(
-        MessageManager $messageManager,
+        JobFactory $jobFactory,
         ApiResponseManager $apiResponseManager
     ) {
         parent::__construct($apiResponseManager);
-        $this->messageManager = $messageManager;
+        $this->jobFactory = $jobFactory;
     }
 
     /**
@@ -57,10 +57,16 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
      */
     public function resolve() :? string
     {
-        return $this->messageManager->produceJobMessage(
-            ApiRequest::QUEUE_SITE,
-            ApiRequest::ACTION_CREATE,
-            $this->all()
-        );
+        $data = $this->all();
+        $data['crud_operation'] = ApiRequest::ACTION_CREATE;
+        $job = $this->jobFactory->create(ApiRequest::QUEUE_SITE, $data);
+        $job->resolve();
+
+        $response = [
+            'object' => $job->getObject(),
+            'errors' => $job->getErrors(),
+        ];
+
+        return json_encode($response);
     }
 }

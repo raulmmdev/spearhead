@@ -73,7 +73,7 @@ abstract class BaseJob
      * @access public
      * @return Model
      */
-    public function getObject() : Model
+    public function getObject() :? Model
     {
         return $this->object;
     }
