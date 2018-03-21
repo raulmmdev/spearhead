@@ -41,35 +41,16 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
-if (env('LOG_KIBANA', true)) {
-    $app->configureMonologUsing(function ($monolog) {
-        $options = [
-            'index' => 'laralogs',
-            'type'  => 'log',
-        ];
+$app->configureMonologUsing(function ($monolog) {
+    $client = new Elastica\Client();
 
-        $clientOptions = [
-            'host' => null,
-            'port' => null,
-            'path' => null,
-            'url' => null,
-            'proxy' => null,
-            'transport' => null,
-            'persistent' => true,
-            'timeout' => null,
-            'connections' => [], // host, port, path, timeout, transport, compression, persistent, timeout, config -> (curl, headers, url)
-            'roundRobin' => false,
-            'log' => false,
-            'retryOnConflict' => 0,
-            'bigintConversion' => false,
-            'username' => null,
-            'password' => null,
-        ];
-
-        $client = new Elastica\Client();
-        $monolog->pushHandler(new Monolog\Handler\ElasticSearchHandler($client, $options));
-    });
-}
+    $monolog->pushHandler(
+        new Monolog\Handler\ElasticSearchHandler(
+            $client,
+            config('qwindo.monolog.using.kibana.options')
+        )
+    );
+});
 
 /*
 |--------------------------------------------------------------------------

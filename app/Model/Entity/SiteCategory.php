@@ -62,7 +62,7 @@ class SiteCategory extends BaseModel
      */
     public function products()
     {
-        return $this->belongsToMany('App\Model\Entity\Product');
+        return $this->belongsToMany('App\Model\Entity\Product', 'product_site_category', 'site_category_id', 'product_id');
     }
 
     //------------------------------------------------------------------------------------------------------------------

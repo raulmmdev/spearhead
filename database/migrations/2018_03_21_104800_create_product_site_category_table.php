@@ -17,7 +17,6 @@ class CreateProductSiteCategoryTable extends Migration
             $table->increments('id');
             $table->integer('product_id')->unsigned()->comment('Product Id');
             $table->integer('site_category_id')->unsigned()->comment('Site Category Id');
-            $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
             $table->foreign('site_category_id')->references('id')->on('site_category')->onDelete('cascade');

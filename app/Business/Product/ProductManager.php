@@ -12,6 +12,8 @@ use App\Model\Entity\ProductVariant;
 use App\Model\Entity\Repository\ApiFeatureRepository;
 use App\Model\Entity\Repository\ProductRepository;
 use App\Model\Entity\Repository\ProductVariantRepository;
+use App\Model\Entity\Site;
+use App\Model\Entity\SiteCategory;
 
 /**
  * ProductManager
@@ -143,6 +145,17 @@ class ProductManager
             );
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            // Process categories
+
+            if (array_has($job->data['product'], 'category_ids')) {
+                $product->categories()->detach();
+
+                foreach ($job->data['product']['category_ids'] as $id) {
+                    $this->setCategory($site, $product, $id);
+                }
+            }
+
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             // Process variants
 
             if (array_has($job->data['product'], 'variants')) {
@@ -218,6 +231,26 @@ class ProductManager
         }
 
         return $job;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Set category
+     *
+     * @access public
+     * @param Site $site
+     * @param Product $product
+     * @param int $id
+     * @return void
+     */
+    public function setCategory(Site $site, Product $product, int $id) : void
+    {
+        $category = SiteCategory::where('site_id', $site->id)->where('source_id', $id)->first();
+
+        if ($category) {
+            $product->categories()->attach($category->id);
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------

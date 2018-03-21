@@ -72,7 +72,7 @@ class Product extends BaseProduct
      */
     public function categories()
     {
-        return $this->hasMany('App\Model\Entity\SiteCategory');
+        return $this->belongsToMany('App\Model\Entity\SiteCategory', 'product_site_category', 'product_id', 'site_category_id');
     }
 
     //------------------------------------------------------------------------------------------------------------------
