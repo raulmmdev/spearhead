@@ -60,17 +60,17 @@ class ApiResponseManager
      * @param  array  $errors
      * @return string
      */
-    public function formatValidationErrors(array $errors): array
+    public function formatValidationErrors(\Illuminate\Support\MessageBag $errors): array
     {
         $formattedErrors= [];
-
+        $errors = $errors->getMessages();
         foreach ($errors as $source => $errorList) {
             $errorSource = [ "pointer" => "/data/attributes/".$source];
             foreach ($errorList as $errorMessage) {
                 $formattedErrors[] = [
                     "source" => $errorSource,
                     "title" => "Invalid Attribute",
-                    "details" => $errorMessage,
+                    "details" => json_decode($errorMessage),
                 ];
             }
         }

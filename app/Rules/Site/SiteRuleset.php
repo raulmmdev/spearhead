@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Rule as ExtendedRule;
 use Validator;
 
-class MerchantRuleset implements Rule
+class SiteRuleset implements Rule
 {
     const STATUS_ACTIVE = 'active';
 
@@ -29,11 +29,17 @@ class MerchantRuleset implements Rule
         $validStatuses = [self::STATUS_ACTIVE];
 
         $this->validator = Validator::make($value, [
-            'country' => ['required', 'regex:/(^('.config('qwindo.system')['valid_countries'].')$)/u'],
-            'email_address' => ['required', 'email'],
-            'name' => ['required', 'string'],
-            'merchant_id' => ['required', 'integer'],
-            'merchant_status' => ['required', ExtendedRule::in($validStatuses)]
+            'portal_payment_methods' => ['required', 'min:1', 'array'],
+            'portal_payment_methods.*' => ['string', ExtendedRule::in(config('qwindo.system')['valid_payment_methods'])],
+            'portal_url' => ['required', 'string', 'url'],
+            'site_apikey' => ['required', 'string'],
+            'portal_description' => ['required', 'string'],
+            'site_id' => ['required', 'integer'],
+            'supportemail' => ['nullable', 'email'],
+            'ca_code' => ['required', 'string'],
+            'support_phone' => ['string'],
+            'mcc' => ['required', 'string'],
+            'site_status' => ['required', ExtendedRule::in($validStatuses)]
         ]);
 
         if ($this->validator->fails()) {

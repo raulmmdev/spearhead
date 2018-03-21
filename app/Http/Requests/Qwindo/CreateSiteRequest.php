@@ -6,7 +6,9 @@ use App\Business\Api\Interfaces\ResolvableInterface;
 use App\Business\Api\Response\ApiResponseManager;
 use App\Business\Job\JobFactory;
 use App\Http\Requests\ApiRequest;
-use App\Rules\Site\CreateRuleset;
+//use App\Rules\Site\CreateRuleset;
+use App\Rules\Site\SiteRuleset;
+use App\Rules\Site\MerchantRuleset;
 
 /**
  * CreateSiteRequest
@@ -60,20 +62,6 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Override validationData() to reindex the input data for validation purposes
-     *
-     * @return array
-     */
-    protected function validationData() : array
-    {
-        $data = $this->all();
-
-        return ['site' => $data];
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @access public
@@ -82,7 +70,8 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
     public function rules(): array
     {
         return [
-            'site' => ['required', 'array', 'min:1', new CreateRuleset],
+            'site' => ['required', 'array', 'min:1', new SiteRuleset],
+            'merchant' => ['required', 'array', 'min:1', new MerchantRuleset],
         ];
     }
 

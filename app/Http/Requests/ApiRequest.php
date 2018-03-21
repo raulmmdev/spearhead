@@ -82,7 +82,7 @@ class ApiRequest extends FormRequest
         $response = $this
             ->apiResponseManager
             ->formatValidationErrors(
-                $validator->errors()->getMessages()
+                $validator->errors()
             );
 
         throw new HttpResponseException(response()->json($response, Response::HTTP_UNPROCESSABLE_ENTITY));
