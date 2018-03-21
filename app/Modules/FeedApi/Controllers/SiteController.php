@@ -9,6 +9,7 @@ use App\Business\Error\ErrorCode;
 use App\Business\Message\MessageManager;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Qwindo\CreateSiteRequest;
+use App\Http\Requests\Qwindo\DeleteSiteRequest;
 use App\Model\Document\BusinessLog;
 use App\Model\Entity\Repository\SiteRepository;
 use App\Model\Entity\Repository\UserRepository;
@@ -20,9 +21,7 @@ use Illuminate\Support\Facades\Auth;
  */
 class SiteController extends Controller
 {
-    const RESPONSE_TYPES = [
-        'createSite' => 'site',
-    ];
+    const RESPONSE_TYPE = 'site';
 
     /**
      * $messageManager
@@ -88,7 +87,7 @@ class SiteController extends Controller
      * @param CreateSiteRequest $request
      * @return JsonResponse
      */
-    public function createSite(CreateSiteRequest $request): \Illuminate\Http\JsonResponse
+    public function create(CreateSiteRequest $request): \Illuminate\Http\JsonResponse
     {
         //$user = Auth::guard('api')->user();
         $result = $request->resolve();
@@ -133,8 +132,55 @@ class SiteController extends Controller
             ->apiResponseManager
             ->createResponse(
                 Response::HTTP_CREATED,
-                self::RESPONSE_TYPES[__FUNCTION__],
+                self::RESPONSE_TYPE,
                 $siteResponse
+            );
+    }
+
+    public function delete(DeleteSiteRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $result = $request->resolve();
+        $result = json_decode($result, true);
+
+        if (!empty($result['errors'])) {
+            $this->businessLogManager->error(
+                BusinessLog::USER_TYPE_MERCHANT,
+                BusinessLog::ELEMENT_TYPE_SITE,
+                'There was an error tryng to process a site deletion request.',
+                json_encode($request->all()),
+                BusinessLog::HTTP_TYPE_PUSH
+            );
+
+            $this->businessLogManager->error(
+                BusinessLog::USER_TYPE_ADMIN,
+                BusinessLog::ELEMENT_TYPE_SITE,
+                'There was an error tryng to process a site deletion request.',
+                json_encode($request->all()) . json_encode($result),
+                BusinessLog::HTTP_TYPE_PUSH
+            );
+
+            return $this
+                ->apiResponseManager
+                ->createErrorResponse(
+                    Response::HTTP_INTERNAL_SERVER_ERROR,
+                    ErrorCode::ERROR_CODE_PROCESS_REQUEST
+                );
+        }
+
+        $this->businessLogManager->info(
+            BusinessLog::USER_TYPE_MERCHANT,
+            BusinessLog::ELEMENT_TYPE_SITE,
+            'Site deletion request has been processed.',
+            json_encode($result['object']),
+            BusinessLog::HTTP_TYPE_PUSH
+        );
+
+        return $this
+            ->apiResponseManager
+            ->createResponse(
+                Response::HTTP_ACCEPTED,
+                self::RESPONSE_TYPE,
+                $result['object']
             );
     }
 

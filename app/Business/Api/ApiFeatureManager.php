@@ -85,4 +85,21 @@ class ApiFeatureManager
 
         return $feature;
     }
+
+    /**
+     * disableSiteFeatures
+     *
+     * @access public
+     * @param  Site   $site
+     * @return
+     */
+    public function disableSiteFeatures(Site $site): void
+    {
+        $features = $this->apiFeatureRepository->findByField('site_id', $site->getId());
+
+        foreach ($features as $feature) {
+            $feature->setStatus(ApiFeature::STATUS_DISABLED);
+            $feature->save();
+        }
+    }
 }

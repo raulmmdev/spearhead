@@ -21,6 +21,7 @@ class JobFactory
     const CLASS_NAMES = [
         ApiRequest::QUEUE_SITE => [
             ApiRequest::ACTION_CREATE => 'App\Business\Job\CreateSiteJob',
+            ApiRequest::ACTION_DELETE => 'App\Business\Job\DeleteSiteJob',
         ],
 
         ApiRequest::QUEUE_CATEGORY => [
@@ -122,8 +123,9 @@ class JobFactory
     {
         switch ($queue) {
             case ApiRequest::QUEUE_SITE:
-                $this->job->data['site'] = $values['site'];
-                $this->job->data['merchant'] = $values['merchant'];
+                isset($values['site']) && $this->job->data['site'] = $values['site'];
+                isset($values['merchant']) && $this->job->data['merchant'] = $values['merchant'];
+                isset($values['site_id']) && $this->job->data['site_id'] = $values['site_id'];
                 break;
 
             case ApiRequest::QUEUE_CATEGORY:

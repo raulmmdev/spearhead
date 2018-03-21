@@ -75,7 +75,7 @@ class SiteTest extends TestCase
         $response
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
-                'type' => SiteController::RESPONSE_TYPES['createSite'],
+                'type' => SiteController::RESPONSE_TYPE,
                 'attributes' => [],
             ]);
     }

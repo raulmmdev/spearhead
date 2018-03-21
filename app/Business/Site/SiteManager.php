@@ -4,6 +4,7 @@ namespace App\Business\Site;
 
 use App\Business\Api\ApiFeatureManager;
 use App\Business\Job\CreateSiteJob;
+use App\Business\Job\DeleteSiteJob;
 use App\Business\User\UserManager;
 use App\Business\Site\Attribute\SiteAttributeManager;
 use App\Model\Entity\Repository\SiteRepository;
@@ -79,6 +80,40 @@ class SiteManager
             $user = $this->userManager->createFromSiteJob($job);
             $site = $this->createSiteFromJob($job, $user);
             $feature = $this->apiFeatureManager->create($site);
+
+            $job->setObject($site);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            \Log::error($e->getTraceAsString());
+            \DB::rollback();
+
+            $job->setErrors([
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
+
+        \DB::commit();
+
+        return $job;
+    }
+
+    /**
+     * Delete a site from a job.
+     *
+     * @access public
+     * @param DeleteSiteJob $job
+     * @return DeleteSiteJob | null
+     */
+    public function deleteFromJob(DeleteSiteJob $job) :? DeleteSiteJob
+    {
+        \DB::beginTransaction();
+        try {
+            //disable the site and all its associated api features
+            $site = $this->siteRepository->findWhere(['native_id' => $job->data['site_id']])->first();
+            $site->setStatus(Site::STATUS_DISABLED);
+
+            $this->apiFeatureManager->disableSiteFeatures($site);
 
             $job->setObject($site);
         } catch (\Exception $e) {

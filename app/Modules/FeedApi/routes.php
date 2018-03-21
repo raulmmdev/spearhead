@@ -7,11 +7,12 @@ Route::group([
     'middleware' => 'App\Http\Middleware\AuthBasic'
 ], function () {
     Route::prefix('api')->group(function () {
-        Route::post('site', 'SiteController@createSite');
+        Route::post('site', 'SiteController@create')->name('createSite');
+        Route::delete('site/{siteId}', 'SiteController@delete')->name('deleteSite');
 
-        Route::match(['post', 'put'], 'category', 'SiteCategoryController@upsert');
+        Route::match(['post', 'put'], 'category', 'SiteCategoryController@upsert')->name('upsertCategory');
 
-        Route::match(['post', 'put'], 'product', 'ProductController@upsert');
-        Route::delete('product', 'ProductController@delete');
+        Route::match(['post', 'put'], 'product', 'ProductController@upsert')->name('upsertProduct');
+        Route::delete('product', 'ProductController@delete')->name('deleteProduct');
     });
 });

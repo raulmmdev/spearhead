@@ -57,8 +57,8 @@ class AuthBasic
             : '';
 
         //header? ('Auth', 'SiteProvider')
-        $supportedHeaders = isset(config('qwindo.authconfigurations')[$request->path()][$request->getMethod()])
-            ? config('qwindo.authconfigurations')[$request->path()][$request->getMethod()]
+        $supportedHeaders = isset(config('qwindo.authconfigurations')[\Route::getCurrentRoute()->getName()])
+            ? config('qwindo.authconfigurations')[\Route::getCurrentRoute()->getName()]
             : null;
 
         $authHeader = $this->getAuthHeader($request, $supportedHeaders);

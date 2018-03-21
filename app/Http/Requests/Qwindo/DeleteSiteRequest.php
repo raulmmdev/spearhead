@@ -10,9 +10,9 @@ use App\Rules\Site\SiteRuleset;
 use App\Rules\Site\MerchantRuleset;
 
 /**
- * CreateSiteRequest
+ * DeleteSiteRequest
  */
-class CreateSiteRequest extends ApiRequest implements ResolvableInterface
+class DeleteSiteRequest extends ApiRequest implements ResolvableInterface
 {
     //------------------------------------------------------------------------------------------------------------------
     // PROPERTIES
@@ -55,7 +55,24 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
      */
     public function authorize(): bool
     {
+        $id = $this->route('siteId');
         return true;
+    }
+
+    /**
+     * prepareForValidation
+     * @access public
+     * @return array
+     */
+    public function prepareForValidation()
+    {
+        $attributes = parent::all();
+
+        // you can add fields
+        $attributes['site_id'] = $this->route('siteId');
+
+        $this->replace($attributes);
+        return parent::all();
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -69,8 +86,7 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
     public function rules(): array
     {
         return [
-            'site' => ['required', 'array', 'min:1', new SiteRuleset],
-            'merchant' => ['required', 'array', 'min:1', new MerchantRuleset],
+            'site_id' => 'required|numeric|exists:site,native_id',
         ];
     }
 
@@ -85,7 +101,8 @@ class CreateSiteRequest extends ApiRequest implements ResolvableInterface
     public function resolve() :? string
     {
         $data = $this->all();
-        $data['crud_operation'] = ApiRequest::ACTION_CREATE;
+
+        $data['crud_operation'] = ApiRequest::ACTION_DELETE;
         $job = $this->jobFactory->create(ApiRequest::QUEUE_SITE, $data);
         $job->resolve();
 
